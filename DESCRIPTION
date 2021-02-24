@@ -1,16 +1,24 @@
 Package: epgminer
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Analysis of EPG data
+Version: 0.0.0.9
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Elizabeth",
+           family = "Chun",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           email = "lizzie_chun1@tamu.edu")
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Depends: R (>= 4.0.0)
+Imports:
+    dplyr,
+    ggplot2,
+    magrittr,
+    readr,
+    stats,
+    stringr,
+    tibble,
+    utils
