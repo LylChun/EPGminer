@@ -18,6 +18,7 @@ Imports:
     ggplot2,
     magrittr,
     readr,
+    shiny,
     stats,
     stringr,
     tibble,
