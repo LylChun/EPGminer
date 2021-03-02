@@ -39,3 +39,11 @@ largest amplitude. Frequencies are aggregated such that only the highest in each
 integer bin are kept and compared - e.g. if the data is 5.1 Hz, 5.2 Hz, only the
 largest will be kept for the 5.x Hz entry.
 }
+\seealso{
+Other frequency related functions: 
+\code{\link{plot_fft}()},
+\code{\link{single_fft}()},
+\code{\link{topfreq}()},
+\code{\link{wave_topfreq}()}
+}
+\concept{frequency related functions}

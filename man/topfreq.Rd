@@ -29,3 +29,11 @@ for voltage time series data using the Fast Fourier Transform.
 \details{
 The main frequency is defined as that which has the largest amplitude.
 }
+\seealso{
+Other frequency related functions: 
+\code{\link{mainfreqs}()},
+\code{\link{plot_fft}()},
+\code{\link{single_fft}()},
+\code{\link{wave_topfreq}()}
+}
+\concept{frequency related functions}

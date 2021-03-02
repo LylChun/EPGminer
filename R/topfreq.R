@@ -13,6 +13,8 @@
 #' The single main frequency and its amplitude is returned as a tibble object.
 #'
 #' @export
+#'
+#' @family frequency related functions
 
 
 topfreq <- function (data, window = TRUE, filter = 0.25,

@@ -22,4 +22,5 @@ devtools::install_github("LylChun/epgminer")
 
 ## Example
 
-TBA
+One major utility of epgminer is to find the frequency of voltage data
+waveforms using the Fourier Transform.

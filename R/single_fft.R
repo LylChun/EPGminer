@@ -78,6 +78,8 @@ hann <- function (length) {
 #' @return A tibble object with two columns: Frequency and Amplitude. It is
 #' single-sided, and will select up to the Nyquist (sample_rate/2)
 #' @export
+#'
+#' @family frequency related functions
 
 
 single_fft <- function (data, window = TRUE, include_dc = TRUE,

@@ -27,6 +27,8 @@
 #'
 #' @export
 #'
+#' @family frequency related functions
+#'
 
 mainfreqs <- function (data, end = sample_rate/2, pre_fft = FALSE,
                        window = TRUE, filter = 0.25, sample_rate = 100) {

@@ -21,6 +21,8 @@
 #' @return A plot showing amplitude vs frequency of the Fourier Transformed data.
 #' @export
 #'
+#' @family frequency related functions
+#'
 
 
 plot_fft <- function (data, end = NULL, include_dc = FALSE, pre_fft = FALSE,
