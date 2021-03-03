@@ -76,7 +76,7 @@ g_times <- function (data, g_drop = 0.75) {
     times = seq(from = udat$time[1], to = udat$time[2], by = 0.01)
 
     out = data %>%
-      dplyr::mutate(g = dplyr::if_else(round(time, 2) %in% round(times, 2), "g", NA_character_))
+      dplyr::mutate(g = dplyr::if_else(round(time, 2) %in% round(times, 2), "G", NA_character_))
     # mutate(g = case_when(
     #   round(time, 2) %in% round(times, 2) ~ "g"
     # ))

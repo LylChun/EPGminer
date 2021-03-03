@@ -376,7 +376,7 @@ shinyServer(function(input, output) {
 
       if (any(!is.na(addg$g))) {
         gend <- addg %>%
-          filter(waveform == "g") %>%
+          filter(waveform == "G") %>%
           slice_tail()
 
         gtimes <- seq(gend$time + 0.01, gend$time + 500, by = 0.01)
@@ -611,92 +611,92 @@ shinyServer(function(input, output) {
 
   ################## Beta Zone ####################
 
-  beta_data <- reactive ({
-    req(input$beta)
-
-    list <- lapply(input$beta$datapath, read_epg)
-    out <- rbindlist(list)
-    return(out)
-  })
-
-  output$data_probe <- DT::renderDataTable({
-
-    DT::datatable(beta_data()[1:5, ],
-                  options = list(dom = "t"),
-                  rownames = FALSE)
-  })
-
-  output$probe_a <- renderUI ({
-
-    alphas <- probe_apply(beta_data())$time
-
-    idx <- seq(1, by = 2, length.out = length(alphas)/2)
-
-    textInput("in_a", "Specify A start(s)",
-              value = paste(alphas[idx], collapse = ","))
-
-  })
-
-  output$probe_o <- renderUI ({
-
-    omegas <- probe_apply(beta_data())$time
-
-    idx <- seq(2, by = 2, length.out = length(omegas)/2)
-
-    textInput("in_o", "Specify A ends(s)",
-              value = paste(omegas[idx], collapse = ","))
-
-  })
-
-  a_data_probe <- reactive ({
-
-    # shiny specific function
-    wave_label_a_probe <- function (data, a, o) {
-
-      times <- unlist(seqvec(from = a, to = o, by = 0.01))
-
-      out <- data %>%
-        mutate(waveform = ifelse(round(time, 2) %in% round(times, 2), "a", NA_character_))
-
-      return(out)
-    }
-
-    a <- as.double(str_split(input$in_a, pattern = ",")[[1]])
-    o <- as.double(str_split(input$in_o, pattern = ",")[[1]])
-
-    out <- wave_label_a_probe(beta_data(), a, o)
-
-    return(out)
-  })
-
-  auto_data_probe <- reactive ({
-
-    udat <- a_data_probe()
-
-    out <- probe_comb(udat, e_var = as.double(input$in_evar_p))
-  })
-
-  plot_probe <- reactive ({
-
-    if (input$adone_p == "n") {
-      plot_wave(a_data_probe())
-    }
-
-    else if (input$adone_p == "y") {
-
-      plot_wave(auto_data_probe())
-    }
-
-  })
-
-  output$plot_probe <- renderPlotly ({
-
-    ggplotly(plot_probe())
-  })
-
-  output$e_var_p <- renderUI ({
-    textInput("in_evar_p", "Specify acceptable E Variance", value = 0.1)
-  })
+  # beta_data <- reactive ({
+  #   req(input$beta)
+  #
+  #   list <- lapply(input$beta$datapath, read_epg)
+  #   out <- rbindlist(list)
+  #   return(out)
+  # })
+  #
+  # output$data_probe <- DT::renderDataTable({
+  #
+  #   DT::datatable(beta_data()[1:5, ],
+  #                 options = list(dom = "t"),
+  #                 rownames = FALSE)
+  # })
+  #
+  # output$probe_a <- renderUI ({
+  #
+  #   alphas <- probe_apply(beta_data())$time
+  #
+  #   idx <- seq(1, by = 2, length.out = length(alphas)/2)
+  #
+  #   textInput("in_a", "Specify A start(s)",
+  #             value = paste(alphas[idx], collapse = ","))
+  #
+  # })
+  #
+  # output$probe_o <- renderUI ({
+  #
+  #   omegas <- probe_apply(beta_data())$time
+  #
+  #   idx <- seq(2, by = 2, length.out = length(omegas)/2)
+  #
+  #   textInput("in_o", "Specify A ends(s)",
+  #             value = paste(omegas[idx], collapse = ","))
+  #
+  # })
+  #
+  # a_data_probe <- reactive ({
+  #
+  #   # shiny specific function
+  #   wave_label_a_probe <- function (data, a, o) {
+  #
+  #     times <- unlist(seqvec(from = a, to = o, by = 0.01))
+  #
+  #     out <- data %>%
+  #       mutate(waveform = ifelse(round(time, 2) %in% round(times, 2), "a", NA_character_))
+  #
+  #     return(out)
+  #   }
+  #
+  #   a <- as.double(str_split(input$in_a, pattern = ",")[[1]])
+  #   o <- as.double(str_split(input$in_o, pattern = ",")[[1]])
+  #
+  #   out <- wave_label_a_probe(beta_data(), a, o)
+  #
+  #   return(out)
+  # })
+  #
+  # auto_data_probe <- reactive ({
+  #
+  #   udat <- a_data_probe()
+  #
+  #   out <- probe_comb(udat, e_var = as.double(input$in_evar_p))
+  # })
+  #
+  # plot_probe <- reactive ({
+  #
+  #   if (input$adone_p == "n") {
+  #     plot_wave(a_data_probe())
+  #   }
+  #
+  #   else if (input$adone_p == "y") {
+  #
+  #     plot_wave(auto_data_probe())
+  #   }
+  #
+  # })
+  #
+  # output$plot_probe <- renderPlotly ({
+  #
+  #   ggplotly(plot_probe())
+  # })
+  #
+  # output$e_var_p <- renderUI ({
+  #   textInput("in_evar_p", "Specify acceptable E Variance", value = 0.1)
+  # })
 
 
 })
