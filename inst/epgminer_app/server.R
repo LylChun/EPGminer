@@ -193,11 +193,13 @@ shinyServer(function(input, output) {
     if (input$plottype == "fbar") {
       out <- wave_topfreq(analyze_data())
       colnames(out) <- c("group", "waveform", "frequency")
-      out <- out[, 2:3]
+      out <- out[, 2:3] %>%
+        filter(waveform %in% input$fbar_waves)
     }
 
     else if (input$plottype == "pie") {
-      out <- analyze_data()
+      out <- analyze_data() %>%
+        filter(waveform %in% input$pie_waves)
     }
 
     return(out)
@@ -209,43 +211,48 @@ shinyServer(function(input, output) {
     on.exit(removeNotification(plot_id), add = TRUE)
 
     if (input$plottype == "fbar") {
-      ggplot(visual_data()) + geom_boxplot(aes(waveform, frequency))
+
+      ggplotly(ggplot(visual_data()) + geom_boxplot(aes(waveform, frequency)))
     }
 
     else if (input$plottype == "pie") {
 
       if (input$pietype == "pie_t") {
-        plot_data <- visual_data() %>%
-          mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
-                                  rle(waveform)[[1]])) %>%
-          filter(!is.na(waveform)) %>%
-          mutate(wave_group = rep(1:length(rle(wave_group)[[1]]),
-                                  rle(wave_group)[[1]])) %>%
-          group_by(wave_group) %>%
-          summarise(waveform = waveform[1], length = length(time))
-
-        ggplot(data = plot_data, mapping = aes(x = 1, fill = waveform, y = length)) +
-          geom_bar(stat = "identity") + coord_polar("y", start = 0) + theme_void()
+        # plot_data <- visual_data() %>%
+        #   mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
+        #                           rle(waveform)[[1]])) %>%
+        #   filter(!is.na(waveform)) %>%
+        #   mutate(wave_group = rep(1:length(rle(wave_group)[[1]]),
+        #                           rle(wave_group)[[1]])) %>%
+        #   group_by(wave_group) %>%
+        #   summarise(waveform = waveform[1], length = length(time))
+        #
+        # ggplot(data = plot_data, mapping = aes(x = 1, fill = waveform, y = length)) +
+        #   geom_bar(stat = "identity") + coord_polar("y", start = 0) +
+        #   geom_text(aes(label = length))
+        #   theme_void()
+        plot_pie(visual_data(), pietype = "time")
       }
 
       else if (input$pietype == "pie_c") {
-        plot_data <- visual_data() %>%
-          mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
-                                  rle(waveform)[[1]])) %>%
-          filter(!is.na(waveform)) %>%
-          mutate(wave_group = rep(1:length(rle(wave_group)[[1]]),
-                                  rle(wave_group)[[1]])) %>%
-          group_by(wave_group) %>%
-          summarise(wave_group = wave_group[1], waveform = waveform[1])
-
-        ggplot(data = plot_data, mapping = aes(x = 1, fill = waveform)) +
-          geom_bar() + coord_polar("y", start = 0) + theme_void()
+        # plot_data <- visual_data() %>%
+        #   mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
+        #                           rle(waveform)[[1]])) %>%
+        #   filter(!is.na(waveform)) %>%
+        #   mutate(wave_group = rep(1:length(rle(wave_group)[[1]]),
+        #                           rle(wave_group)[[1]])) %>%
+        #   group_by(wave_group) %>%
+        #   summarise(wave_group = wave_group[1], waveform = waveform[1])
+        #
+        # ggplot(data = plot_data, mapping = aes(x = 1, fill = waveform)) +
+        #   geom_bar() + coord_polar("y", start = 0) + theme_void()
+        plot_pie(visual_data(), pietype = "count")
       }
     }
 
   })
 
-  output$plot <- renderPlot({
+  output$plot <- renderPlotly({
     plot_react()
   })
 
@@ -264,14 +271,25 @@ shinyServer(function(input, output) {
 
   options(shiny.usecairo = TRUE)
 
+  # output$pdf <- downloadHandler(
+  #   filename = function() {
+  #     paste(visual_name(), '.pdf', sep = '')
+  #   },
+  #   content = function(file) {
+  #     cairo_pdf(filename = file, width = 10, height = 7, bg = "transparent")
+  #     plot(plot_react())
+  #     dev.off()
+  #   }
+  # )
+
   output$pdf <- downloadHandler(
     filename = function() {
       paste(visual_name(), '.pdf', sep = '')
     },
     content = function(file) {
-      cairo_pdf(filename = file, width = 10, height = 7, bg = "transparent")
-      plot(plot_react())
-      dev.off()
+
+      htmlwidgets::saveWidget(as_widget(plot_react()), "temp.html", selfcontained = FALSE)
+      webshot(url = "temp.html", file, cliprect = "viewport", zoom = 0.5)
     }
   )
 
@@ -280,22 +298,22 @@ shinyServer(function(input, output) {
       paste(visual_name(), '.png', sep = '')
     },
     content = function(file) {
-      png(file)
-      plot(plot_react())
-      dev.off()
+
+      htmlwidgets::saveWidget(as_widget(plot_react()), "temp.html", selfcontained = FALSE)
+      webshot(url = "temp.html", file, cliprect = "viewport", zoom = 0.5)
     }
   )
 
-  output$eps <- downloadHandler(
-    filename = function() {
-      paste(visual_name(), '.eps', sep = '')
-    },
-    content = function(file) {
-      postscript(file)
-      plot(plot_react())
-      dev.off()
-    }
-  )
+  # output$eps <- downloadHandler(
+  #   filename = function() {
+  #     paste(visual_name(), '.eps', sep = '')
+  #   },
+  #   content = function(file) {
+  #     postscript(file)
+  #     plot(plot_react())
+  #     dev.off()
+  #   }
+  # )
 
   ######################## Algorithm ########################
 
@@ -475,72 +493,6 @@ shinyServer(function(input, output) {
     comp_id <- showNotification("Rendering...", duration  = NULL, closeButton = FALSE)
     on.exit(removeNotification(comp_id), add = TRUE)
 
-    # has been modified bc plotly can't have multicolored single trace
-    # plot_wave <- function (data, facetted = FALSE, aggregate = TRUE,
-    #                        pd = TRUE, e = TRUE, g = TRUE, pre_label = T) {
-    #   if (!pre_label) {
-    #     udat <- wave_label(data, pd = pd, e = e, g = g)
-    #   } else {udat = data}
-    #
-    #   if (aggregate) {
-    #     out = udat %>%
-    #       mutate(win = cut(time, breaks = floor(length(time)/100),
-    #                        labels = FALSE)) %>%
-    #       group_by(win) %>%
-    #       summarise(time = time[1],
-    #                 volts = mean(volts, na.rm = TRUE),
-    #                 waveform = waveform[1])
-    #   } else {out = udat}
-    #
-    #   if (!facetted) {
-    #
-    #     plot_data <- out %>%
-    #       mutate(A = ifelse(waveform == "a", volts, NA),
-    #              C = ifelse(waveform == "C", volts, NA),
-    #              E1 = ifelse(waveform == "E1", volts, NA),
-    #              E2 = ifelse(waveform == "E2", volts, NA),
-    #              G = ifelse(waveform == "g", volts, NA),
-    #              pd1 = ifelse(waveform == "pd1", volts, NA),
-    #              pd2 = ifelse(waveform == "pd2", volts, NA),
-    #              pd = ifelse(waveform == "pd", volts, NA),
-    #              none = ifelse(is.na(waveform), volts, NA))
-    #
-    #     ggplot(plot_data) + {
-    #       # dependent on specific names, might need to add "pd"
-    #       if (!all(is.na(plot_data$A))) geom_line(aes(time, A), color = "#1A7A21")
-    #     } + {
-    #       if (!all(is.na(plot_data$C))) geom_line(aes(time, C), color = "tan")
-    #     } + {
-    #       if (!all(is.na(plot_data$E1))) geom_line(aes(time, E1), color = "blue")
-    #     } + {
-    #       if (!all(is.na(plot_data$E2))) geom_line(aes(time, E2), color = "black")
-    #     } + {
-    #       if (!all(is.na(plot_data$G))) geom_line(aes(time, G), color = "#F9E15B")
-    #     } + {
-    #       if (!all(is.na(plot_data$pd1))) geom_line(aes(time, pd1), color = "#FDA6F6")
-    #     } + {
-    #       if (!all(is.na(plot_data$pd2))) geom_line(aes(time, pd2), color = "#C6FA8B")
-    #     } + {
-    #       if (!all(is.na(plot_data$pd))) geom_line(aes(time, pd), color = "#F7AC74")
-    #     } + {
-    #       if (!all(is.na(plot_data$none))) geom_line(aes(time, none), color = "grey")
-    #     }
-    #
-    #   } else {
-    #     out <- out %>%
-    #       # index is each waveform/na period
-    #       mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
-    #                               rle(waveform)[[1]])) %>%
-    #       # drop intervening times
-    #       filter(!is.na(waveform))
-    #
-    #     ggplot(out) +
-    #       geom_line(aes(time, volts, group = 1, color = waveform)) +
-    #       facet_wrap(~wave_group, scales = "free_x")
-    #   }
-    #
-    # }
-
     ggplotly(plot_comp())
 
   })
@@ -563,7 +515,6 @@ shinyServer(function(input, output) {
   observe ({
     req(input$in_ao)
 
-    # test stop removal of points after add manual
     validate(
       need(input$pd_manual == "n", message = F)
     )

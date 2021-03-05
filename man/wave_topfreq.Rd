@@ -30,6 +30,7 @@ Other frequency related functions:
 \code{\link{topfreq}()}
 
 Other waveform functions: 
+\code{\link{plot_pie}()},
 \code{\link{plot_wave}()},
 \code{\link{wave_duration}()},
 \code{\link{wave_extract}()}

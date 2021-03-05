@@ -23,6 +23,7 @@ is then calculated.
 }
 \seealso{
 Other waveform functions: 
+\code{\link{plot_pie}()},
 \code{\link{plot_wave}()},
 \code{\link{wave_extract}()},
 \code{\link{wave_topfreq}()}

@@ -7,6 +7,11 @@ library(shiny)
 library(shinythemes)
 library(stringr)
 
+library("plotly")
+library("htmlwidgets")
+library("webshot")
+
+
 options(shiny.maxRequestSize = 300*1024^2)
 
 shinyUI(fluidPage(
@@ -253,17 +258,26 @@ shinyUI(fluidPage(
                               choices = c(`Frequency Bar Chart` = 'fbar',
                                           `Pie chart of Waveforms` = "pie")),
                  conditionalPanel(
+                   condition = "input.plottype == 'fbar'",
+                   checkboxGroupInput("fbar_waves", "Choose Waveforms to Include",
+                               choices = c("A", "G", "E1", "E2", "pd1", "pd2", "pd"),
+                               selected = c("G", "E1", "E2", "pd1", "pd2"))
+                 ),
+                 conditionalPanel(
                    condition = "input.plottype == 'pie'",
                    radioButtons("pietype", "Choose Type of Pie Chart",
                                 choices = c(`By Time` = "pie_t",
-                                            `By Count` = "pie_c"))
+                                            `By Count` = "pie_c")),
+                   checkboxGroupInput("pie_waves", "Choose Waveforms to Include",
+                                      choices = c("A", "G", "E1", "E2", "pd1", "pd2", "pd"),
+                                      selected = c("G", "E1", "E2", "pd1", "pd2"))
                  ),
                  downloadButton(outputId = "pdf", label = "pdf"),
                  downloadButton(outputId = "png", label = "png"),
-                 downloadButton(outputId = "eps", label = "eps")
+                 # downloadButton(outputId = "eps", label = "eps")
                ),
 
-               mainPanel(plotOutput("plot"))
+               mainPanel(plotlyOutput("plot"))
              )
     )
     # ,

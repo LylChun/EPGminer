@@ -39,6 +39,7 @@ non-feeding activity. The labels must be characters and are case sensitive.
 }
 \seealso{
 Other waveform functions: 
+\code{\link{plot_pie}()},
 \code{\link{wave_duration}()},
 \code{\link{wave_extract}()},
 \code{\link{wave_topfreq}()}
