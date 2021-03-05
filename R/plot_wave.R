@@ -80,7 +80,7 @@ plot_wave <- function (data, facetted = FALSE, aggregate = c("all", "smart", "no
                      C = ifelse(waveform == "C", volts, NA),
                      E1 = ifelse(waveform == "E1", volts, NA),
                      E2 = ifelse(waveform == "E2", volts, NA),
-                     G = ifelse(waveform == "g", volts, NA),
+                     G = ifelse(waveform == "G", volts, NA),
                      pd1 = ifelse(waveform == "pd1", volts, NA),
                      pd2 = ifelse(waveform == "pd2", volts, NA),
                      pd = ifelse(waveform == "pd", volts, NA),

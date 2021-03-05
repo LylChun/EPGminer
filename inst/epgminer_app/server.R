@@ -87,26 +87,81 @@ shinyServer(function(input, output) {
 
   ################### Analyze My Data ####################
 
-  metric_type <- reactive ({
+  metric_data <- reactive ({
 
     if (input$metric == "freq") {
       out <- wave_topfreq(analyze_data())
       colnames(out) <- c("group", "waveform", "frequency")
-      out <- out[, 2:3]
+      out <- out[, 2:3] %>%
+        filter(waveform != "pd")
+
+      pdonly <- pd_data() %>%
+        dplyr::summarise(waveform = waveform[1],
+                         frequency = topfreq(data.frame(time, volts))$mainfreq,
+                         .groups = "drop") %>%
+        filter(waveform == "pd") %>%
+        select(waveform, frequency)
+
+      out = rbind(out, pdonly)
     }
 
-    else if (input$metric %in% c("dur", "count")) {
+    # else if (input$metric %in% c("dur", "count")) {
+    #   out <- wave_duration(analyze_data())
+    #   colnames(out) <- c("group", "waveform", "duration")
+    #   out <- out
+    # }
+
+    else if (input$metric == "dur") {
+
       out <- wave_duration(analyze_data())
       colnames(out) <- c("group", "waveform", "duration")
-      out <- out
+      out <- out[, 2:3] %>%
+        filter(waveform != "pd")
+
+      pd_only <- pd_data() %>%
+        dplyr::summarise(waveform = waveform[1],
+                         duration = max(time) - min(time),
+                         .groups = "drop") %>%
+        filter(waveform == "pd") %>%
+        select(waveform, duration)
+
+      out <- rbind(out, pd_only)
+    }
+
+    else if (input$metric == "count") {
+      out <- analyze_data() %>%
+        dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
+                                       rle(waveform)[[1]])) %>%
+        dplyr::group_by(waveform) %>%
+        dplyr::summarise(waveform = waveform[1], count = length(unique(wave_group))) %>%
+        filter(waveform != "pd")
+
+      pd_only <- pd_data() %>%
+        ungroup() %>%
+        group_by(waveform) %>%
+        summarise(waveform = waveform[1], count = length(unique(wave_group))) %>%
+        filter(waveform == "pd")
+
+      out <- rbind(out, pd_only)
     }
 
     return(out)
   })
 
+  pd_data <- reactive ({
+    pdonly <- analyze_data() %>%
+      mutate(waveform = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"),
+                                       "pd", "non")) %>%
+      dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
+                                     rle(waveform)[[1]])) %>%
+      dplyr::group_by(wave_group)
+
+    return(pdonly)
+  })
+
   metric_tab <- reactive ({
 
-    out <- metric_type()
+    out <- metric_data()
 
     if (input$metric == "freq") {
 
@@ -140,25 +195,25 @@ shinyServer(function(input, output) {
     else if (input$metric == "dur") {
 
       if (input$summaryd == "default") {
-        out <- out[, 2:3]
+        out <- out
       }
 
       else if (input$summaryd == "mean") {
-        out <- out[, 2:3] %>%
+        out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
                     duration = mean(duration))
       }
 
       else if (input$summaryd == "median") {
-        out <- out[, 2:3] %>%
+        out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
                     duration = median(duration))
       }
 
-      else if (input$summary == "sd") {
-        out <- out[, 2:3] %>%
+      else if (input$summaryd == "sd") {
+        out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
                     sd = sd(duration))
@@ -167,10 +222,7 @@ shinyServer(function(input, output) {
     }
 
     else if (input$metric == "count") {
-      out <- out %>%
-        group_by(waveform) %>%
-        summarise(waveform = waveform[1],
-                  count = length(unique(group)))
+      out <- out
     }
 
     return(out)
@@ -212,7 +264,10 @@ shinyServer(function(input, output) {
 
     if (input$plottype == "fbar") {
 
-      ggplotly(ggplot(visual_data()) + geom_boxplot(aes(waveform, frequency)))
+      gg <- ggplot(visual_data()) + geom_boxplot(aes(waveform, frequency)) +
+        theme_minimal()
+
+      ggplotly(gg)
     }
 
     else if (input$plottype == "pie") {
