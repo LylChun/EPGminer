@@ -41,7 +41,8 @@ wave_topfreq <- function (data) {
                                    rle(wave_group)[[1]])) %>%
     dplyr::group_by(wave_group) %>%
     dplyr::summarise(waveform = waveform[1],
-                     topfreq = topfreq(data.frame(time, volts))$mainfreq)
+                     topfreq = topfreq(data.frame(time, volts))$mainfreq,
+                     .groups = "drop")
 
   return(out)
 }

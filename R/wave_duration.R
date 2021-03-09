@@ -35,7 +35,7 @@ wave_duration <- function(data) {
     # find duration of each wave_group
     dplyr::group_by(wave_group) %>%
     dplyr::summarise(waveform = waveform[1],
-                     duration = max(time) - min(time))
+                     duration = max(time) - min(time), .groups = "drop")
 
   return(out)
 }
