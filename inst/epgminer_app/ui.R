@@ -36,17 +36,19 @@ shinyUI(fluidPage(
                           relationships."),
                         p("There are three parts to EPGminer: (i) Labeling raw data, (ii) Analysis
                           of labeled data through metric calculations, and (iii) Visualizations
-                          of labeled data. A researcher may upload their data, label it if necessary,
-                          and then analyze the data, all within a point and click interface."),
+                          of labeled data. A researcher may upload their data, label it, and then
+                          analyze the data, all within a point and click interface that is user
+                          friendly and requires no coding experience."),
                         p("One of the main functionalities of EPGminer is to allow researchers to
                           calculate frequencies for labeled waveforms using the Fourier Transform.
                           Additional waveform metrics are available as well, such as duration and
-                          count. The other functionality of EPGminer is the ability to generate visuals.
-                          There are currently three visuals that EPGminer can create - a frequency
-                          boxplot, a pie chart of waveform times, and a pie chart of waveform counts.
-                          Each of these plots is customizable - e.g. the user may select which waveforms
-                          to include in the plot itself. The plots are also interactive and the user
-                          may zoom in, or 'hover' over the plot for additional information."))
+                          count. The other main functionality of EPGminer is the ability to generate
+                          visuals. There are currently three visuals that EPGminer can create - a
+                          frequency boxplot, a pie chart of waveform times, and a pie chart of
+                          waveform counts. Each of these plots is customizable - e.g. the user may
+                          select which waveforms to include in the plot itself. The plots are also
+                          interactive and the user may zoom in, or 'hover' over the plot for
+                          additional information."))
                )
              ),
              fluidRow(
@@ -78,8 +80,10 @@ shinyUI(fluidPage(
                           Alternatively, you may upload a single csv containing both the raw data and
                           the waveform labels. See 'Additional Resources' for more details on supported data
                           formats. If you choose 'Use Algorithm to Label' under 'Label My Data', only raw
-                          data is required, no annotation file is necessary. Please note that the algorithm
-                          is still experimental and may not return accurate results."),
+                          data is required, no annotation file is necessary. For details on how to use this
+                          option, see 'Additional Resources' and select 'Algorithmic Labeling'. Please
+                          note that the algorithm is still in development and may not return accurate
+                          results."),
                         p("2. When you have finished loading/labeling your data, proceed to the
                           'Analyze My Data' tab for analysis of the labeled waveforms. This tab
                           allows one to calculate metrics - frequency, duration, and count, as well as
@@ -119,7 +123,7 @@ shinyUI(fluidPage(
                                          `Data Upload/Labeling` = "upload",
                                          `Data Analysis` = "analysis",
                                          `Visuals` = "visuals",
-                                         `Algorithmic Labelling` = "comp")),
+                                         `Algorithmic Labeling` = "comp")),
                  conditionalPanel(
                    condition = "input.help == 'upload'",
                    p("Supported data formats are as follows:"),
@@ -138,7 +142,7 @@ shinyUI(fluidPage(
                      time to read in/process the data properly. If at the end of that time,
                      there still is no output, or you have encountered an error, consider the
                      following:"),
-                   p("(i) Make sure that your uploaded data type matches with the correct option. If
+                   p("(i) Make sure that your uploaded data type matches with the selected option. If
                      the 'Choose Raw Data File Type' input does not match with what you have uploaded,
                      please change the input and try again."),
                    p("(ii) For the 'Add Manual Labels from ANA' option, check that the raw data
@@ -153,7 +157,13 @@ shinyUI(fluidPage(
                      you are using algorithmically labeled data, make sure the plot displays,
                      properly labeled before proceeding. If the data is displayed as expected,
                      then return to the 'Analyze My Data' tab and wait an additional 30 seconds
-                     to allow time to process.")
+                     to allow time to process."),
+                   p("For the waveform annotation 'pd', all calculated results will appear at
+                     the bottom of the table when viewing the frequency or duration of each
+                     individual waveform instance. The subforms labels, pd1 and pd2, will appear
+                     in order with the other waveforms, but due to the way 'pd' unseparated into
+                     subforms is handled by the app, they will appear all together on the bottom
+                     of the table.")
                  ),
                  conditionalPanel(
                    condition = "input.help == 'visuals'",
@@ -175,10 +185,10 @@ shinyUI(fluidPage(
                    condition = "input.help == 'comp'",
                    p(strong("The algorithm is currently experimental and prone to error. If you have
                      the annotation for your data, it is recommended to use that instead.")),
-                   p("Start by checking the A start/end. Currently the algorithm only supports
-                     a single instance of waveform A - feeding activity must begin only once.
-                     Once A has been labelled to your satisfaction, click Yes to the 'Are you
-                     finished labeling A?' input. The rest of the waveforms will be now be
+                   p("Start by checking the A start(s)/end(s). To minimize sources of error, only
+                     choose 'Yes' for multiple feeding starts IF you see multiple feeding beginnings
+                     in your data. Once A has been labelled to your satisfaction, click Yes to the
+                     'Are you finished labeling A?' input. The rest of the waveforms will be now be
                      algorithmically labelled. If at the end of this process you encounter an
                      error or E is present and has not been labelled, try to adjust the E variance
                      - this adjusts the amount of variation allowed in E. A larger
@@ -188,7 +198,7 @@ shinyUI(fluidPage(
                      click on the plot at the starts and ends of the pd(s) you wish to add.
                      The order of points does not matter, as they will be automatically re-ordered.
                      Then choose yes for 'Add Manually identified pds?'. Currently, pd subforms
-                     are supported."),
+                     are not supported."),
                    p("Only click 'Clear Selected Points' if you have made an error in choosing
                      pd starts/ends. The selected points are displayed on the bottom left just
                      below the plot. Please note that clicking this button will clear ALL selected
@@ -198,7 +208,7 @@ shinyUI(fluidPage(
                      to instead use the zoom in/out buttons on the top right of the plot. You may
                      double click to unzoom once you have clicked 'Yes' for adding manual pds."),
                    p("Do not click the download button more than once. Writing the data to a csv
-                     file and downloading will take time so you may not see the download right away,
+                     file and downloading will take time so you will not see the download right away,
                      but once the download button has been pressed, your download will automatically
                      begin. The downloaded csv file can now be used in EPGminer as 'Pre-labeled'
                      data if you so chose.")

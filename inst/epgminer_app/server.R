@@ -93,23 +93,19 @@ shinyServer(function(input, output) {
       out <- wave_topfreq(analyze_data())
       colnames(out) <- c("group", "waveform", "frequency")
       out <- out[, 2:3] %>%
+        mutate(frequency = round(frequency, 2)) %>%
         filter(waveform != "pd")
 
       pdonly <- pd_data() %>%
         dplyr::summarise(waveform = waveform[1],
-                         frequency = topfreq(data.frame(time, volts))$mainfreq,
+                         frequency = round(topfreq(data.frame(time, volts))$mainfreq, 2),
                          .groups = "drop") %>%
         filter(waveform == "pd") %>%
         select(waveform, frequency)
 
       out = rbind(out, pdonly)
+      colnames(out) <- c("waveform", "frequency (Hz)")
     }
-
-    # else if (input$metric %in% c("dur", "count")) {
-    #   out <- wave_duration(analyze_data())
-    #   colnames(out) <- c("group", "waveform", "duration")
-    #   out <- out
-    # }
 
     else if (input$metric == "dur") {
 
@@ -126,6 +122,7 @@ shinyServer(function(input, output) {
         select(waveform, duration)
 
       out <- rbind(out, pd_only)
+      colnames(out) <- c("waveform", "duration (seconds)")
     }
 
     else if (input$metric == "count") {
@@ -173,7 +170,8 @@ shinyServer(function(input, output) {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    topfreq = median(frequency))
+                    frequency = median(frequency))
+        colnames(out) <- c("waveform", "frequency (Hz)")
       }
 
       else if (input$summary == "mean") {
@@ -181,6 +179,7 @@ shinyServer(function(input, output) {
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
                     topfreq = mean(frequency))
+        colnames(out) <- c("waveform", "frequency (Hz)")
       }
 
       else if (input$summary == "sd") {
@@ -203,6 +202,7 @@ shinyServer(function(input, output) {
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
                     duration = mean(duration))
+        colnames(out) <- c("waveform", "duration (seconds)")
       }
 
       else if (input$summaryd == "median") {
@@ -210,6 +210,7 @@ shinyServer(function(input, output) {
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
                     duration = median(duration))
+        colnames(out) <- c("waveform", "duration (seconds)")
       }
 
       else if (input$summaryd == "sd") {
