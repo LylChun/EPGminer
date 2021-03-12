@@ -45,6 +45,7 @@ a 'center cut' of the data and avoid irregularities around the edges.
 \seealso{
 Other frequency related functions: 
 \code{\link{mainfreqs}()},
+\code{\link{plot_fbar}()},
 \code{\link{single_fft}()},
 \code{\link{topfreq}()},
 \code{\link{wave_topfreq}()}

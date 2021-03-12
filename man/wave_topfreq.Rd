@@ -25,6 +25,7 @@ epgminer function topfreq.
 \seealso{
 Other frequency related functions: 
 \code{\link{mainfreqs}()},
+\code{\link{plot_fbar}()},
 \code{\link{plot_fft}()},
 \code{\link{single_fft}()},
 \code{\link{topfreq}()}

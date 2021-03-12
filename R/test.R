@@ -674,3 +674,294 @@ pd_sub <- function (data) {
 
   return(out)
 }
+
+##################### Wave ##################
+# shiny specific function
+wave_label_eg <- function (data, e_var = 0.1, e_o = c(2, 1.25), e_low = 1.25,
+                           g_drop = 0.75) {
+
+  edat <- data %>%
+    # a use smoothed data to label, but use raw data for actual kept volts
+    mutate(e = e_label(data, e_var = e_var, e_o = e_o, e_low = e_low)$subform,
+           waveform = case_when(
+             !is.na(waveform) ~ waveform,
+             !is.na(e) ~ e,
+             TRUE ~ NA_character_))
+
+  out <- edat %>%
+    mutate(g = g_label(., g_drop)$g,
+           waveform = case_when(
+             !is.na(waveform) ~ waveform,
+             !is.na(g) ~ g,
+             TRUE ~ NA_character_))
+
+  return(out)
+}
+# potentially same as stand-alone, unsure
+wave_label_pdc <- function (data, ...) {
+
+  addg <- data
+
+  # find end for removing pdformat below
+  aend <- addg %>%
+    filter(waveform == "a") %>%
+    slice_tail()
+
+  udat <- addg %>%
+    # filter out e, g, and a
+    filter(is.na(waveform)) %>%
+    # filter early times before feeding, a, and 60s after a
+    filter(time >= aend$time + 1*60) %>%
+    # add rows column to cut windows on
+    mutate(rows = 1:n()) %>%
+    select(-waveform)
+
+  # find pd times
+  pds <- pd_label(udat, ...) %>%
+    filter(pd == "pd") %>%
+    mutate(time = round(time, 2))
+
+  if (any(!is.na(addg$g))) {
+    gend <- addg %>%
+      filter(waveform == "G") %>%
+      slice_tail()
+
+    gtimes <- seq(gend$time + 0.01, gend$time + 500, by = 0.01)
+  } else {gtimes = NA}
+
+  # add in pds
+  withpd <- addg %>%
+    # wopd has all times, pds only has pd times
+    left_join(pds, by = c("time", "volts")) %>%
+    mutate(waveform = case_when(
+      !is.na(waveform) ~ waveform,
+      !is.na(pdsubform) ~ pdsubform,
+      TRUE ~ NA_character_
+    )) %>%
+    mutate(waveform = ifelse(
+      # if close to G, wipe out
+      round(time, 2) %in% round(gtimes, 2), NA, waveform
+    )) %>%
+    select(time, volts, waveform)
+
+  # add waveform C, fix A
+  out <- withpd %>%
+    mutate(waveform = case_when(
+      # first set no activity + A as pre-labeled
+      time <= aend$time ~ waveform,
+      # any remaining intervening time becomes C
+      is.na(waveform) ~ "C",
+      # keep all other labels
+      TRUE ~ waveform
+    ))
+
+  return(out)
+}
+
+################# Probe ###################
+# works for n48, s236, s196
+probe_a <- function (data) {
+
+  # check for feeding activity at very beginning
+  begin = ifelse(data$volts[1] > -0.1, mean(data$volts[1:1000]), 0)
+
+  data <- epgminer:::smooth_vts(data, 127)
+
+  bandpass <- data %>%
+    # cut windows to get smoothed state of voltage
+    mutate(win = cut(time, breaks = floor(length(time)/5000),
+                     labels = FALSE)) %>%
+    group_by(win) %>%
+    # for each period, find average volts
+    mutate(winpeak = max(volts, na.rm = TRUE),
+           winval = min(volts, na.rm = TRUE)) %>%
+    ungroup() %>%
+    # mutate(high = winpeak > begin - probe_drop*sd(volts, na.rm = T)) %>%
+    # average volts must be greater than _*sd below beginning
+    # og is 0.75sd
+    mutate(hightar = (max(volts, na.rm = T) + min(volts, na.rm = T))/3,
+           highpass = winpeak > (max(volts, na.rm = T) + min(volts, na.rm = T))/3,
+           lowtar = (max(volts, na.rm = T) + min(volts, na.rm = T))/2,
+           lowpass = winval < lowtar)
+
+  possible <- bandpass %>%
+    mutate(bandpass = ifelse(highpass & lowpass, TRUE, FALSE)) %>%
+    # i think need to rle from high/low passes together
+    # start here
+    mutate(idx = rep(1:length(rle(bandpass)[[1]]), rle(bandpass)[[1]])) %>%
+    group_by(idx) %>%
+    mutate(exit = ifelse(highpass == TRUE & lowpass == TRUE &
+                           # seems the length filter isn't working properly?
+                           length(idx) > 20000, TRUE, FALSE),
+           tmp = length(idx))
+
+  exit <- possible[possible$exit, ]
+
+  starts <- exit %>%
+    select(time, volts, idx) %>%
+    group_by(idx) %>%
+    slice(c(1, n())) %>%
+    mutate(ao = c("start", "end")) %>%
+    ungroup() %>%
+    mutate(bridge = case_when(
+      ao == "start" & (time - lag(time) < 100) ~ TRUE,
+      TRUE ~ FALSE
+    )) %>%
+    filter(!bridge & ao == "start")
+
+  return(starts)
+}
+
+# works
+probe_o <- function (data) {
+
+  starts <- probe_a(data)
+
+  data <- epgminer:::smooth_vts(data, 127)
+
+  ends <- list()
+  for (i in 1:nrow(starts)) {
+    search <- data %>%
+      filter(time >= starts$time[i]) %>%
+      mutate(hightar = (max(volts, na.rm = T) + min(volts, na.rm = T))/4,
+             highpass = volts > hightar)
+
+    gaps <- search %>%
+      mutate(idx = rep(1:length(rle(highpass)[[1]]), rle(highpass)[[1]])) %>%
+      group_by(idx) %>%
+      mutate(size = length(idx)) %>%
+      filter(size > 10000) %>%
+      ungroup() %>%
+      slice(which(highpass)[1]:n())
+
+    ends[[i]] <- gaps[which(!gaps$highpass), ] %>%
+      slice(1)
+  }
+
+  out <- ends %>%
+    Reduce(function(dtf1,dtf2) rbind(dtf1, dtf2), .)
+
+  return(out)
+}
+
+# if there is non-probing activity in the middle
+# returns each section as list entry
+probe_split <- function (data) {
+  a <- c(probe_a(data)$time, max(data$time))
+  o <- probe_o(data)$time
+
+  splits <- list()
+  splits[[1]] <- data %>%
+    filter(time <= a[1])
+  for (i in 1:length(o)) {
+    splits[[i + 1]] <- data %>%
+      filter(time >= o[i] & time < a[i+1])
+  }
+
+  return(splits)
+}
+
+
+# new dev, untested
+probe_apply <- function (data) {
+  # take in probe_split data
+  split <- probe_split(data)
+
+  as <- list()
+  for (i in 1:length(split)) {
+    as[[i]] <- a_ao(split[[i]], a_o = c(0.75, 0.5, 1, 1.25), a_drop = 0.75)
+  }
+
+  out <- rbindlist(as)
+  return(out)
+}
+
+# want to take data, remove probe and a sections
+# receive a labelled data - a_data_probe, shiny only
+probe_comb <- function (data, e_var = 0.1) {
+
+  feed <- rbindlist(probe_split(data))
+
+  # using a_labelled data (has all time points)
+  adat <- data %>%
+    # keep only splits (feeding times)
+    filter(round(time, 2) %in% round(feed$time, 2))
+
+  # will need different wave_label functions
+
+  out <- wave_label_probe(adat, e_var = e_var)
+
+  return(out)
+}
+
+# take in a_labelled data
+wave_label_probe <- function (data, e_var = 0.1, e_o = c(2, 1.25), e_low = 1.25,
+                              g_drop = 0.75, ...) {
+
+  edat <- data %>%
+    mutate(e = e_label(data, e_var = e_var, e_o = e_o, e_low = e_low)$subform,
+           waveform = case_when(
+             !is.na(waveform) ~ waveform,
+             !is.na(e) ~ e,
+             TRUE ~ NA_character_))
+
+  aeg <- edat %>%
+    # technically will only find g is after last bit of a
+    # right now think no g if nonprobe middle, to be fixed later perhaps
+    mutate(g = g_label(., g_drop)$g,
+           waveform = case_when(
+             !is.na(waveform) ~ waveform,
+             !is.na(g) ~ g,
+             TRUE ~ NA_character_))
+
+  # find feeding beginning
+  a_a <- aeg %>%
+    filter(waveform == "a") %>%
+    slice_head()
+
+  pdform <- aeg %>%
+    # filter out aeg and non-feed before first a
+    filter(is.na(waveform) & time >= a_a$time) %>%
+    filter(time >= a_a$time) %>%
+    # add rows column to cut windows on
+    mutate(rows = 1:n()) %>%
+    select(time, volts, rows)
+
+  # find pd times
+  pds <- pd_label(pdform, ...) %>%
+    filter(pd == "pd") %>%
+    mutate(time = round(time, 2))
+
+  if (any(!is.na(aeg$g))) {
+    gend <- aeg %>%
+      filter(waveform == "g") %>%
+      slice_tail()
+
+    gtimes <- seq(gend$time + 0.01, gend$time + 500, by = 0.01)
+  } else {gtimes = NA}
+
+  # add in pds
+  withpd <- aeg %>%
+    left_join(pds, by = c("time", "volts")) %>%
+    mutate(waveform = case_when(
+      !is.na(waveform) ~ waveform,
+      !is.na(pdsubform) ~ pdsubform,
+      TRUE ~ NA_character_
+    )) %>%
+    mutate(waveform = ifelse(
+      # if close to G, wipe out
+      round(time, 2) %in% round(gtimes, 2), NA, waveform
+    )) %>%
+    select(time, volts, waveform)
+
+  # add waveform C, fix A
+  out <- withpd %>%
+    mutate(waveform = case_when(
+      # first set no activity as pre-labeled
+      time <= a_a$time ~ waveform,
+      # any remaining intervening time becomes C
+      is.na(waveform) ~ "C",
+      # keep all other labels
+      TRUE ~ waveform
+    ))
+}

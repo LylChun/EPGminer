@@ -1,15 +1,13 @@
 library(data.table)
 library(dplyr)
 library(epgminer)
+library(htmlwidgets)
 library(plotly)
 library(readr)
 library(shiny)
 library(shinythemes)
 library(stringr)
-
-library("plotly")
-library("htmlwidgets")
-library("webshot")
+library(webshot)
 
 
 options(shiny.maxRequestSize = 300*1024^2)
@@ -257,7 +255,8 @@ shinyUI(fluidPage(
                    condition = "input.label == 'comp'",
                    fileInput("compraw", "Choose Raw Data File(s)",
                              multiple = TRUE, accept = ".txt"),
-
+                   radioButtons("probe", "Are there multiple feeding beginnings?",
+                                choices = c(`No` = "n", `Yes` = "y")),
                    uiOutput("ao"),
                    radioButtons("adone", "Are you finished labeling A?",
                                 choices = c(`No` = "n", `Yes` = "y")),
@@ -348,8 +347,8 @@ shinyUI(fluidPage(
                  conditionalPanel(
                    condition = "input.plottype == 'fbar'",
                    checkboxGroupInput("fbar_waves", "Choose Waveforms to Include",
-                                      choices = c("A", "G", "E1", "E2", "pd1", "pd2", "pd"),
-                                      selected = c("G", "E1", "E2", "pd1", "pd2"))
+                                      choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
+                                      selected = c("E1", "E2", "G", "pd1", "pd2"))
                  ),
                  conditionalPanel(
                    condition = "input.plottype == 'pie'",
@@ -357,8 +356,8 @@ shinyUI(fluidPage(
                                 choices = c(`By Time` = "pie_t",
                                             `By Count` = "pie_c")),
                    checkboxGroupInput("pie_waves", "Choose Waveforms to Include",
-                                      choices = c("A", "G", "E1", "E2", "pd1", "pd2", "pd"),
-                                      selected = c("G", "E1", "E2", "pd1", "pd2"))
+                                      choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
+                                      selected = c("C", "E1", "E2", "G", "pd1", "pd2"))
                  ),
                  downloadButton(outputId = "pdf", label = "pdf"),
                  downloadButton(outputId = "png", label = "png"),
@@ -368,30 +367,30 @@ shinyUI(fluidPage(
                mainPanel(plotlyOutput("plot"))
              )
     )
-    # ,
-    #
-    # tabPanel("Beta Zone", fluid = TRUE,
-    #
-    #          sidebarLayout(
-    #
-    #            sidebarPanel(
-    #
-    #              fileInput("beta", "Choose Raw Data Files",
-    #                        multiple = TRUE, accept = ".txt"),
-    #              uiOutput("probe_a"),
-    #              uiOutput("probe_o"),
-    #              radioButtons("adone_p", "Are you finished labeling A?",
-    #                           choices = c(`No` = "n", `Yes` = "y")),
-    #              conditionalPanel(
-    #                condition = "input.adone_p == 'y'",
-    #                uiOutput("e_var_p"),
-    #              )
-    #            ),
-    #            mainPanel(
-    #              DT::dataTableOutput("data_probe"),
-    #              plotlyOutput("plot_probe")
-    #            ))
-    # )
+    ,
+
+    tabPanel("Beta Zone", fluid = TRUE,
+
+             sidebarLayout(
+
+               sidebarPanel(
+
+                 fileInput("beta", "Choose Raw Data Files",
+                           multiple = TRUE, accept = ".txt"),
+                 uiOutput("probe_a"),
+                 uiOutput("probe_o"),
+                 radioButtons("adone_p", "Are you finished labeling A?",
+                              choices = c(`No` = "n", `Yes` = "y")),
+                 conditionalPanel(
+                   condition = "input.adone_p == 'y'",
+                   uiOutput("e_var_p"),
+                 )
+               ),
+               mainPanel(
+                 DT::dataTableOutput("data_probe"),
+                 plotlyOutput("plot_probe")
+               ))
+    )
 
 
   )

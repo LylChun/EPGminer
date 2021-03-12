@@ -32,6 +32,7 @@ The main frequency is defined as that which has the largest amplitude.
 \seealso{
 Other frequency related functions: 
 \code{\link{mainfreqs}()},
+\code{\link{plot_fbar}()},
 \code{\link{plot_fft}()},
 \code{\link{single_fft}()},
 \code{\link{wave_topfreq}()}

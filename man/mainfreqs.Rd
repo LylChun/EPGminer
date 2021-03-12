@@ -41,6 +41,7 @@ largest will be kept for the 5.x Hz entry.
 }
 \seealso{
 Other frequency related functions: 
+\code{\link{plot_fbar}()},
 \code{\link{plot_fft}()},
 \code{\link{single_fft}()},
 \code{\link{topfreq}()},

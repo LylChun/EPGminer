@@ -4,7 +4,8 @@
 \alias{plot_pie}
 \title{Pie chart of labelled EPG data}
 \usage{
-plot_pie(data, pietype = c("time", "count"), sample_rate = 100)
+plot_pie(data, pietype = c("time", "count"), sample_rate = 100,
+waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
 }
 \arguments{
 \item{data}{A dataframe containing three columns: time, volts, waveform.}
@@ -16,6 +17,8 @@ if there are 20 distince waveforms, and 5 are of type C, then C will be 5/20 or
 25\%.}
 
 \item{sample_rate}{The frequency of collection in Hz. Default is 100 Hz}
+
+\item{waveforms}{A list of waveforms to include in the plot. Default is all.}
 }
 \value{
 A pie chart of EPG waveforms in a dataset.

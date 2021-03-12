@@ -104,7 +104,6 @@ shinyServer(function(input, output) {
         select(waveform, frequency)
 
       out = rbind(out, pdonly)
-      colnames(out) <- c("waveform", "frequency (Hz)")
     }
 
     else if (input$metric == "dur") {
@@ -112,17 +111,17 @@ shinyServer(function(input, output) {
       out <- wave_duration(analyze_data())
       colnames(out) <- c("group", "waveform", "duration")
       out <- out[, 2:3] %>%
+        mutate(duration = round(duration, 2)) %>%
         filter(waveform != "pd")
 
       pd_only <- pd_data() %>%
         dplyr::summarise(waveform = waveform[1],
-                         duration = max(time) - min(time),
+                         duration = round(max(time) - min(time), 2),
                          .groups = "drop") %>%
         filter(waveform == "pd") %>%
         select(waveform, duration)
 
       out <- rbind(out, pd_only)
-      colnames(out) <- c("waveform", "duration (seconds)")
     }
 
     else if (input$metric == "count") {
@@ -164,13 +163,14 @@ shinyServer(function(input, output) {
 
       if (input$summary == "default") {
         out <- out
+        colnames(out) <- c("waveform", "frequency (Hz)")
       }
 
       else if (input$summary == "median") {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    frequency = median(frequency))
+                    frequency = round(median(frequency), 2))
         colnames(out) <- c("waveform", "frequency (Hz)")
       }
 
@@ -178,7 +178,7 @@ shinyServer(function(input, output) {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    topfreq = mean(frequency))
+                    topfreq = round(mean(frequency), 2))
         colnames(out) <- c("waveform", "frequency (Hz)")
       }
 
@@ -186,7 +186,7 @@ shinyServer(function(input, output) {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    sd = sd(frequency))
+                    sd = round(sd(frequency), 2))
       }
 
     }
@@ -195,13 +195,14 @@ shinyServer(function(input, output) {
 
       if (input$summaryd == "default") {
         out <- out
+        colnames(out) <- c("waveform", "duration (seconds)")
       }
 
       else if (input$summaryd == "mean") {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    duration = mean(duration))
+                    duration = round(mean(duration), 2))
         colnames(out) <- c("waveform", "duration (seconds)")
       }
 
@@ -209,7 +210,7 @@ shinyServer(function(input, output) {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    duration = median(duration))
+                    duration = round(median(duration), 2))
         colnames(out) <- c("waveform", "duration (seconds)")
       }
 
@@ -217,7 +218,7 @@ shinyServer(function(input, output) {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    sd = sd(duration))
+                    sd = round(sd(duration), 2))
       }
 
     }
@@ -241,22 +242,18 @@ shinyServer(function(input, output) {
 
   ###################### Visuals #####################
 
-  visual_data <- reactive ({
-
-    if (input$plottype == "fbar") {
-      out <- wave_topfreq(analyze_data())
-      colnames(out) <- c("group", "waveform", "frequency")
-      out <- out[, 2:3] %>%
-        filter(waveform %in% input$fbar_waves)
-    }
-
-    else if (input$plottype == "pie") {
-      out <- analyze_data() %>%
-        filter(waveform %in% input$pie_waves)
-    }
-
-    return(out)
-  })
+  # visual_data <- reactive ({
+  #
+  #   if (input$plottype == "fbar") {
+  #     out <- analyze_data()
+  #   }
+  #
+  #   else if (input$plottype == "pie") {
+  #     out <- analyze_data()
+  #   }
+  #
+  #   return(out)
+  # })
 
   plot_react <- reactive({
 
@@ -265,8 +262,7 @@ shinyServer(function(input, output) {
 
     if (input$plottype == "fbar") {
 
-      gg <- ggplot(visual_data()) + geom_boxplot(aes(waveform, frequency)) +
-        theme_minimal()
+      gg <- plot_fbar(analyze_data(), waveforms = input$fbar_waves)
 
       ggplotly(gg)
     }
@@ -274,35 +270,13 @@ shinyServer(function(input, output) {
     else if (input$plottype == "pie") {
 
       if (input$pietype == "pie_t") {
-        # plot_data <- visual_data() %>%
-        #   mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
-        #                           rle(waveform)[[1]])) %>%
-        #   filter(!is.na(waveform)) %>%
-        #   mutate(wave_group = rep(1:length(rle(wave_group)[[1]]),
-        #                           rle(wave_group)[[1]])) %>%
-        #   group_by(wave_group) %>%
-        #   summarise(waveform = waveform[1], length = length(time))
-        #
-        # ggplot(data = plot_data, mapping = aes(x = 1, fill = waveform, y = length)) +
-        #   geom_bar(stat = "identity") + coord_polar("y", start = 0) +
-        #   geom_text(aes(label = length))
-        #   theme_void()
-        plot_pie(visual_data(), pietype = "time")
+
+        plot_pie(analyze_data(), pietype = "time", waveforms = input$pie_waves)
       }
 
       else if (input$pietype == "pie_c") {
-        # plot_data <- visual_data() %>%
-        #   mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
-        #                           rle(waveform)[[1]])) %>%
-        #   filter(!is.na(waveform)) %>%
-        #   mutate(wave_group = rep(1:length(rle(wave_group)[[1]]),
-        #                           rle(wave_group)[[1]])) %>%
-        #   group_by(wave_group) %>%
-        #   summarise(wave_group = wave_group[1], waveform = waveform[1])
-        #
-        # ggplot(data = plot_data, mapping = aes(x = 1, fill = waveform)) +
-        #   geom_bar() + coord_polar("y", start = 0) + theme_void()
-        plot_pie(visual_data(), pietype = "count")
+
+        plot_pie(analyze_data(), pietype = "count", waveforms = input$pie_waves)
       }
     }
 
@@ -327,17 +301,6 @@ shinyServer(function(input, output) {
 
   options(shiny.usecairo = TRUE)
 
-  # output$pdf <- downloadHandler(
-  #   filename = function() {
-  #     paste(visual_name(), '.pdf', sep = '')
-  #   },
-  #   content = function(file) {
-  #     cairo_pdf(filename = file, width = 10, height = 7, bg = "transparent")
-  #     plot(plot_react())
-  #     dev.off()
-  #   }
-  # )
-
   output$pdf <- downloadHandler(
     filename = function() {
       paste(visual_name(), '.pdf', sep = '')
@@ -360,19 +323,7 @@ shinyServer(function(input, output) {
     }
   )
 
-  # output$eps <- downloadHandler(
-  #   filename = function() {
-  #     paste(visual_name(), '.eps', sep = '')
-  #   },
-  #   content = function(file) {
-  #     postscript(file)
-  #     plot(plot_react())
-  #     dev.off()
-  #   }
-  # )
-
   ######################## Algorithm ########################
-
 
   comp_raw <- reactive ({
     req(input$compraw)
@@ -403,88 +354,6 @@ shinyServer(function(input, output) {
 
     req(input$in_evar)
 
-    # shiny specific function
-    wave_label_eg <- function (data, e_var = 0.1, e_o = c(2, 1.25), e_low = 1.25,
-                               g_drop = 0.75) {
-
-      edat <- data %>%
-        # a use smoothed data to label, but use raw data for actual kept volts
-        mutate(e = e_label(data, e_var = e_var, e_o = e_o, e_low = e_low)$subform,
-               waveform = case_when(
-                 !is.na(waveform) ~ waveform,
-                 !is.na(e) ~ e,
-                 TRUE ~ NA_character_))
-
-      out <- edat %>%
-        mutate(g = g_label(., g_drop)$g,
-               waveform = case_when(
-                 !is.na(waveform) ~ waveform,
-                 !is.na(g) ~ g,
-                 TRUE ~ NA_character_))
-
-      return(out)
-    }
-    # potentially same as stand-alone, unsure
-    wave_label_pdc <- function (data, ...) {
-
-      addg <- data
-
-      # find end for removing pdformat below
-      aend <- addg %>%
-        filter(waveform == "a") %>%
-        slice_tail()
-
-      udat <- addg %>%
-        # filter out e, g, and a
-        filter(is.na(waveform)) %>%
-        # filter early times before feeding, a, and 60s after a
-        filter(time >= aend$time + 1*60) %>%
-        # add rows column to cut windows on
-        mutate(rows = 1:n()) %>%
-        select(-waveform)
-
-      # find pd times
-      pds <- pd_label(udat, ...) %>%
-        filter(pd == "pd") %>%
-        mutate(time = round(time, 2))
-
-      if (any(!is.na(addg$g))) {
-        gend <- addg %>%
-          filter(waveform == "G") %>%
-          slice_tail()
-
-        gtimes <- seq(gend$time + 0.01, gend$time + 500, by = 0.01)
-      } else {gtimes = NA}
-
-      # add in pds
-      withpd <- addg %>%
-        # wopd has all times, pds only has pd times
-        left_join(pds, by = c("time", "volts")) %>%
-        mutate(waveform = case_when(
-          !is.na(waveform) ~ waveform,
-          !is.na(pdsubform) ~ pdsubform,
-          TRUE ~ NA_character_
-        )) %>%
-        mutate(waveform = ifelse(
-          # if close to G, wipe out
-          round(time, 2) %in% round(gtimes, 2), NA, waveform
-        )) %>%
-        select(time, volts, waveform)
-
-      # add waveform C, fix A
-      out <- withpd %>%
-        mutate(waveform = case_when(
-          # first set no activity + A as pre-labeled
-          time <= aend$time ~ waveform,
-          # any remaining intervening time becomes C
-          is.na(waveform) ~ "C",
-          # keep all other labels
-          TRUE ~ waveform
-        ))
-
-      return(out)
-    }
-
     eg <- wave_label_eg(a_data(), e_var = as.double(input$in_evar))
     out <- wave_label_pdc(eg)
 
@@ -493,11 +362,14 @@ shinyServer(function(input, output) {
 
   plot_comp <- reactive ({
 
-
     validate (
       need (!is.null(input$compraw), "Waiting on Data Upload..."),
-      need (!is.null(input$in_ao), message = FALSE)
+      # need (!is.null(input$in_ao), message = FALSE)
     )
+
+    # if (input$probe == "n") {
+    #   plot_vts(comp_raw(), aggregate = TRUE, interval = 500)
+    # }
 
     if (input$adone == "n") {
       plot_wave(a_data(), aggregate = "smart")
@@ -618,92 +490,92 @@ shinyServer(function(input, output) {
 
   ################## Beta Zone ####################
 
-  # beta_data <- reactive ({
-  #   req(input$beta)
-  #
-  #   list <- lapply(input$beta$datapath, read_epg)
-  #   out <- rbindlist(list)
-  #   return(out)
-  # })
-  #
-  # output$data_probe <- DT::renderDataTable({
-  #
-  #   DT::datatable(beta_data()[1:5, ],
-  #                 options = list(dom = "t"),
-  #                 rownames = FALSE)
-  # })
-  #
-  # output$probe_a <- renderUI ({
-  #
-  #   alphas <- probe_apply(beta_data())$time
-  #
-  #   idx <- seq(1, by = 2, length.out = length(alphas)/2)
-  #
-  #   textInput("in_a", "Specify A start(s)",
-  #             value = paste(alphas[idx], collapse = ","))
-  #
-  # })
-  #
-  # output$probe_o <- renderUI ({
-  #
-  #   omegas <- probe_apply(beta_data())$time
-  #
-  #   idx <- seq(2, by = 2, length.out = length(omegas)/2)
-  #
-  #   textInput("in_o", "Specify A ends(s)",
-  #             value = paste(omegas[idx], collapse = ","))
-  #
-  # })
-  #
-  # a_data_probe <- reactive ({
-  #
-  #   # shiny specific function
-  #   wave_label_a_probe <- function (data, a, o) {
-  #
-  #     times <- unlist(seqvec(from = a, to = o, by = 0.01))
-  #
-  #     out <- data %>%
-  #       mutate(waveform = ifelse(round(time, 2) %in% round(times, 2), "a", NA_character_))
-  #
-  #     return(out)
-  #   }
-  #
-  #   a <- as.double(str_split(input$in_a, pattern = ",")[[1]])
-  #   o <- as.double(str_split(input$in_o, pattern = ",")[[1]])
-  #
-  #   out <- wave_label_a_probe(beta_data(), a, o)
-  #
-  #   return(out)
-  # })
-  #
-  # auto_data_probe <- reactive ({
-  #
-  #   udat <- a_data_probe()
-  #
-  #   out <- probe_comb(udat, e_var = as.double(input$in_evar_p))
-  # })
-  #
-  # plot_probe <- reactive ({
-  #
-  #   if (input$adone_p == "n") {
-  #     plot_wave(a_data_probe())
-  #   }
-  #
-  #   else if (input$adone_p == "y") {
-  #
-  #     plot_wave(auto_data_probe())
-  #   }
-  #
-  # })
-  #
-  # output$plot_probe <- renderPlotly ({
-  #
-  #   ggplotly(plot_probe())
-  # })
-  #
-  # output$e_var_p <- renderUI ({
-  #   textInput("in_evar_p", "Specify acceptable E Variance", value = 0.1)
-  # })
+  beta_data <- reactive ({
+    req(input$beta)
+
+    list <- lapply(input$beta$datapath, read_epg)
+    out <- rbindlist(list)
+    return(out)
+  })
+
+  output$data_probe <- DT::renderDataTable({
+
+    DT::datatable(beta_data()[1:5, ],
+                  options = list(dom = "t"),
+                  rownames = FALSE)
+  })
+
+  output$probe_a <- renderUI ({
+
+    alphas <- probe_apply(beta_data())$time
+
+    idx <- seq(1, by = 2, length.out = length(alphas)/2)
+
+    textInput("in_a", "Specify A start(s)",
+              value = paste(alphas[idx], collapse = ","))
+
+  })
+
+  output$probe_o <- renderUI ({
+
+    omegas <- probe_apply(beta_data())$time
+
+    idx <- seq(2, by = 2, length.out = length(omegas)/2)
+
+    textInput("in_o", "Specify A ends(s)",
+              value = paste(omegas[idx], collapse = ","))
+
+  })
+
+  a_data_probe <- reactive ({
+
+    # shiny specific function
+    wave_label_a_probe <- function (data, a, o) {
+
+      times <- unlist(seqvec(from = a, to = o, by = 0.01))
+
+      out <- data %>%
+        mutate(waveform = ifelse(round(time, 2) %in% round(times, 2), "a", NA_character_))
+
+      return(out)
+    }
+
+    a <- as.double(str_split(input$in_a, pattern = ",")[[1]])
+    o <- as.double(str_split(input$in_o, pattern = ",")[[1]])
+
+    out <- wave_label_a_probe(beta_data(), a, o)
+
+    return(out)
+  })
+
+  auto_data_probe <- reactive ({
+
+    udat <- a_data_probe()
+
+    out <- probe_comb(udat, e_var = as.double(input$in_evar_p))
+  })
+
+  plot_probe <- reactive ({
+
+    if (input$adone_p == "n") {
+      plot_wave(a_data_probe())
+    }
+
+    else if (input$adone_p == "y") {
+
+      plot_wave(auto_data_probe())
+    }
+
+  })
+
+  output$plot_probe <- renderPlotly ({
+
+    ggplotly(plot_probe())
+  })
+
+  output$e_var_p <- renderUI ({
+    textInput("in_evar_p", "Specify acceptable E Variance", value = 0.1)
+  })
 
 
 })
