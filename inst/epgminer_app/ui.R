@@ -195,8 +195,8 @@ shinyUI(fluidPage(
                    p("Additionally if you wish to add pds after the algorithm has run, simple
                      click on the plot at the starts and ends of the pd(s) you wish to add.
                      The order of points does not matter, as they will be automatically re-ordered.
-                     Then choose yes for 'Add Manually identified pds?'. Currently, pd subforms
-                     are not supported."),
+                     Then choose yes for 'Add Manually identified pds?'. Currently, this option
+                     is only available for data with only one feedinb beginning."),
                    p("Only click 'Clear Selected Points' if you have made an error in choosing
                      pd starts/ends. The selected points are displayed on the bottom left just
                      below the plot. Please note that clicking this button will clear ALL selected
@@ -255,144 +255,175 @@ shinyUI(fluidPage(
                    condition = "input.label == 'comp'",
                    fileInput("compraw", "Choose Raw Data File(s)",
                              multiple = TRUE, accept = ".txt"),
-                   radioButtons("probe", "Are there multiple feeding beginnings?",
-                                choices = c(`No` = "n", `Yes` = "y")),
-                   uiOutput("ao"),
-                   radioButtons("adone", "Are you finished labeling A?",
-                                choices = c(`No` = "n", `Yes` = "y")),
+                   selectInput("probe", "Are there multiple feeding beginnings?",
+                               choices = c(`Select Option` = "blank", `No` = "n",
+                                           `Yes` = "y")),
+
                    conditionalPanel(
-                     condition = "input.adone == 'y'",
-                     uiOutput("e_var"),
-                     # could add other selectables
-                     radioButtons("pd_manual", "Add manually identified pds?",
+                     condition = "input.probe == 'n'",
+                     uiOutput("ao"),
+                     radioButtons("adone", "Are you finished labeling A?",
                                   choices = c(`No` = "n", `Yes` = "y")),
-                     downloadButton("downloadcomp", "Download")
+
+                     conditionalPanel(
+                       condition = "input.adone == 'y'",
+                       uiOutput("e_var"),
+                       # could add other selectables
+                       radioButtons("pd_manual", "Add manually identified pds?",
+                                    choices = c(`No` = "n", `Yes` = "y")),
+                       downloadButton("downloadcomp", "Download")
+                     )
+                   ),
+
+                   conditionalPanel(
+                     condition = "input.probe == 'y'",
+                     uiOutput("probe_a"),
+                     uiOutput("probe_o"),
+                     radioButtons("adone_p", "Are you finished labeling A?",
+                                  choices = c(`No` = "n", `Yes` = "y")),
+                     conditionalPanel(
+                       condition = "input.adone_p == 'y'",
+                       uiOutput("e_var_p"),
+                       downloadButton("downloadcomp_probe", "Download")
+                     )
+                   )
+                 )),
+
+                 mainPanel(
+
+                   conditionalPanel(
+                     condition = "input.label == 'ana' || input.label == 'prelab'",
+
+                     fluidRow(
+                       column(12,
+                              p("First five rows of data for reference (after loading):"))
+                     ),
+                     DT::dataTableOutput("data")
+                   ),
+
+                   conditionalPanel(
+                     condition = "input.label == 'comp'",
+
+                     conditionalPanel(
+                       condition = "input.probe == 'blank'",
+                       plotlyOutput("vts_plot")
+                     ),
+
+                     conditionalPanel(
+                       condition = "input.probe == 'n'",
+                       plotlyOutput("comp_plot"),
+
+                       conditionalPanel(
+                         condition = "input.adone == 'y'",
+                         fluidRow(
+                           column(6, tableOutput("comp_table")),
+                           column(6, actionButton(inputId = "clear", "Clear selected points"))
+                         ),
+                         tableOutput("tab"))
+                     ),
+
+                     conditionalPanel(
+                       condition = "input.probe == 'y'",
+
+                       # DT::dataTableOutput("data_probe"),
+                       plotlyOutput("plot_probe")
+                     )
                    )
                  )
-
-               ),
-
-               mainPanel(
-
-                 conditionalPanel(
-                   condition = "input.label == 'ana' || input.label == 'prelab'",
-
-                   fluidRow(
-                     column(12,
-                            p("First five rows of data for reference (after loading):"))
-                   ),
-                   DT::dataTableOutput("data")
-                 ),
-
-                 conditionalPanel(
-                   condition = "input.label == 'comp'",
-                   plotlyOutput("comp_plot"),
-
-                   conditionalPanel(
-                     condition = "input.adone == 'y'",
-                     fluidRow(
-                       column(6, tableOutput("comp_table")),
-                       column(6, actionButton(inputId = "clear", "Clear selected points"))
-                     ),
-                     tableOutput("tab"))
-                 )
-
                )
+             ),
 
+             tabPanel("Analyze My Data", fluid = TRUE,
+
+                      sidebarLayout(
+
+                        sidebarPanel(
+
+                          selectInput("metric", "Choose Desired Metric",
+                                      choices = c(`Frequency` = 'freq',
+                                                  `Duration` = 'dur',
+                                                  `Count` = "count")),
+                          conditionalPanel(
+                            condition = "input.metric == 'freq'",
+                            radioButtons("summary", "Choose Summary Type",
+                                         choices = c(`Individual` = 'default',
+                                                     `Mean per Waveform` = "mean",
+                                                     `Median per Wavefrom` = "median",
+                                                     `SD within each Waveform` = "sd"))
+                          ),
+                          conditionalPanel(
+                            condition = "input.metric == 'dur'",
+                            radioButtons("summaryd", "Choose Summary Type",
+                                         choices = c(`Individual` = 'default',
+                                                     `Median per Wavefrom` = "median",
+                                                     `Mean per Waveform` = "mean",
+                                                     `SD within each Waveform` = "sd"))
+                          )
+                        ),
+
+                        mainPanel(DT::dataTableOutput("metric"))
+
+                      )
+             ),
+
+             tabPanel("Visuals", fluid = TRUE,
+
+                      sidebarLayout(
+
+                        sidebarPanel(
+
+                          radioButtons("plottype", "Choose Desired Visualization",
+                                       choices = c(`Frequency Bar Chart` = 'fbar',
+                                                   `Pie chart of Waveforms` = "pie")),
+                          conditionalPanel(
+                            condition = "input.plottype == 'fbar'",
+                            checkboxGroupInput("fbar_waves", "Choose Waveforms to Include",
+                                               choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
+                                               selected = c("E1", "E2", "G", "pd1", "pd2"))
+                          ),
+                          conditionalPanel(
+                            condition = "input.plottype == 'pie'",
+                            radioButtons("pietype", "Choose Type of Pie Chart",
+                                         choices = c(`By Time` = "pie_t",
+                                                     `By Count` = "pie_c")),
+                            checkboxGroupInput("pie_waves", "Choose Waveforms to Include",
+                                               choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
+                                               selected = c("C", "E1", "E2", "G", "pd1", "pd2"))
+                          ),
+                          downloadButton(outputId = "pdf", label = "pdf"),
+                          downloadButton(outputId = "png", label = "png"),
+                          # downloadButton(outputId = "eps", label = "eps")
+                        ),
+
+                        mainPanel(plotlyOutput("plot"))
+                      )
              )
-    ),
+             # ,
+             #
+             # tabPanel("Beta Zone", fluid = TRUE,
+             #
+             #          sidebarLayout(
+             #
+             #            sidebarPanel(
+             #
+             #              fileInput("beta", "Choose Raw Data Files",
+             #                        multiple = TRUE, accept = ".txt"),
+             #              uiOutput("probe_a"),
+             #              uiOutput("probe_o"),
+             #              radioButtons("adone_p", "Are you finished labeling A?",
+             #                           choices = c(`No` = "n", `Yes` = "y")),
+             #              conditionalPanel(
+             #                condition = "input.adone_p == 'y'",
+             #                uiOutput("e_var_p"),
+             #              )
+             #            ),
+             #            mainPanel(
+             #              DT::dataTableOutput("data_probe"),
+             #              plotlyOutput("plot_probe")
+             #            ))
+             # )
 
-    tabPanel("Analyze My Data", fluid = TRUE,
 
-             sidebarLayout(
-
-               sidebarPanel(
-
-                 selectInput("metric", "Choose Desired Metric",
-                             choices = c(`Frequency` = 'freq',
-                                         `Duration` = 'dur',
-                                         `Count` = "count")),
-                 conditionalPanel(
-                   condition = "input.metric == 'freq'",
-                   radioButtons("summary", "Choose Summary Type",
-                                choices = c(`Individual` = 'default',
-                                            `Mean per Waveform` = "mean",
-                                            `Median per Wavefrom` = "median",
-                                            `SD within each Waveform` = "sd"))
-                 ),
-                 conditionalPanel(
-                   condition = "input.metric == 'dur'",
-                   radioButtons("summaryd", "Choose Summary Type",
-                                choices = c(`Individual` = 'default',
-                                            `Median per Wavefrom` = "median",
-                                            `Mean per Waveform` = "mean",
-                                            `SD within each Waveform` = "sd"))
-                 )
-               ),
-
-               mainPanel(DT::dataTableOutput("metric"))
-
-             )
-    ),
-
-    tabPanel("Visuals", fluid = TRUE,
-
-             sidebarLayout(
-
-               sidebarPanel(
-
-                 radioButtons("plottype", "Choose Desired Visualization",
-                              choices = c(`Frequency Bar Chart` = 'fbar',
-                                          `Pie chart of Waveforms` = "pie")),
-                 conditionalPanel(
-                   condition = "input.plottype == 'fbar'",
-                   checkboxGroupInput("fbar_waves", "Choose Waveforms to Include",
-                                      choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
-                                      selected = c("E1", "E2", "G", "pd1", "pd2"))
-                 ),
-                 conditionalPanel(
-                   condition = "input.plottype == 'pie'",
-                   radioButtons("pietype", "Choose Type of Pie Chart",
-                                choices = c(`By Time` = "pie_t",
-                                            `By Count` = "pie_c")),
-                   checkboxGroupInput("pie_waves", "Choose Waveforms to Include",
-                                      choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
-                                      selected = c("C", "E1", "E2", "G", "pd1", "pd2"))
-                 ),
-                 downloadButton(outputId = "pdf", label = "pdf"),
-                 downloadButton(outputId = "png", label = "png"),
-                 # downloadButton(outputId = "eps", label = "eps")
-               ),
-
-               mainPanel(plotlyOutput("plot"))
-             )
     )
-    ,
 
-    tabPanel("Beta Zone", fluid = TRUE,
-
-             sidebarLayout(
-
-               sidebarPanel(
-
-                 fileInput("beta", "Choose Raw Data Files",
-                           multiple = TRUE, accept = ".txt"),
-                 uiOutput("probe_a"),
-                 uiOutput("probe_o"),
-                 radioButtons("adone_p", "Are you finished labeling A?",
-                              choices = c(`No` = "n", `Yes` = "y")),
-                 conditionalPanel(
-                   condition = "input.adone_p == 'y'",
-                   uiOutput("e_var_p"),
-                 )
-               ),
-               mainPanel(
-                 DT::dataTableOutput("data_probe"),
-                 plotlyOutput("plot_probe")
-               ))
-    )
-
-
-  )
-
-))
+  ))

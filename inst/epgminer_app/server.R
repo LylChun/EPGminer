@@ -70,9 +70,16 @@ shinyServer(function(input, output) {
       data = label_ana(raw_data(), ana_data())
     }
 
-    # technically useless as data table not printed for comp
     else if (input$label == "comp") {
-      data = comp_label()
+
+      if (input$probe == "n") {
+        data = comp_label()
+      }
+
+      else if (input$probe == "y") {
+        # if add option to manually annotate pds, will need to change this as well
+        data = auto_data_probe()
+      }
     }
 
     return(data)
@@ -333,6 +340,15 @@ shinyServer(function(input, output) {
     return(out)
   })
 
+  output$vts_plot <- renderPlotly({
+    vts_id <- showNotification("Rendering...", duration  = NULL, closeButton = FALSE)
+    on.exit(removeNotification(vts_id), add = TRUE)
+
+    ggplotly(plot_vts(comp_raw()))
+  })
+
+          ############# Single probe instance ############
+
   a_data <- reactive ({
 
     # shiny specific function
@@ -364,12 +380,9 @@ shinyServer(function(input, output) {
 
     validate (
       need (!is.null(input$compraw), "Waiting on Data Upload..."),
-      # need (!is.null(input$in_ao), message = FALSE)
+      # need (input$probe == "n", message = FALSE),
+      need (!is.null(input$in_ao), message = FALSE)
     )
-
-    # if (input$probe == "n") {
-    #   plot_vts(comp_raw(), aggregate = TRUE, interval = 500)
-    # }
 
     if (input$adone == "n") {
       plot_wave(a_data(), aggregate = "smart")
@@ -426,6 +439,8 @@ shinyServer(function(input, output) {
   })
 
   output$ao <- renderUI ({
+
+    req(input$probe == "n")
 
     ao <- a_ao(comp_raw(), a_o = c(0.75, 0.5, 1, 1.25), a_drop = 0.75)$time
 
@@ -488,26 +503,26 @@ shinyServer(function(input, output) {
     }
   )
 
-  ################## Beta Zone ####################
+            ################## Multiple Probes ####################
 
-  beta_data <- reactive ({
-    req(input$beta)
+  # beta_data <- reactive ({
+  #   req(input$beta)
+  #
+  #   list <- lapply(input$beta$datapath, read_epg)
+  #   out <- rbindlist(list)
+  #   return(out)
+  # })
 
-    list <- lapply(input$beta$datapath, read_epg)
-    out <- rbindlist(list)
-    return(out)
-  })
-
-  output$data_probe <- DT::renderDataTable({
-
-    DT::datatable(beta_data()[1:5, ],
-                  options = list(dom = "t"),
-                  rownames = FALSE)
-  })
+  # output$data_probe <- DT::renderDataTable({
+  #
+  #   DT::datatable(beta_data()[1:5, ],
+  #                 options = list(dom = "t"),
+  #                 rownames = FALSE)
+  # })
 
   output$probe_a <- renderUI ({
 
-    alphas <- probe_apply(beta_data())$time
+    alphas <- probe_apply(comp_raw())$time
 
     idx <- seq(1, by = 2, length.out = length(alphas)/2)
 
@@ -518,7 +533,7 @@ shinyServer(function(input, output) {
 
   output$probe_o <- renderUI ({
 
-    omegas <- probe_apply(beta_data())$time
+    omegas <- probe_apply(comp_raw())$time
 
     idx <- seq(2, by = 2, length.out = length(omegas)/2)
 
@@ -543,7 +558,7 @@ shinyServer(function(input, output) {
     a <- as.double(str_split(input$in_a, pattern = ",")[[1]])
     o <- as.double(str_split(input$in_o, pattern = ",")[[1]])
 
-    out <- wave_label_a_probe(beta_data(), a, o)
+    out <- wave_label_a_probe(comp_raw(), a, o)
 
     return(out)
   })
@@ -574,8 +589,17 @@ shinyServer(function(input, output) {
   })
 
   output$e_var_p <- renderUI ({
-    textInput("in_evar_p", "Specify acceptable E Variance", value = 0.1)
+    textInput("in_evar_p", "Specify acceptable E Variance", value = 0.2)
   })
 
+  output$downloadcomp_probe <- downloadHandler(
+    filename = function() {
+      filename <- str_sub(input$compraw$name, end = -8)
+      paste(filename, ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(auto_data_probe(), file, row.names = FALSE)
+    }
+  )
 
 })
