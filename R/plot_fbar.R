@@ -22,8 +22,7 @@
 plot_fbar <- function (data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
                                            "pd2", "pd")) {
   out <- wave_topfreq(data)
-  colnames(out) <- c("group", "waveform", "frequency")
-  out <- out[, 2:3] %>%
+  out <- out %>%
     # filter after finding top frequency to avoid run-on errors
     dplyr::filter(waveform %in% waveforms)
 

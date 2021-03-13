@@ -34,6 +34,7 @@ in the data, the function will not work.
 Other waveform functions: 
 \code{\link{plot_pie}()},
 \code{\link{plot_wave}()},
+\code{\link{wave_count}()},
 \code{\link{wave_duration}()},
 \code{\link{wave_topfreq}()}
 }

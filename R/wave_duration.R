@@ -8,7 +8,10 @@
 #' @inheritParams plot_wave
 #'
 #' @details Labelled data is grouped by each waveform instance and the duration
-#' is then calculated.
+#' is then calculated. The waveform type 'pd' independent of any splitting
+#' into subforms is calculated at the end. As a result, the pd calculations
+#' will appear all at the end of the table. The subforms, pd1 and pd2,
+#' will appear in sequence. Duration is reported in seconds.
 #'
 #' @return A tibble object containing a row per waveform instance and two
 #' columns, waveform and duration, is returned.
@@ -35,7 +38,18 @@ wave_duration <- function(data) {
     # find duration of each wave_group in seconds
     dplyr::group_by(wave_group) %>%
     dplyr::summarise(waveform = waveform[1],
-                     duration = max(time) - min(time), .groups = "drop")
+                     duration = round(max(time) - min(time), 2),
+                     .groups = "drop") %>%
+    dplyr::filter(waveform != "pd") %>%
+    dplyr::select(waveform, duration)
 
+  pdonly <- pd_helper(data) %>%
+    dplyr::summarise(waveform = waveform[1],
+                     duration = round(max(time) - min(time), 2),
+                     .groups = "drop") %>%
+    dplyr::filter(waveform == "pd") %>%
+    dplyr::select(waveform, duration)
+
+  out <- rbind(out, pdonly)
   return(out)
 }

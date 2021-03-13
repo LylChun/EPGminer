@@ -19,12 +19,16 @@ each waveform instance in labelled data.
 }
 \details{
 Labelled data is grouped by each waveform instance and the duration
-is then calculated.
+is then calculated. The waveform type 'pd' independent of any splitting
+into subforms is calculated at the end. As a result, the pd calculations
+will appear all at the end of the table. The subforms, pd1 and pd2,
+will appear in sequence. Duration is reported in seconds.
 }
 \seealso{
 Other waveform functions: 
 \code{\link{plot_pie}()},
 \code{\link{plot_wave}()},
+\code{\link{wave_count}()},
 \code{\link{wave_extract}()},
 \code{\link{wave_topfreq}()}
 }

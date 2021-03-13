@@ -3,11 +3,10 @@
 #' @description The function plot_pie allows one to visualize EPG waveforms in a
 #' pie chart format.
 #'
-#' @usage plot_pie(data, pietype = c("time", "count"), sample_rate = 100,
+#' @usage plot_pie(data, pietype = c("time", "count"),
 #' waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
 #'
 #' @inheritParams plot_wave
-#' @inheritParams single_fft
 #' @inheritParams plot_fbar
 #' @param pietype Select the type of pie chart to display. Default is time - a pie
 #' chart showing the percent of time spent in each waveform is displayed. If "count"
@@ -30,12 +29,11 @@ plot_pie <- function (data, pietype = c("time", "count"), sample_rate = 100,
 
   if (pietype == "time") {
 
-    plot_data <- data %>%
-      dplyr::filter(!is.na(waveform)) %>%
+    plot_data <- wave_duration(data) %>%
       dplyr::group_by(waveform) %>%
-      # length in rounded minutes, divide by sample rate to get seconds, by 60 to get min
-      dplyr::summarise(waveform = waveform[1], time = round(length(time)/sample_rate/60, 2),
-                        .groups = "drop") %>%
+      # duration is in seconds, divide by 60 to get minutes
+      summarise(waveform = waveform[1], time = round(sum(duration)/60, 2),
+                .groups = "drop") %>%
       dplyr::filter(waveform %in% waveforms)
 
     plotly::plot_ly(plot_data, labels = ~waveform, values = ~time, type = 'pie',
@@ -43,14 +41,9 @@ plot_pie <- function (data, pietype = c("time", "count"), sample_rate = 100,
                     hoverinfo = 'text+label',
                     text = ~paste(time, "minutes"))
   }
+
   else if (pietype == "count") {
-    plot_data <- data %>%
-      dplyr::filter(!is.na(waveform)) %>%
-      dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
-                                     rle(waveform)[[1]])) %>%
-      dplyr::group_by(waveform) %>%
-      dplyr::summarise(waveform = waveform[1], count = length(unique(wave_group)),
-                       .groups = "drop") %>%
+    plot_data <- wave_count(data) %>%
       dplyr::filter(waveform %in% waveforms)
 
     plotly::plot_ly(plot_data, labels = ~waveform, values = ~count, type = 'pie',

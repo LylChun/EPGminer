@@ -41,12 +41,13 @@ shinyUI(fluidPage(
                           calculate frequencies for labeled waveforms using the Fourier Transform.
                           Additional waveform metrics are available as well, such as duration and
                           count. The other main functionality of EPGminer is the ability to generate
-                          visuals. There are currently three visuals that EPGminer can create - a
-                          frequency boxplot, a pie chart of waveform times, and a pie chart of
-                          waveform counts. Each of these plots is customizable - e.g. the user may
-                          select which waveforms to include in the plot itself. The plots are also
-                          interactive and the user may zoom in, or 'hover' over the plot for
-                          additional information."))
+                          visuals. There are currently four visuals that EPGminer can create - a
+                          frequency boxplot, a pie chart of waveform times, a pie chart of
+                          waveform counts, and a time series colored by waveform labels. Each of
+                          these plots, with the exception of the labeled time series, is customizable
+                          - e.g. the user may select which waveforms to include in the plot itself.
+                          All plots are interactive and the user may zoom in, or 'hover' over the plot
+                          for additional information."))
                )
              ),
              fluidRow(
@@ -87,8 +88,9 @@ shinyUI(fluidPage(
                           allows one to calculate metrics - frequency, duration, and count, as well as
                           to summarise the metric by waveform (frequency and duration only)."),
                         p("3. If you wish to visualize your data, you may select the 'Visuals' tab.
-                          All visuals allow the user to select which waveform(s) to include. They are
-                          also all interactive."),
+                          You may select which waveform(s) to include as well as zoom in or pan through
+                          the plot. The labeled time series plot can help you double check if the labeling
+                          was processed correctly and that the analysis outputs are reasonable."),
                         p("4. If you encounter errors, or are unsure how to proceed, check out
                           'Tips and Troubleshooting' and/or 'Additional Resources'."))
                )
@@ -325,7 +327,6 @@ shinyUI(fluidPage(
                      conditionalPanel(
                        condition = "input.probe == 'y'",
 
-                       # DT::dataTableOutput("data_probe"),
                        plotlyOutput("plot_probe")
                      )
                    )
@@ -347,8 +348,8 @@ shinyUI(fluidPage(
                             condition = "input.metric == 'freq'",
                             radioButtons("summary", "Choose Summary Type",
                                          choices = c(`Individual` = 'default',
-                                                     `Mean per Waveform` = "mean",
                                                      `Median per Wavefrom` = "median",
+                                                     `Mean per Waveform` = "mean",
                                                      `SD within each Waveform` = "sd"))
                           ),
                           conditionalPanel(
@@ -374,7 +375,8 @@ shinyUI(fluidPage(
 
                           radioButtons("plottype", "Choose Desired Visualization",
                                        choices = c(`Frequency Bar Chart` = 'fbar',
-                                                   `Pie chart of Waveforms` = "pie")),
+                                                   `Pie chart of Waveforms` = "pie",
+                                                   `Labeled Time Series` = "wave")),
                           conditionalPanel(
                             condition = "input.plottype == 'fbar'",
                             checkboxGroupInput("fbar_waves", "Choose Waveforms to Include",
@@ -388,7 +390,7 @@ shinyUI(fluidPage(
                                                      `By Count` = "pie_c")),
                             checkboxGroupInput("pie_waves", "Choose Waveforms to Include",
                                                choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
-                                               selected = c("C", "E1", "E2", "G", "pd1", "pd2"))
+                                               selected = c("E1", "E2", "G", "pd1", "pd2"))
                           ),
                           downloadButton(outputId = "pdf", label = "pdf"),
                           downloadButton(outputId = "png", label = "png"),
@@ -398,32 +400,6 @@ shinyUI(fluidPage(
                         mainPanel(plotlyOutput("plot"))
                       )
              )
-             # ,
-             #
-             # tabPanel("Beta Zone", fluid = TRUE,
-             #
-             #          sidebarLayout(
-             #
-             #            sidebarPanel(
-             #
-             #              fileInput("beta", "Choose Raw Data Files",
-             #                        multiple = TRUE, accept = ".txt"),
-             #              uiOutput("probe_a"),
-             #              uiOutput("probe_o"),
-             #              radioButtons("adone_p", "Are you finished labeling A?",
-             #                           choices = c(`No` = "n", `Yes` = "y")),
-             #              conditionalPanel(
-             #                condition = "input.adone_p == 'y'",
-             #                uiOutput("e_var_p"),
-             #              )
-             #            ),
-             #            mainPanel(
-             #              DT::dataTableOutput("data_probe"),
-             #              plotlyOutput("plot_probe")
-             #            ))
-             # )
-
-
     )
 
   ))
