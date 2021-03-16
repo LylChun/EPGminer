@@ -63,6 +63,10 @@ shinyServer(function(input, output) {
 
     else if (input$label == "comp") {
 
+      validate(
+        need(input$probe %in% c("n", "y"), message = FALSE)
+      )
+
       if (input$probe == "n") {
         data = comp_label()
       }
@@ -102,17 +106,6 @@ shinyServer(function(input, output) {
 
     return(out)
   })
-
-  # pd_data <- reactive ({
-  #   pdonly <- analyze_data() %>%
-  #     mutate(waveform = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"),
-  #                                      "pd", "non")) %>%
-  #     dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
-  #                                    rle(waveform)[[1]])) %>%
-  #     dplyr::group_by(wave_group)
-  #
-  #   return(pdonly)
-  # })
 
   metric_tab <- reactive ({
 

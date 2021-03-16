@@ -759,6 +759,7 @@ wave_label_pdc <- function (data, ...) {
 }
 
 ################# Probe ###################
+
 # works for n48, s236, s196
 probe_a <- function (data) {
 
@@ -858,8 +859,29 @@ probe_split <- function (data) {
       filter(time >= o[i] & time < a[i+1])
   }
 
-  return(splits)
+  # remove empty list entries
+  idx <- c()
+  for (i in 1:length(splits)) {
+    idx[i] <- dplyr::if_else(dim(splits[[i]])[1] == 0, FALSE, TRUE)
+  }
+
+  return(splits[idx])
 }
+
+# probe_split_old <- function (data) {
+#   a <- c(probe_a(data)$time, max(data$time))
+#   o <- probe_o(data)$time
+#
+#   splits <- list()
+#   splits[[1]] <- data %>%
+#     filter(time <= a[1])
+#   for (i in 1:length(o)) {
+#     splits[[i + 1]] <- data %>%
+#       filter(time >= o[i] & time < a[i+1])
+#   }
+#
+#   return(splits)
+# }
 
 
 # new dev, untested
