@@ -1,4 +1,6 @@
-shinyServer(function(input, output) {
+source("algorithm.R")
+
+shinyServer(function(input, output, session) {
 
   ################ Label My Data #################
 
@@ -258,6 +260,7 @@ shinyServer(function(input, output) {
       htmlwidgets::saveWidget(as_widget(plot_react()), "temp.html", selfcontained = FALSE)
       webshot(url = "temp.html", file, cliprect = "viewport", zoom = 0.5)
     }
+
   )
 
   output$png <- downloadHandler(
@@ -311,7 +314,8 @@ shinyServer(function(input, output) {
 
     req(input$in_evar)
 
-    eg <- wave_label_eg(a_data(), e_var = as.double(input$in_evar))
+    eg <- wave_label_eg(a_data(), e_var = as.double(input$in_evar),
+                        g_drop = as.double(input$in_gdrop))
     out <- wave_label_pdc(eg)
 
     return(out)
@@ -321,7 +325,6 @@ shinyServer(function(input, output) {
 
     validate (
       need (!is.null(input$compraw), "Waiting on Data Upload..."),
-      # need (input$probe == "n", message = FALSE),
       need (!is.null(input$in_ao), message = FALSE)
     )
 
@@ -393,7 +396,11 @@ shinyServer(function(input, output) {
   output$e_var <- renderUI ({
     sliderInput("in_evar", "Specify acceptable E Variance", min = 0, max = 0.5,
                 value = 0.2, step = 0.1)
-    # textInput("in_evar", "Specify acceptable E Variance", value = 0.2)
+  })
+
+  output$g_drop <- renderUI ({
+    textInput("in_gdrop", "Specify acceptable G drop from non-feeding baseline",
+              value = 0.75)
   })
 
   values <- reactiveValues()
@@ -446,7 +453,7 @@ shinyServer(function(input, output) {
     }
   )
 
-            ################## Multiple Probes ####################
+        ################## Multiple Probes ####################
 
   output$probe_a <- renderUI ({
 
@@ -495,7 +502,8 @@ shinyServer(function(input, output) {
 
     udat <- a_data_probe()
 
-    out <- probe_comb(udat, e_var = as.double(input$in_evar_p))
+    out <- probe_comb(udat, e_var = as.double(input$in_evar_p),
+                      g_drop = as.double(input$in_gdrop_p))
   })
 
   plot_probe <- reactive ({
@@ -526,7 +534,11 @@ shinyServer(function(input, output) {
   output$e_var_p <- renderUI ({
     sliderInput("in_evar_p", "Specify acceptable E Variance", min = 0, max = 0.5,
                 value = 0.2, step = 0.1)
-    # textInput("in_evar_p", "Specify acceptable E Variance", value = 0.5)
+  })
+
+  output$g_drop_p <- renderUI ({
+    textInput("in_gdrop_p", "Specify acceptable G drop from non-feeding baseline",
+                value = 0.75)
   })
 
   output$downloadcomp_probe <- downloadHandler(
@@ -538,5 +550,14 @@ shinyServer(function(input, output) {
       write.csv(auto_data_probe(), file, row.names = FALSE)
     }
   )
+
+  session$onSessionEnded ( function () {
+
+    if (file.exists("temp.html")) {
+
+      unlink(c("temp_files", "temp.html"), recursive = TRUE)
+    }
+
+  })
 
 })

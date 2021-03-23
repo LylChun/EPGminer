@@ -7,6 +7,9 @@ smooth_vts <- function (data, interval = 127) {
 
 pd_helper <- function (data) {
 
+  waveform = wave_group = NULL
+  rm(list = c("waveform", "wave_group"))
+
   out <- data %>%
     dplyr::mutate(waveform = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"),
                                             "pd", "non")) %>%

@@ -27,11 +27,13 @@ shinyUI(fluidPage(
              fluidRow(
                column(12,
                       wellPanel(
-                        h4("Introduction"),
+                        h4("Overview"),
                         p("EPGminer is a web application designed to assist researchers in the
                           analysis of Electrical Penetration Graph (EPG) data. EPG data can help
                           scientists to better understand insect feeding behavior and host-insect
-                          relationships."),
+                          relationships. Since EPG datasets can often be large and hard to analyze,
+                          there is a need for user friendly software that can assist in that
+                          analysis."),
                         p("There are three parts to EPGminer: (i) Labeling raw data, (ii) Analysis
                           of labeled data through metric calculations, and (iii) Visualizations
                           of labeled data. A researcher may upload their data, label it, and then
@@ -40,16 +42,17 @@ shinyUI(fluidPage(
                         p("One of the main functionalities of EPGminer is to allow researchers to
                           calculate frequencies for labeled waveforms using the Fourier Transform.
                           Additional waveform metrics are available as well, such as duration and
-                          count. The other main functionality of EPGminer is the ability to generate
+                          count. Another main functionality of EPGminer is the ability to generate
                           visuals. There are currently four visuals that EPGminer can create - a
                           frequency boxplot, a pie chart of waveform times, a pie chart of
                           waveform counts, and a time series colored by waveform labels. Each of
                           these plots, with the exception of the labeled time series, is customizable
                           - e.g. the user may select which waveforms to include in the plot itself.
                           All plots are interactive and the user may zoom in, or 'hover' over the plot
-                          for additional information."))
-               )
-             ),
+                          for additional information.")
+                      )
+               )),
+
              fluidRow(
                column(12,
                       wellPanel(
@@ -60,8 +63,20 @@ shinyUI(fluidPage(
                           data analysis further. For example, the metrics calculated can be downloaded
                           and used to cross compare waveform types, differences both within and between
                           datasets, and even differences between insect/host combinations. All analysis
-                          - both metrics and visuals, can be downloaded by the user.")
-                      ))
+                          - both metrics and visuals, can be downloaded by the user."),
+                        p("Additionally, EPGminer includes a semi-automatic algorithm to label
+                          waveforms in raw EPG data. Manual annotations of EPG data are time-consuming
+                          and a computer mediated method of annotating is desireable. In this
+                          semi-automatic algorithm, we have sought to balance the benefits of automatic
+                          labeling with the need for accuracy. The automatic portion allows one to save
+                          time and energy by computationally labeling waveforms. Then the user input
+                          features - making it 'semi'-automatic - can be used to fine-tune the
+                          computer labeling to improve accuracy. The algorithm is still under active
+                          development, so if you already possess manual annotations (ANA files) for
+                          your data, it is recommended that you use those instead for best accuracy.
+                          However if you do not have manual annotations, or you simply would like to
+                          see the algorithm in action, then the option is available."))
+               )
              )),
 
     tabPanel("Tutorial", fluid = TRUE,
@@ -81,15 +96,25 @@ shinyUI(fluidPage(
                           formats. If you choose 'Use Algorithm to Label' under 'Label My Data', only raw
                           data is required, no annotation file is necessary. For details on how to use this
                           option, see 'Additional Resources' and select 'Algorithmic Labeling'. Please
-                          note that the algorithm is still in development and may not return accurate
-                          results."),
+                          note that the algorithm is still under active development and may not return
+                          completely accurate results."),
                         p("2. When you have finished loading/labeling your data, proceed to the
                           'Analyze My Data' tab for analysis of the labeled waveforms. This tab
                           allows one to calculate metrics - frequency, duration, and count, as well as
-                          to summarise the metric by waveform (frequency and duration only)."),
+                          to summarise the metric by waveform (frequency and duration only). You may
+                          download the analysis by clicking on one of the buttons diplayed above the
+                          table - e.g. if you would like to download the table as a csv click on the
+                          button labeled csv."),
                         p("3. If you wish to visualize your data, you may select the 'Visuals' tab.
                           You may select which waveform(s) to include as well as zoom in or pan through
-                          the plot. The labeled time series plot can help you double check if the labeling
+                          the plot. Certain waveforms are included by default but can be deselected if
+                          desired. Note that the pie chart percentages will change depending on which
+                          waveforms are selected as they are percents out of a 100%, where 100% means all
+                          selected waveforms not all present waveforms. However the absolute values will
+                          not change - e.g. if waveform G is present for 100 minutes, adding waveform C
+                          to the selected waveforms will change it's percent composition but the absolute
+                          value of 100 minutes will not change. This can be seen by hovering over the plot.
+                          The labeled time series plot can help you double check if the labeling
                           was processed correctly and that the analysis outputs are reasonable."),
                         p("4. If you encounter errors, or are unsure how to proceed, check out
                           'Tips and Troubleshooting' and/or 'Additional Resources'."))
@@ -105,14 +130,18 @@ shinyUI(fluidPage(
                           before checking that all inputs are correct. You may also see a
                           notification in the bottom right corner that says 'Rendering'. This
                           means the program is running and the output will be displayed when
-                          finished."),
+                          finished. Additionally, if you see an error displaying, but the 'Rendering'
+                          banner is also displayed, wait until the Rendering banner disappears as
+                          the error message may be old/transient and disappear once the program
+                          finishs rendering."),
                         p("If you are adding Manual labels/annotation from an ANA file, ensure that
                           the raw data and the ANA file match and are for the same dataset. For example,
                           if there are 24 hours of data, you must upload the raw data for all 24 hours.
                           The file names do not need to match, only the contents."),
-                        p("If the pop-up in the bottom right hand corner says 'Rendering', this is a
-                          good indication that the program is running and will display the output
-                          once finished."))
+                        p("The algorithm for labeling data is still under active development and prone
+                          to erroring out and mislabeling. For detailed instructions on how to use it
+                          and best avoid errors, please see the 'Additional Resources' section on
+                          'Algorithmic Labeling'."))
                )
              ),
              fluidRow(
@@ -185,20 +214,26 @@ shinyUI(fluidPage(
                    condition = "input.help == 'comp'",
                    p(strong("The algorithm is currently experimental and prone to error. If you have
                      the annotation for your data, it is recommended to use that instead.")),
-                   p("Start by checking the A start(s)/end(s). To minimize sources of error, only
-                     choose 'Yes' for multiple feeding starts IF you see multiple feeding beginnings
-                     in your data. Once A has been labelled to your satisfaction, click Yes to the
-                     'Are you finished labeling A?' input. The rest of the waveforms will be now be
-                     algorithmically labelled. If at the end of this process you encounter an
-                     error or E is present and has not been labelled, try to adjust the E variance
-                     - this adjusts the amount of variation allowed in E. A larger
-                     input value means a greater standard deviation is allowable - looser
-                     parameters."),
+                   p("Start by determining if your data has multiple feeding beginnings. If the insect
+                     has retracted the probe and reinserted it, as seen in the plotted voltage data,
+                     then select yes for 'Multiple Feeding Beginning'. To minimize error, only select
+                     yes if there are truly multiple feeding beginnings."),
+                   p("Then begin the labeling by checking the A start(s)/end(s). Once A has been
+                     labelled to your satisfaction, click Yes to the 'Are you finished labeling A?'
+                     input. The rest of the waveforms will be now be algorithmically labelled. If
+                     at the end of this process you encounter an error or E is present and has
+                     not been labelled, try to adjust the E variance - this adjusts the amount of
+                     variation allowed in E. A larger input value means a greater standard deviation
+                     is allowable - looser parameters that increase chances of finding E. Similarly
+                     for G, if G is present and has not been found, try adjusting the 'Specify
+                     acceptable G drop' input. Note that the input value is simply a multiplier
+                     used in the algorithm and does not represent absolute voltage values. A larger
+                     input value here will allow a larger drop from the pre-feeding baseline."),
                    p("Additionally if you wish to add pds after the algorithm has run, simple
                      click on the plot at the starts and ends of the pd(s) you wish to add.
                      The order of points does not matter, as they will be automatically re-ordered.
                      Then choose yes for 'Add Manually identified pds?'. Currently, this option
-                     is only available for data with only one feedinb beginning."),
+                     is only available for data with only one feeding beginning."),
                    p("Only click 'Clear Selected Points' if you have made an error in choosing
                      pd starts/ends. The selected points are displayed on the bottom left just
                      below the plot. Please note that clicking this button will clear ALL selected
@@ -270,6 +305,7 @@ shinyUI(fluidPage(
                      conditionalPanel(
                        condition = "input.adone == 'y'",
                        uiOutput("e_var"),
+                       uiOutput("g_drop"),
                        # could add other selectables
                        radioButtons("pd_manual", "Add manually identified pds?",
                                     choices = c(`No` = "n", `Yes` = "y")),
@@ -286,120 +322,121 @@ shinyUI(fluidPage(
                      conditionalPanel(
                        condition = "input.adone_p == 'y'",
                        uiOutput("e_var_p"),
+                       uiOutput("g_drop_p"),
                        downloadButton("downloadcomp_probe", "Download")
                      )
                    )
                  )),
 
-                 mainPanel(
+               mainPanel(
+
+                 conditionalPanel(
+                   condition = "input.label == 'ana' || input.label == 'prelab'",
+
+                   fluidRow(
+                     column(12,
+                            p("First five rows of data for reference (after loading):"))
+                   ),
+                   DT::dataTableOutput("data")
+                 ),
+
+                 conditionalPanel(
+                   condition = "input.label == 'comp'",
 
                    conditionalPanel(
-                     condition = "input.label == 'ana' || input.label == 'prelab'",
-
-                     fluidRow(
-                       column(12,
-                              p("First five rows of data for reference (after loading):"))
-                     ),
-                     DT::dataTableOutput("data")
+                     condition = "input.probe == 'blank'",
+                     plotlyOutput("vts_plot")
                    ),
 
                    conditionalPanel(
-                     condition = "input.label == 'comp'",
+                     condition = "input.probe == 'n'",
+                     plotlyOutput("comp_plot"),
 
                      conditionalPanel(
-                       condition = "input.probe == 'blank'",
-                       plotlyOutput("vts_plot")
-                     ),
+                       condition = "input.adone == 'y'",
+                       fluidRow(
+                         column(6, tableOutput("comp_table")),
+                         column(6, actionButton(inputId = "clear", "Clear selected points"))
+                       ),
+                       tableOutput("tab"))
+                   ),
 
-                     conditionalPanel(
-                       condition = "input.probe == 'n'",
-                       plotlyOutput("comp_plot"),
+                   conditionalPanel(
+                     condition = "input.probe == 'y'",
 
-                       conditionalPanel(
-                         condition = "input.adone == 'y'",
-                         fluidRow(
-                           column(6, tableOutput("comp_table")),
-                           column(6, actionButton(inputId = "clear", "Clear selected points"))
-                         ),
-                         tableOutput("tab"))
-                     ),
-
-                     conditionalPanel(
-                       condition = "input.probe == 'y'",
-
-                       plotlyOutput("plot_probe")
-                     )
+                     plotlyOutput("plot_probe")
                    )
                  )
                )
-             ),
+             )
+    ),
 
-             tabPanel("Analyze My Data", fluid = TRUE,
+    tabPanel("Analyze My Data", fluid = TRUE,
 
-                      sidebarLayout(
+             sidebarLayout(
 
-                        sidebarPanel(
+               sidebarPanel(
 
-                          selectInput("metric", "Choose Desired Metric",
-                                      choices = c(`Frequency` = 'freq',
-                                                  `Duration` = 'dur',
-                                                  `Count` = "count")),
-                          conditionalPanel(
-                            condition = "input.metric == 'freq'",
-                            radioButtons("summary", "Choose Summary Type",
-                                         choices = c(`Individual` = 'default',
-                                                     `Median per Wavefrom` = "median",
-                                                     `Mean per Waveform` = "mean",
-                                                     `SD within each Waveform` = "sd"))
-                          ),
-                          conditionalPanel(
-                            condition = "input.metric == 'dur'",
-                            radioButtons("summaryd", "Choose Summary Type",
-                                         choices = c(`Individual` = 'default',
-                                                     `Median per Wavefrom` = "median",
-                                                     `Mean per Waveform` = "mean",
-                                                     `SD within each Waveform` = "sd"))
-                          )
-                        ),
+                 selectInput("metric", "Choose Desired Metric",
+                             choices = c(`Frequency` = 'freq',
+                                         `Duration` = 'dur',
+                                         `Count` = "count")),
+                 conditionalPanel(
+                   condition = "input.metric == 'freq'",
+                   radioButtons("summary", "Choose Summary Type",
+                                choices = c(`Individual` = 'default',
+                                            `Median per Wavefrom` = "median",
+                                            `Mean per Waveform` = "mean",
+                                            `SD within each Waveform` = "sd"))
+                 ),
+                 conditionalPanel(
+                   condition = "input.metric == 'dur'",
+                   radioButtons("summaryd", "Choose Summary Type",
+                                choices = c(`Individual` = 'default',
+                                            `Median per Wavefrom` = "median",
+                                            `Mean per Waveform` = "mean",
+                                            `SD within each Waveform` = "sd"))
+                 )
+               ),
 
-                        mainPanel(DT::dataTableOutput("metric"))
+               mainPanel(DT::dataTableOutput("metric"))
 
-                      )
-             ),
+             )
+    ),
 
-             tabPanel("Visuals", fluid = TRUE,
+    tabPanel("Visuals", fluid = TRUE,
 
-                      sidebarLayout(
+             sidebarLayout(
 
-                        sidebarPanel(
+               sidebarPanel(
 
-                          radioButtons("plottype", "Choose Desired Visualization",
-                                       choices = c(`Frequency Bar Chart` = 'fbar',
-                                                   `Pie chart of Waveforms` = "pie",
-                                                   `Labeled Time Series` = "wave")),
-                          conditionalPanel(
-                            condition = "input.plottype == 'fbar'",
-                            checkboxGroupInput("fbar_waves", "Choose Waveforms to Include",
-                                               choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
-                                               selected = c("E1", "E2", "G", "pd1", "pd2"))
-                          ),
-                          conditionalPanel(
-                            condition = "input.plottype == 'pie'",
-                            radioButtons("pietype", "Choose Type of Pie Chart",
-                                         choices = c(`By Time` = "pie_t",
-                                                     `By Count` = "pie_c")),
-                            checkboxGroupInput("pie_waves", "Choose Waveforms to Include",
-                                               choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
-                                               selected = c("E1", "E2", "G", "pd1", "pd2"))
-                          ),
-                          downloadButton(outputId = "pdf", label = "pdf"),
-                          downloadButton(outputId = "png", label = "png"),
-                          # downloadButton(outputId = "eps", label = "eps")
-                        ),
+                 radioButtons("plottype", "Choose Desired Visualization",
+                              choices = c(`Frequency Bar Chart` = 'fbar',
+                                          `Pie chart of Waveforms` = "pie",
+                                          `Labeled Time Series` = "wave")),
+                 conditionalPanel(
+                   condition = "input.plottype == 'fbar'",
+                   checkboxGroupInput("fbar_waves", "Choose Waveforms to Include",
+                                      choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
+                                      selected = c("E1", "E2", "G", "pd1", "pd2"))
+                 ),
+                 conditionalPanel(
+                   condition = "input.plottype == 'pie'",
+                   radioButtons("pietype", "Choose Type of Pie Chart",
+                                choices = c(`By Time` = "pie_t",
+                                            `By Count` = "pie_c")),
+                   checkboxGroupInput("pie_waves", "Choose Waveforms to Include",
+                                      choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
+                                      selected = c("E1", "E2", "G", "pd1", "pd2"))
+                 ),
+                 downloadButton(outputId = "pdf", label = "pdf"),
+                 downloadButton(outputId = "png", label = "png"),
+                 # downloadButton(outputId = "eps", label = "eps")
+               ),
 
-                        mainPanel(plotlyOutput("plot"))
-                      )
+               mainPanel(plotlyOutput("plot"))
              )
     )
+  )
 
-  ))
+))

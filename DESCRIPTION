@@ -1,22 +1,23 @@
 Package: epgminer
 Title: Analysis of EPG data
-Version: 0.0.0.9
+Version: 0.0.1
 Authors@R: 
     person(given = "Elizabeth",
            family = "Chun",
            role = c("aut", "cre"),
            email = "lizzie_chun1@tamu.edu")
-Description: What the package does (one paragraph).
+Description: Analysis of EPG data through metrics and visuals.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Depends: R (>= 4.0.0)
+Depends: R (>= 4.0.3)
 Imports:
     dplyr,
     ggplot2,
     magrittr,
+    plotly,
     readr,
     shiny,
     stats,

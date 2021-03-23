@@ -23,8 +23,8 @@
 
 wave_duration <- function(data) {
 
-  waveform = wave_group = time = NULL
-  rm(list = c("waveform", "wave_group", "time"))
+  waveform = wave_group = time = duration = NULL
+  rm(list = c("waveform", "wave_group", "time", "duration"))
 
   out = data %>%
     # wave_group is each waveform/na period

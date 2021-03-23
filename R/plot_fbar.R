@@ -21,6 +21,10 @@
 
 plot_fbar <- function (data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
                                            "pd2", "pd")) {
+
+  waveform = frequency = NULL
+  rm(list = c("waveform", "frequency"))
+
   out <- wave_topfreq(data)
   out <- out %>%
     # filter after finding top frequency to avoid run-on errors

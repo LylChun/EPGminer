@@ -19,7 +19,9 @@
 #' @details Main frequencies are determined as those having the
 #' largest amplitude. Frequencies are aggregated such that only the highest in each
 #' integer bin are kept and compared - e.g. if the data is 5.1 Hz, 5.2 Hz, only the
-#' largest will be kept for the 5.x Hz entry.
+#' largest will be kept for the 5.x Hz entry. Therefore if there are multiple main
+#' frequencies in the same bin, only the largest one will the kept and the others
+#' will be discarded.
 #'
 #' @return
 #' A dataframe containing the main frequencies with 2 columns is returned:

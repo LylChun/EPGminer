@@ -5,7 +5,9 @@
 #' @usage read_epg(data, extension = c("txt", "ANA", "csv"))
 #'
 #' @param data As with other read in functions, insert the file
-#' path for the data file here.
+#' path for the data file here. If there are multiple files, they must
+#' be read in one at a time such as by using lapply.
+#'
 #' @param extension The file extension for the raw data that is to be read. The
 #' options are txt, ANA, and csv. If no extension is indicated,
 #' txt will be chosen by defaults.

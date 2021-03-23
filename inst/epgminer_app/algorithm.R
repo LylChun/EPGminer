@@ -1,3 +1,29 @@
+################ Utils ################
+
+seqvec <- Vectorize(seq.default, vectorize.args = c("from", "to"))
+
+smooth_vts <- function (data, interval = 127) {
+  out = tibble::tibble(time = data$time, volts = stats::runmed(data$volts, interval))
+  return(out)
+}
+
+pd_helper <- function (data) {
+
+  waveform = wave_group = NULL
+  rm(list = c("waveform", "wave_group"))
+
+  out <- data %>%
+    dplyr::mutate(waveform = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"),
+                                            "pd", "non")) %>%
+    dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
+                                   rle(waveform)[[1]])) %>%
+    dplyr::group_by(wave_group)
+
+  # returns grouped tibble with pd and non, grouped into wave_groups
+  return(out)
+}
+
+
 ################### A ##############
 
 # run on 24 hr data as a whole
@@ -56,7 +82,7 @@ a_ao <- function (data, a_o = c(0.75, 0.5, 1, 1.25), a_drop = 0.75) {
 
 
 ########### G ################
-# works for one G in 24 hr period ----
+# works for one G in 24 hr period
 g_label <- function (data, g_drop = 0.75) {
 
   out <- g_times(data, g_drop)
@@ -182,7 +208,7 @@ e_label <- function (data, e_var = 0.1, e_o = c(2, 1.25), e_low = 1.25) {
   out <- udat %>%
     left_join(e_sub(udat), by = c("time", "volts", "we"))
 
-  ########## replaced, keep for now ----
+  ########## replaced, keep for now
   # # bandaid filter
   # # if no deep basin of e then don't bother evaluating
   # if (quantile(data$volts)[1] > -1.5) {
@@ -205,7 +231,7 @@ e_label <- function (data, e_var = 0.1, e_o = c(2, 1.25), e_low = 1.25) {
   #   out = udat %>%
   #     mutate(subform = ifelse(we == "e", "E1", NA_character_))
   # }
-  ##########
+  ########## End old code
   return(out)
 }
 
@@ -900,7 +926,7 @@ probe_apply <- function (data) {
 
 # want to take data, remove probe and a sections
 # receive a labelled data - a_data_probe, shiny only
-probe_comb <- function (data, e_var = 0.1) {
+probe_comb <- function (data, e_var = 0.1, g_drop = 0.75) {
 
   feed <- rbindlist(probe_split(data))
 
@@ -911,7 +937,7 @@ probe_comb <- function (data, e_var = 0.1) {
 
   # will need different wave_label functions
 
-  out <- wave_label_probe(adat, e_var = e_var)
+  out <- wave_label_probe(adat, e_var = e_var, g_drop = g_drop)
 
   return(out)
 }

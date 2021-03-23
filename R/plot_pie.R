@@ -16,14 +16,17 @@
 #'
 #' @details The function plot_pie is designed to help visualize EPG waveform data.
 #'
-#' @return A pie chart of EPG waveforms in a dataset.
+#' @return A plotly pie chart of EPG waveforms in a dataset.
 #' @export
 #'
 #' @family waveform functions
 #'
 
-plot_pie <- function (data, pietype = c("time", "count"), sample_rate = 100,
+plot_pie <- function (data, pietype = c("time", "count"),
                       waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd")) {
+
+  waveform = duration = NULL
+  rm(list = c("waveform", "duration"))
 
   pietype = match.arg(pietype)
 
@@ -32,7 +35,7 @@ plot_pie <- function (data, pietype = c("time", "count"), sample_rate = 100,
     plot_data <- wave_duration(data) %>%
       dplyr::group_by(waveform) %>%
       # duration is in seconds, divide by 60 to get minutes
-      summarise(waveform = waveform[1], time = round(sum(duration)/60, 2),
+      dplyr::summarise(waveform = waveform[1], time = round(sum(duration)/60, 2),
                 .groups = "drop") %>%
       dplyr::filter(waveform %in% waveforms)
 

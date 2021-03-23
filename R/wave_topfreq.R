@@ -23,8 +23,8 @@
 
 wave_topfreq <- function (data) {
 
-  waveform = wave_group = suffish = time = volts = NULL
-  rm(list = c("waveform", "wave_group", "suffish", "time", "volts"))
+  waveform = wave_group = suffish = time = volts = frequency = NULL
+  rm(list = c("waveform", "wave_group", "suffish", "time", "volts", "frequency"))
 
   out = data %>%
     # wave_group is each waveform/na period
