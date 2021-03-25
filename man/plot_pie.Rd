@@ -19,7 +19,7 @@ if there are 20 distince waveforms, and 5 are of type C, then C will be 5/20 or
 \item{waveforms}{A list of waveforms to include in the plot. Default is all.}
 }
 \value{
-A pie chart of EPG waveforms in a dataset.
+A plotly pie chart of EPG waveforms in a dataset.
 }
 \description{
 The function plot_pie allows one to visualize EPG waveforms in a

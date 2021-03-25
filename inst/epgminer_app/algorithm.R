@@ -41,7 +41,7 @@ a_times <- function (data, a_o = c(0.75, 0.5, 1, 1.25), a_drop = 0.75) {
   times = seq(from = udat$time[1], to = udat$time[2], by = 0.01)
 
   out = data %>%
-    dplyr::mutate(a = dplyr::if_else(round(time, 2) %in% round(times, 2), "a", NA_character_))
+    dplyr::mutate(a = dplyr::if_else(round(time, 2) %in% round(times, 2), "A", NA_character_))
 
   return(out)
 }
@@ -930,7 +930,7 @@ probe_comb <- function (data, e_var = 0.1, g_drop = 0.75) {
 
   feed <- rbindlist(probe_split(data))
 
-  # using a_labelled data (has all time points)
+  # using a_labeled data (has all time points)
   adat <- data %>%
     # keep only splits (feeding times)
     filter(round(time, 2) %in% round(feed$time, 2))
@@ -942,7 +942,7 @@ probe_comb <- function (data, e_var = 0.1, g_drop = 0.75) {
   return(out)
 }
 
-# take in a_labelled data
+# take in a_labeled data
 wave_label_probe <- function (data, e_var = 0.1, e_o = c(2, 1.25), e_low = 1.25,
                               g_drop = 0.75, ...) {
 

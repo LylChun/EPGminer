@@ -76,7 +76,7 @@ plot_wave <- function (data, facetted = FALSE, aggregate = c("all", "smart", "no
   if (!facetted) {
 
     plot_data <- out %>%
-      dplyr:: mutate(A = ifelse(waveform == "a", volts, NA),
+      dplyr:: mutate(A = ifelse(waveform == "A", volts, NA),
                      C = ifelse(waveform == "C", volts, NA),
                      E1 = ifelse(waveform == "E1", volts, NA),
                      E2 = ifelse(waveform == "E2", volts, NA),
