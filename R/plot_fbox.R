@@ -1,25 +1,25 @@
-#' Bar Chart of Frequencies
+#' Box plot of Frequencies
 #'
-#' @description The function plot_fbar shows the frequencies present in a dataset
-#' plotted in a bar chart by waveform.
+#' @description The function plot_fbox shows the frequencies present in a dataset
+#' plotted in a box plot by waveform.
 #'
-#' @usage plot_fbar(data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
+#' @usage plot_fbox(data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
 #' "pd2", "pd"))
 #'
 #' @inheritParams plot_wave
 #' @param waveforms A list of waveforms to include in the plot. Default is all.
 #'
-#' @details The function plot_fbar is designed to allow one to see the frequencies
+#' @details The function plot_fbox is designed to allow one to see the frequencies
 #' and the variability of frequencies for waveforms in a dataset.
 #'
-#' @return A bar chart of frequencies by waveform
+#' @return A boxplot of frequencies by waveform
 #' @export
 #'
 #' @family frequency related functions
 #'
 #'
 
-plot_fbar <- function (data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
+plot_fbox <- function (data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
                                            "pd2", "pd")) {
 
   waveform = frequency = NULL

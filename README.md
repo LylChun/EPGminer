@@ -67,14 +67,7 @@ will first generate a simple example waveform.
 library(epgminer)
 library(tibble)
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
+#> Warning: package 'dplyr' was built under R version 4.0.4
 example <- tibble(time = seq(0, 10, 0.01), volts = sin(pi*time))
 plot_vts(example, aggregate = FALSE)
 ```
@@ -196,7 +189,7 @@ wave_count(waves)
 ```
 
 Lastly, there are a number of visuals in the waveform family of
-functions: plot\_wave, plot\_pie, and plot\_fbar. The plot\_wave shows
+functions: plot\_wave, plot\_pie, and plot\_fbox. The plot\_wave shows
 the data labeled by waveform using different colors for each waveform
 type. The plot\_pie generates pie charts of time or count depending on
 the input parameter pietype. These pie charts are generated using plotly
@@ -228,7 +221,7 @@ plot_pie(waves, pietype = "count")
 
 ``` r
 # frequency variation 
-plot_fbar(waves)
+plot_fbox(waves)
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-4.png" width="100%" />

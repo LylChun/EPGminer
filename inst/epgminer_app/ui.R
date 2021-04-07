@@ -28,7 +28,7 @@ shinyUI(fluidPage(
                column(12,
                       wellPanel(
                         h4("Overview"),
-                        p("EPGminer is a web application designed to assist researchers in the
+                        p("EPGminer is an application designed to assist researchers in the
                           analysis of Electrical Penetration Graph (EPG) data. EPG data can help
                           scientists to better understand insect feeding behavior and host-insect
                           relationships. Since EPG datasets can often be large and hard to analyze,
@@ -139,7 +139,7 @@ shinyUI(fluidPage(
                           if there are 24 hours of data, you must upload the raw data for all 24 hours.
                           The file names do not need to match, only the contents."),
                         p("The algorithm for labeling data is still under active development and prone
-                          to erroring out and mislabeling. For detailed instructions on how to use it
+                          to erroring out or mislabeling. For detailed instructions on how to use it
                           and best avoid errors, please see the 'Additional Resources' section on
                           'Algorithmic Labeling'."))
                )
@@ -411,12 +411,12 @@ shinyUI(fluidPage(
                sidebarPanel(
 
                  radioButtons("plottype", "Choose Desired Visualization",
-                              choices = c(`Frequency Bar Chart` = 'fbar',
-                                          `Pie chart of Waveforms` = "pie",
+                              choices = c(`Frequency Box Plot` = 'fbox',
+                                          `Pie Chart of Waveforms` = "pie",
                                           `Labeled Time Series` = "wave")),
                  conditionalPanel(
-                   condition = "input.plottype == 'fbar'",
-                   checkboxGroupInput("fbar_waves", "Choose Waveforms to Include",
+                   condition = "input.plottype == 'fbox'",
+                   checkboxGroupInput("fbox_waves", "Choose Waveforms to Include",
                                       choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
                                       selected = c("E1", "E2", "G", "pd1", "pd2"))
                  ),

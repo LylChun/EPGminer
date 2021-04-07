@@ -7,7 +7,7 @@
 #' waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
 #'
 #' @inheritParams plot_wave
-#' @inheritParams plot_fbar
+#' @inheritParams plot_fbox
 #' @param pietype Select the type of pie chart to display. Default is time - a pie
 #' chart showing the percent of time spent in each waveform is displayed. If "count"
 #' is selected, then the number of instances for each waveform type is displayed - e.g.

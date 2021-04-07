@@ -46,7 +46,7 @@ Note that although some frequency related functions allow the selection of sampl
 
 To demonstrate the frequency calculation abilities of the package, we will first generate a simple example waveform.
 
-```{r}
+```{r, message = FALSE}
 library(epgminer)
 library(tibble)
 library(dplyr)
@@ -107,7 +107,7 @@ wave_duration(waves)
 wave_count(waves)
 ```
 
-Lastly, there are a number of visuals in the waveform family of functions: plot_wave, plot_pie, and plot_fbar. The plot_wave shows the data labeled by waveform using different colors for each waveform type. The plot_pie generates pie charts of time or count depending on the input parameter pietype. These pie charts are generated using plotly and are thus interactive within RStudio. The frequency variation barplot will show the variation in main frequency within a waveform type. The example data has no variation but actual data can contain great variation in frequency within a single waveform type.
+Lastly, there are a number of visuals in the waveform family of functions: plot_wave, plot_pie, and plot_fbox. The plot_wave shows the data labeled by waveform using different colors for each waveform type. The plot_pie generates pie charts of time or count depending on the input parameter pietype. These pie charts are generated using plotly and are thus interactive within RStudio. The frequency variation barplot will show the variation in main frequency within a waveform type. The example data has no variation but actual data can contain great variation in frequency within a single waveform type.
 
 ```{r}
 # color coded by waveform
@@ -117,7 +117,7 @@ plot_pie(waves, pietype = "time")
 # pie chart of count
 plot_pie(waves, pietype = "count")
 # frequency variation 
-plot_fbar(waves)
+plot_fbox(waves)
 ```
 
 ## EPGminer Shiny App

@@ -201,9 +201,9 @@ shinyServer(function(input, output, session) {
     plot_id <- showNotification("Rendering...", duration  = NULL, closeButton = FALSE)
     on.exit(removeNotification(plot_id), add = TRUE)
 
-    if (input$plottype == "fbar") {
+    if (input$plottype == "fbox") {
 
-      gg <- plot_fbar(analyze_data(), waveforms = input$fbar_waves)
+      gg <- plot_fbox(analyze_data(), waveforms = input$fbox_waves)
 
       ggplotly(gg)
     }
@@ -234,8 +234,8 @@ shinyServer(function(input, output, session) {
 
   visual_name <- reactive({
 
-    if (input$plottype == "fbar") {
-      out <- "Frequency_barplot"
+    if (input$plottype == "fbox") {
+      out <- "Frequency_boxplot"
     }
 
     else if (input$plottype == "pie") {
