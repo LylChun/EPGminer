@@ -19,7 +19,8 @@ each waveform instance in labelled data.
 }
 \details{
 Labelled data is grouped by each waveform instance and the duration
-is then calculated. The waveform type 'pd' independent of any splitting
+is then calculated. The overall feeding duration is displayed in the top row
+as "Feeding" for simplicity. The waveform type 'pd' independent of any splitting
 into subforms is calculated at the end. As a result, the pd calculations
 will appear all at the end of the table. The subforms, pd1 and pd2,
 will appear in sequence. Duration is reported in seconds.

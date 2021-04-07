@@ -8,7 +8,8 @@
 #' @inheritParams plot_wave
 #'
 #' @details Labelled data is grouped by each waveform instance and the duration
-#' is then calculated. The waveform type 'pd' independent of any splitting
+#' is then calculated. The overall feeding duration is displayed in the top row
+#' as "Feeding" for simplicity. The waveform type 'pd' independent of any splitting
 #' into subforms is calculated at the end. As a result, the pd calculations
 #' will appear all at the end of the table. The subforms, pd1 and pd2,
 #' will appear in sequence. Duration is reported in seconds.
@@ -50,6 +51,12 @@ wave_duration <- function(data) {
     dplyr::filter(waveform == "pd") %>%
     dplyr::select(waveform, duration)
 
-  out <- rbind(out, pdonly)
+  total <- tibble::tibble(
+    waveform = "Feeding",
+    duration = sum(out$duration[out$waveform %in% c("A", "C", "G", "E1", "E2")],
+                   pdonly$duration)
+  )
+
+  out <- dplyr::bind_rows(total, out, pdonly)
   return(out)
 }
