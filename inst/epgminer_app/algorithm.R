@@ -115,7 +115,7 @@ g_times <- function (data, g_drop = 0.75) {
 g_ao <- function (data, g_drop = 0.75) {
 
   aend <- data %>%
-    dplyr::filter(waveform == "a") %>%
+    dplyr::filter(waveform == "A") %>%
     dplyr::slice_tail()
 
   # check for feeding activity at very beginning
@@ -730,7 +730,7 @@ wave_label_pdc <- function (data, ...) {
 
   # find end for removing pdformat below
   aend <- addg %>%
-    filter(waveform == "a") %>%
+    filter(waveform == "A") %>%
     slice_tail()
 
   udat <- addg %>%
@@ -964,7 +964,7 @@ wave_label_probe <- function (data, e_var = 0.1, e_o = c(2, 1.25), e_low = 1.25,
 
   # find feeding beginning
   a_a <- aeg %>%
-    filter(waveform == "a") %>%
+    filter(waveform == "A") %>%
     slice_head()
 
   pdform <- aeg %>%
@@ -982,7 +982,7 @@ wave_label_probe <- function (data, e_var = 0.1, e_o = c(2, 1.25), e_low = 1.25,
 
   if (any(!is.na(aeg$g))) {
     gend <- aeg %>%
-      filter(waveform == "g") %>%
+      filter(waveform == "G") %>%
       slice_tail()
 
     gtimes <- seq(gend$time + 0.01, gend$time + 500, by = 0.01)
