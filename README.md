@@ -44,8 +44,9 @@ through the EPGminer app built using the Shiny framework. Additionaly,
 the app contains a novel algorithm for semi-automatic labeling of
 waveforms without the need for manual annotations.
 
-Currently the app, may be accessed through R by running epgminer\_app().
-A web hosted version is coming soon.
+The app may be accessed in two ways: (i) directly through R using
+epgminer::epgminer\_app(), or (ii) as a web application at:
+<https://epgdata.shinyapps.io/epgminer_app/>
 
 ## Example
 
