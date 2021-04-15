@@ -25,8 +25,8 @@ count can also be calculated.
 The other major function of the package epgminer is the ability to
 generate visuals. The plotting functions are all in the format plot\_x
 where x denotes the type of plot. The types of plots currently supported
-are: voltage time series, labeled waveform, Fourier transformed data,
-frequency bar plot, and two types of pie charts.
+are: voltage time series, labeled time-series, Fourier transformed data,
+frequency boxplot, and two types of pie charts.
 
 ## Installation
 
@@ -40,7 +40,7 @@ devtools::install_github("LylChun/epgminer")
 ## EPGminer Shiny App
 
 All of the functionality of the epgminer package is also accessible
-through the EPGminer app built using the Shiny framework. Additionaly,
+through the EPGminer app built using the Shiny framework. Additionally,
 the app contains a novel algorithm for semi-automatic labeling of
 waveforms without the need for manual annotations.
 
@@ -72,7 +72,9 @@ equal to 100Hz.
 ### Frequency
 
 To demonstrate the frequency calculation abilities of the package, we
-will first generate a simple example waveform.
+will first generate a simple example waveform. Note that this is not
+actual EPG data. It is merely a simple example of time-series data to
+demonstrate the frequency calculation in epgminer.
 
 ``` r
 library(epgminer)
@@ -205,7 +207,7 @@ functions: plot\_wave, plot\_pie, and plot\_fbox. The plot\_wave shows
 the data labeled by waveform using different colors for each waveform
 type. The plot\_pie generates pie charts of time or count depending on
 the input parameter pietype. These pie charts are generated using plotly
-and are thus interactive within RStudio. The frequency variation barplot
+and are thus interactive within RStudio. The frequency variation boxplot
 will show the variation in main frequency within a waveform type. The
 example data has no variation but actual data can contain great
 variation in frequency within a single waveform type.
