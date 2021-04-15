@@ -34,6 +34,12 @@ To install, use the following code:
 # install.packages("devtools")
 devtools::install_github("LylChun/epgminer")
 ```
+
+## EPGminer Shiny App
+All of the functionality of the epgminer package is also accessible through the EPGminer app built using the Shiny framework. Additionaly, the app contains a novel algorithm for semi-automatic labeling of waveforms without the need for manual annotations. 
+
+Currently the app, may be accessed through R by running epgminer_app(). A web hosted version is coming soon.
+
 ## Example
 
 Data to be analyzed using epgpminer must be in one of the accepted file formats. Raw voltage data must be in txt file(s) with the structure time;volts. ANA annotation files must have the first two columns be waveform then time. The columns do not need to be labeled, and any columns after the first two will not be used. Additionally for ANA files, the waveform codes will be converted as specified in the label_ana function when the raw data and annotation are combined. Finally, data that is already labeled may be read in csv format with columns labeled time, volts, and waveform. 
@@ -120,7 +126,4 @@ plot_pie(waves, pietype = "count")
 plot_fbox(waves)
 ```
 
-## EPGminer Shiny App
-All of the functionality of the epgminer package is also accessible through the EPGminer app built using the Shiny framework. Additionaly, the app contains a novel algorithm for semi-automatic labeling of waveforms without the need for manual annotations. 
 
-The app may be accessed in one of three ways: (i) directly through R by running epgminer::epgminer_app(), (ii) as a web application at the following link: *insert link*, or (iii) using the Desktop version which is available for download here: *insert  link*. Note that the desktop version is currently only available for Windows users. A Mac version is under development.

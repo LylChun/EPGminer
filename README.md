@@ -37,6 +37,16 @@ To install, use the following code:
 devtools::install_github("LylChun/epgminer")
 ```
 
+## EPGminer Shiny App
+
+All of the functionality of the epgminer package is also accessible
+through the EPGminer app built using the Shiny framework. Additionaly,
+the app contains a novel algorithm for semi-automatic labeling of
+waveforms without the need for manual annotations.
+
+Currently the app, may be accessed through R by running epgminer\_app().
+A web hosted version is coming soon.
+
 ## Example
 
 Data to be analyzed using epgpminer must be in one of the accepted file
@@ -174,12 +184,13 @@ wave_topfreq(waves)
 #> 2 G              1.5
 #> 3 C              0.5
 wave_duration(waves)
-#> # A tibble: 3 x 2
+#> # A tibble: 4 x 2
 #>   waveform duration
 #>   <chr>       <dbl>
-#> 1 C            9.99
-#> 2 G            9.99
-#> 3 C            9.99
+#> 1 Feeding     30.0 
+#> 2 C            9.99
+#> 3 G            9.99
+#> 4 C            9.99
 wave_count(waves)
 #> # A tibble: 2 x 2
 #>   waveform count
@@ -225,17 +236,3 @@ plot_fbox(waves)
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-4.png" width="100%" />
-
-## EPGminer Shiny App
-
-All of the functionality of the epgminer package is also accessible
-through the EPGminer app built using the Shiny framework. Additionaly,
-the app contains a novel algorithm for semi-automatic labeling of
-waveforms without the need for manual annotations.
-
-The app may be accessed in one of three ways: (i) directly through R by
-running epgminer::epgminer\_app(), (ii) as a web application at the
-following link: *insert link*, or (iii) using the Desktop version which
-is available for download here: *insert link*. Note that the desktop
-version is currently only available for Windows users. A Mac version is
-under development.
