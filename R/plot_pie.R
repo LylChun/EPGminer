@@ -3,13 +3,13 @@
 #' @description The function plot_pie allows one to visualize EPG waveforms in a
 #' pie chart format.
 #'
-#' @usage plot_pie(data, pietype = c("time", "count"),
+#' @usage plot_pie(data, pietype = c("time", "number"),
 #' waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
 #'
 #' @inheritParams plot_wave
 #' @inheritParams plot_fbox
 #' @param pietype Select the type of pie chart to display. Default is time - a pie
-#' chart showing the percent of time spent in each waveform is displayed. If "count"
+#' chart showing the percent of time spent in each waveform is displayed. If "number"
 #' is selected, then the number of instances for each waveform type is displayed - e.g.
 #' if there are 20 distince waveforms, and 5 are of type C, then C will be 5/20 or
 #' 25%.
@@ -22,7 +22,7 @@
 #' @family waveform functions
 #'
 
-plot_pie <- function (data, pietype = c("time", "count"),
+plot_pie <- function (data, pietype = c("time", "number"),
                       waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd")) {
 
   waveform = duration = NULL
@@ -45,15 +45,15 @@ plot_pie <- function (data, pietype = c("time", "count"),
                     text = ~paste(time, "minutes"))
   }
 
-  else if (pietype == "count") {
-    plot_data <- wave_count(data) %>%
+  else if (pietype == "number") {
+    plot_data <- wave_number(data) %>%
       dplyr::filter(waveform %in% waveforms)
 
-    plotly::plot_ly(plot_data, labels = ~waveform, values = ~count, type = 'pie',
+    plotly::plot_ly(plot_data, labels = ~waveform, values = ~number, type = 'pie',
                     textposition = 'inside',
                     textinfo = 'percent',
                     hoverinfo = 'text+label',
-                    text = ~paste(count))
+                    text = ~paste(number))
   }
 
 

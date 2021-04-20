@@ -4,14 +4,14 @@
 \alias{plot_pie}
 \title{Pie chart of labelled EPG data}
 \usage{
-plot_pie(data, pietype = c("time", "count"),
+plot_pie(data, pietype = c("time", "number"),
 waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
 }
 \arguments{
 \item{data}{A dataframe containing three columns: time, volts, waveform.}
 
 \item{pietype}{Select the type of pie chart to display. Default is time - a pie
-chart showing the percent of time spent in each waveform is displayed. If "count"
+chart showing the percent of time spent in each waveform is displayed. If "number"
 is selected, then the number of instances for each waveform type is displayed - e.g.
 if there are 20 distince waveforms, and 5 are of type C, then C will be 5/20 or
 25\%.}
@@ -31,9 +31,9 @@ The function plot_pie is designed to help visualize EPG waveform data.
 \seealso{
 Other waveform functions: 
 \code{\link{plot_wave}()},
-\code{\link{wave_count}()},
 \code{\link{wave_duration}()},
 \code{\link{wave_extract}()},
+\code{\link{wave_number}()},
 \code{\link{wave_topfreq}()}
 }
 \concept{waveform functions}

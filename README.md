@@ -20,7 +20,7 @@ One primary utility of using epgminer for analysis is the ability to
 calculate frequencies using the Fourier Transform. In this way,
 waveforms both within and between datasets can be analyzed for
 differences in constituent frequency. Other metrics such as duration and
-count can also be calculated.
+number can also be calculated.
 
 The other major function of the package epgminer is the ability to
 generate visuals. The plotting functions are all in the format plot\_x
@@ -174,9 +174,10 @@ plot_vts(waves, aggregate = FALSE)
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 Three metrics can be calculated for each waveform: frequency, duration,
-and count. These metrics are applied per individual waveform or waveform
-type in the case of count. Note that “C” and “G” were labeled simply as
-examples and are not representative of true waveform C or G data.
+and number. These metrics are applied per individual waveform or
+waveform type in the case of number. Note that “C” and “G” were labeled
+simply as examples and are not representative of true waveform C or G
+data.
 
 ``` r
 wave_topfreq(waves)
@@ -194,18 +195,18 @@ wave_duration(waves)
 #> 2 C            9.99
 #> 3 G            9.99
 #> 4 C            9.99
-wave_count(waves)
+wave_number(waves)
 #> # A tibble: 2 x 2
-#>   waveform count
-#>   <chr>    <int>
-#> 1 C            2
-#> 2 G            1
+#>   waveform number
+#>   <chr>     <int>
+#> 1 C             2
+#> 2 G             1
 ```
 
 Lastly, there are a number of visuals in the waveform family of
 functions: plot\_wave, plot\_pie, and plot\_fbox. The plot\_wave shows
 the data labeled by waveform using different colors for each waveform
-type. The plot\_pie generates pie charts of time or count depending on
+type. The plot\_pie generates pie charts of time or number depending on
 the input parameter pietype. These pie charts are generated using plotly
 and are thus interactive within RStudio. The frequency variation boxplot
 will show the variation in main frequency within a waveform type. The
@@ -227,8 +228,8 @@ plot_pie(waves, pietype = "time")
 <img src="man/figures/README-unnamed-chunk-8-2.png" width="100%" />
 
 ``` r
-# pie chart of count
-plot_pie(waves, pietype = "count")
+# pie chart of number
+plot_pie(waves, pietype = "number")
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-3.png" width="100%" />

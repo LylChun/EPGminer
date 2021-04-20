@@ -102,8 +102,8 @@ shinyServer(function(input, output, session) {
       out <- wave_duration(analyze_data())
     }
 
-    else if (input$metric == "count") {
-      out <- wave_count(analyze_data())
+    else if (input$metric == "number") {
+      out <- wave_number(analyze_data())
     }
 
     return(out)
@@ -177,7 +177,7 @@ shinyServer(function(input, output, session) {
 
     }
 
-    else if (input$metric == "count") {
+    else if (input$metric == "number") {
       out <- out
     }
 
@@ -217,7 +217,7 @@ shinyServer(function(input, output, session) {
 
       else if (input$pietype == "pie_c") {
 
-        plot_pie(analyze_data(), pietype = "count", waveforms = input$pie_waves)
+        plot_pie(analyze_data(), pietype = "number", waveforms = input$pie_waves)
       }
     }
 

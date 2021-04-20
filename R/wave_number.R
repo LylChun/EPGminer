@@ -1,9 +1,9 @@
-#' Calculate the Count or number of each waveform
+#' Calculate the Number of each waveform
 #'
-#' @description The function wave_count calculates the count of each waveform
+#' @description The function wave_number calculates the number of each waveform
 #' type.
 #'
-#' @usage wave_count(data)
+#' @usage wave_number(data)
 #'
 #' @inheritParams plot_wave
 #'
@@ -14,13 +14,13 @@
 #' The subforms, pd1 and pd2, will appear in sequence.
 #'
 #' @return A tibble object containing a row per waveform instance and two
-#' columns, waveform and count, is returned.
+#' columns, waveform and number, is returned.
 #'
 #' @export
 #'
 #' @family waveform functions
 
-wave_count <- function(data) {
+wave_number <- function(data) {
 
   waveform = wave_group = time = NULL
   rm(list = c("waveform", "wave_group", "time"))
@@ -29,14 +29,14 @@ wave_count <- function(data) {
     dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
                                    rle(waveform)[[1]])) %>%
     dplyr::group_by(waveform) %>%
-    dplyr::summarise(waveform = waveform[1], count = length(unique(wave_group)),
+    dplyr::summarise(waveform = waveform[1], number = length(unique(wave_group)),
                      .groups = "drop") %>%
     dplyr::filter(waveform != "pd")
 
   pdonly <- pd_helper(data) %>%
     dplyr::ungroup() %>%
     dplyr::group_by(waveform) %>%
-    dplyr::summarise(waveform = waveform[1], count = length(unique(wave_group)),
+    dplyr::summarise(waveform = waveform[1], number = length(unique(wave_group)),
                      .groups = "drop") %>%
     dplyr::filter(waveform == "pd")
 
