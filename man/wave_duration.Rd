@@ -30,7 +30,7 @@ Other waveform functions:
 \code{\link{plot_pie}()},
 \code{\link{plot_wave}()},
 \code{\link{wave_extract}()},
-\code{\link{wave_number}()},
+\code{\link{wave_occurrence}()},
 \code{\link{wave_topfreq}()},
 \code{\link{wave_volts}()}
 }

@@ -46,7 +46,7 @@ plot_pie <- function (data, pietype = c("time", "number"),
   }
 
   else if (pietype == "number") {
-    plot_data <- wave_number(data) %>%
+    plot_data <- wave_occurrence(data) %>%
       dplyr::filter(waveform %in% waveforms)
 
     plotly::plot_ly(plot_data, labels = ~waveform, values = ~number, type = 'pie',

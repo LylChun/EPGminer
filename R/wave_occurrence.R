@@ -1,9 +1,9 @@
 #' Calculate the Number of each waveform
 #'
-#' @description The function wave_number calculates the number of each waveform
+#' @description The function wave_occurrence calculates the number of each waveform
 #' type.
 #'
-#' @usage wave_number(data)
+#' @usage wave_occurrence(data)
 #'
 #' @inheritParams plot_wave
 #'
@@ -14,13 +14,13 @@
 #' The subforms, pd1 and pd2, will appear in sequence.
 #'
 #' @return A tibble object containing a row per waveform instance and two
-#' columns, waveform and number, is returned.
+#' columns, waveform and occurrence, is returned.
 #'
 #' @export
 #'
 #' @family waveform functions
 
-wave_number <- function(data) {
+wave_occurrence <- function(data) {
 
   waveform = wave_group = time = pd = volts = NULL
   rm(list = c("waveform", "wave_group", "time", "pd", "volts"))
@@ -43,23 +43,23 @@ wave_number <- function(data) {
     dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
                                    rle(waveform)[[1]])) %>%
     dplyr::group_by(waveform) %>%
-    dplyr::summarise(waveform = waveform[1], number = length(unique(wave_group)),
+    dplyr::summarise(waveform = waveform[1], occurrence = length(unique(wave_group)),
                      .groups = "drop")
 
   # check for phloem feeding, if not present assign number 0
   if (!any(unique(out$waveform) == "E1")) {
     out <- out %>%
-      dplyr::add_row(waveform = "E1", number = 0)
+      dplyr::add_row(waveform = "E1", occurrence = 0)
   }
   if (!any(unique(out$waveform) == "E2")) {
     out <- out %>%
-      dplyr::add_row(waveform = "E2", number = 0)
+      dplyr::add_row(waveform = "E2", occurrence = 0)
   }
 
   pdsubforms <- pd_helper(data) %>%
     dplyr::group_by(waveform) %>%
     dplyr::summarise(waveform = waveform[1],
-                     number = length(unique(wave_group)),
+                     occurrence = length(unique(wave_group)),
                      .groups = "drop")
 
   out <- rbind(out, pdsubforms)
