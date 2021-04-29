@@ -2,7 +2,7 @@
 library(dplyr)
 library(epgminer)
 # library(htmlwidgets)
-# library(plotly)
+library(plotly)
 ### library(readr)
 # library(shiny)
 # library(shinythemes)
@@ -42,10 +42,10 @@ shinyUI(fluidPage(
                         p("One of the main functionalities of EPGminer is to allow researchers to
                           calculate frequencies for labeled waveforms using the Fourier Transform.
                           Additional waveform metrics are available as well, such as duration and
-                          number. Another main functionality of EPGminer is the ability to generate
+                          occurrence. Another main functionality of EPGminer is the ability to generate
                           visuals. There are currently four visuals that EPGminer can create - a
                           frequency boxplot, a pie chart of waveform times, a pie chart of
-                          waveform number, and a time series colored by waveform labels. Each of
+                          waveform occurrence., and a time series colored by waveform labels. Each of
                           these plots, with the exception of the labeled time series, is customizable
                           - e.g. the user may select which waveforms to include in the plot itself.
                           All plots are interactive and the user may zoom in, or 'hover' over the plot
@@ -100,7 +100,7 @@ shinyUI(fluidPage(
                           completely accurate results."),
                         p("2. When you have finished loading/labeling your data, proceed to the
                           'Analyze My Data' tab for analysis of the labeled waveforms. This tab
-                          allows one to calculate metrics - frequency, duration, and number, as well as
+                          allows one to calculate metrics - frequency, duration, and occurrence., as well as
                           to summarise the metric by waveform (frequency and duration only). You may
                           download the analysis by clicking on one of the buttons diplayed above the
                           table - e.g. if you would like to download the table as a csv click on the
@@ -380,7 +380,10 @@ shinyUI(fluidPage(
                  selectInput("metric", "Choose Desired Metric",
                              choices = c(`Frequency` = 'freq',
                                          `Duration` = 'dur',
-                                         `Number` = 'number')),
+                                         `Occurrence` = 'count',
+                                         `Mean Volts` = 'mean_volts',
+                                         `SD volts` = 'sd_volts',
+                                         `Amplitude volts` = 'amp_volts')),
                  conditionalPanel(
                    condition = "input.metric == 'freq'",
                    radioButtons("summary", "Choose Summary Type",
@@ -392,6 +395,30 @@ shinyUI(fluidPage(
                  conditionalPanel(
                    condition = "input.metric == 'dur'",
                    radioButtons("summaryd", "Choose Summary Type",
+                                choices = c(`Individual` = 'default',
+                                            `Median per Wavefrom` = "median",
+                                            `Mean per Waveform` = "mean",
+                                            `SD within each Waveform` = "sd"))
+                 ),
+                 conditionalPanel(
+                   condition = "input.metric == 'mean_volts'",
+                   radioButtons("summarymv", "Choose Summary Type",
+                                choices = c(`Individual` = 'default',
+                                            `Median per Wavefrom` = "median",
+                                            `Mean per Waveform` = "mean",
+                                            `SD within each Waveform` = "sd"))
+                 ),
+                 conditionalPanel(
+                   condition = "input.metric == 'sd_volts'",
+                   radioButtons("summarysv", "Choose Summary Type",
+                                choices = c(`Individual` = 'default',
+                                            `Median per Wavefrom` = "median",
+                                            `Mean per Waveform` = "mean",
+                                            `SD within each Waveform` = "sd"))
+                 ),
+                 conditionalPanel(
+                   condition = "input.metric == 'amp_volts'",
+                   radioButtons("summaryav", "Choose Summary Type",
                                 choices = c(`Individual` = 'default',
                                             `Median per Wavefrom` = "median",
                                             `Mean per Waveform` = "mean",

@@ -103,8 +103,12 @@ shinyServer(function(input, output, session) {
       out <- wave_duration(analyze_data())
     }
 
-    else if (input$metric == "number") {
-      out <- wave_number(analyze_data())
+    else if (input$metric == "count") {
+      out <- wave_occurrence(analyze_data())
+    }
+
+    else if (input$metric %in% c("mean_volts", "sd_volts", "amp_volts")) {
+      out <- wave_volts(analyze_data())
     }
 
     return(out)
@@ -178,10 +182,114 @@ shinyServer(function(input, output, session) {
 
     }
 
-    else if (input$metric == "number") {
+    else if (input$metric == "count") {
       out <- out
     }
 
+    if (input$metric == "mean_volts") {
+
+      out <- out %>%
+        select(waveform, mean_volts)
+
+      if (input$summarymv == "default") {
+        out <- out
+        colnames(out) <- c("waveform", "mean volts")
+      }
+
+      else if (input$summarymv == "median") {
+        out <- out %>%
+          group_by(waveform) %>%
+          summarise(waveform = waveform[1],
+                    mean_volts = round(median(mean_volts), 2))
+        colnames(out) <- c("waveform", "mean volts")
+      }
+
+      else if (input$summarymv == "mean") {
+        out <- out %>%
+          group_by(waveform) %>%
+          summarise(waveform = waveform[1],
+                    mean_volts = round(mean(mean_volts), 2))
+        colnames(out) <- c("waveform", "mean volts")
+      }
+
+      else if (input$summarymv == "sd") {
+        out <- out %>%
+          group_by(waveform) %>%
+          summarise(waveform = waveform[1],
+                    sd = round(sd(mean_volts), 2))
+      }
+
+    }
+
+    if (input$metric == "sd_volts") {
+
+      out <- out %>%
+        select(waveform, sd_volts)
+
+      if (input$summarysv == "default") {
+        out <- out
+        colnames(out) <- c("waveform", "SD volts")
+      }
+
+      else if (input$summarysv == "median") {
+        out <- out %>%
+          group_by(waveform) %>%
+          summarise(waveform = waveform[1],
+                    sd_volts = round(median(sd_volts), 2))
+        colnames(out) <- c("waveform", "SD volts")
+      }
+
+      else if (input$summarysv == "mean") {
+        out <- out %>%
+          group_by(waveform) %>%
+          summarise(waveform = waveform[1],
+                    sd_volts = round(mean(sd_volts), 2))
+        colnames(out) <- c("waveform", "SD volts")
+      }
+
+      else if (input$summarysv == "sd") {
+        out <- out %>%
+          group_by(waveform) %>%
+          summarise(waveform = waveform[1],
+                    sd = round(sd(sd_volts), 2))
+      }
+
+    }
+
+    if (input$metric == "amp_volts") {
+
+      out <- out %>%
+        select(waveform, amplitude_volts)
+
+      if (input$summaryav == "default") {
+        out <- out
+        colnames(out) <- c("waveform", "Amplitude Volts")
+      }
+
+      else if (input$summaryav == "median") {
+        out <- out %>%
+          group_by(waveform) %>%
+          summarise(waveform = waveform[1],
+                    amplitude_volts = round(median(amplitude_volts), 2))
+        colnames(out) <- c("waveform", "Amplitude Volts")
+      }
+
+      else if (input$summaryav == "mean") {
+        out <- out %>%
+          group_by(waveform) %>%
+          summarise(waveform = waveform[1],
+                    amplitude_volts = round(mean(amplitude_volts), 2))
+        colnames(out) <- c("waveform", "Amplitude Volts")
+      }
+
+      else if (input$summaryav == "sd") {
+        out <- out %>%
+          group_by(waveform) %>%
+          summarise(waveform = waveform[1],
+                    sd = round(sd(amplitude_volts), 2))
+      }
+
+    }
     return(out)
   })
 
