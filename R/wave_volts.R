@@ -8,22 +8,22 @@
 #' @inheritParams plot_wave
 #'
 #' @details Labeled data is grouped by each waveform instance and the following three
-#' voltage metrics are returned: median, SD, and amplitude.
+#' voltage metrics are returned: mean, SD, and amplitude.
 #' The amplitude is defined as the range of voltage values while the SD is the
-#' mathematical SD. Median is first corrected for by subtracting the starting
-#' voltage, then the median relative (adjusted) voltage is returned.
+#' mathematical SD. Mean is first corrected for by subtracting the starting
+#' voltage, then the mean relative (adjusted) voltage is returned.
 #'
 #' @return A tibble object containing a row per waveform instance and four
-#' columns is returned: waveform, median_volts, sd_volts, amplitude_volts.
+#' columns is returned: waveform, mean_volts, sd_volts, amplitude_volts.
 #' @export
 #'
 #' @family waveform functions
 
 wave_volts <- function(data) {
 
-  waveform = wave_group = time = median_volts = sd_volts =
+  waveform = wave_group = time = mean_volts = sd_volts =
     amplitude_volts = pd = volts = NULL
-  rm(list = c("waveform", "wave_group", "time", "median_volts", "sd_volts",
+  rm(list = c("waveform", "wave_group", "time", "mean_volts", "sd_volts",
               "amplitude_volts", "pd", "volts"))
 
   udat <- data %>%
@@ -57,8 +57,8 @@ wave_volts <- function(data) {
                                    rle(wave_group)[[1]])) %>%
     dplyr::group_by(wave_group) %>%
     dplyr::summarise(waveform = waveform[1],
-                     # median is relative to baseline begin
-                     median_volts = stats::median((volts - begin), na.rm = TRUE),
+                     # mean is relative to baseline begin
+                     mean_volts = mean((volts - begin), na.rm = TRUE),
                      sd_volts = stats::sd(volts, na.rm = TRUE),
                      amplitude_volts = max(volts) - min(volts),
                      .groups = "drop") %>%
@@ -67,7 +67,7 @@ wave_volts <- function(data) {
   pdsubforms <- pd_helper(data) %>%
     dplyr::group_by(wave_group) %>%
     dplyr::summarise(waveform = waveform[1],
-                     median_volts = stats::median(volts, na.rm = TRUE),
+                     mean_volts = mean(volts, na.rm = TRUE),
                      sd_volts = stats::sd(volts, na.rm = TRUE),
                      amplitude_volts = max(volts) - min(volts),
                      .groups = "drop") %>%

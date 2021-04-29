@@ -11,7 +11,7 @@ wave_volts(data)
 }
 \value{
 A tibble object containing a row per waveform instance and four
-columns is returned: waveform, median_volts, sd_volts, amplitude_volts.
+columns is returned: waveform, mean_volts, sd_volts, amplitude_volts.
 }
 \description{
 The function wave_volts calculates the voltage metrics
@@ -19,10 +19,10 @@ for each waveform instance
 }
 \details{
 Labeled data is grouped by each waveform instance and the following three
-voltage metrics are returned: median, SD, and amplitude.
+voltage metrics are returned: mean, SD, and amplitude.
 The amplitude is defined as the range of voltage values while the SD is the
-mathematical SD. Median is first corrected for by subtracting the starting
-voltage, then the median relative (adjusted) voltage is returned.
+mathematical SD. Mean is first corrected for by subtracting the starting
+voltage, then the mean relative (adjusted) voltage is returned.
 }
 \seealso{
 Other waveform functions: 
@@ -30,7 +30,7 @@ Other waveform functions:
 \code{\link{plot_wave}()},
 \code{\link{wave_duration}()},
 \code{\link{wave_extract}()},
-\code{\link{wave_number}()},
+\code{\link{wave_occurrence}()},
 \code{\link{wave_topfreq}()}
 }
 \concept{waveform functions}
