@@ -1,20 +1,20 @@
-library(data.table)
+# library(data.table)
 library(dplyr)
 library(epgminer)
-library(htmlwidgets)
-library(plotly)
-library(readr)
-library(shiny)
-library(shinythemes)
-library(stringr)
-library(webshot)
+# library(htmlwidgets)
+# library(plotly)
+### library(readr)
+# library(shiny)
+# library(shinythemes)
+# library(stringr)
+# library(webshot)
 
 
 options(shiny.maxRequestSize = 300*1024^2)
 
 shinyUI(fluidPage(
 
-  theme = shinytheme("paper"),
+  theme = shinythemes::shinytheme("paper"),
 
   titlePanel("EPGminer"),
 

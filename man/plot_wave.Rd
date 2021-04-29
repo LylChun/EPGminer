@@ -43,6 +43,7 @@ Other waveform functions:
 \code{\link{wave_duration}()},
 \code{\link{wave_extract}()},
 \code{\link{wave_number}()},
-\code{\link{wave_topfreq}()}
+\code{\link{wave_topfreq}()},
+\code{\link{wave_volts}()}
 }
 \concept{waveform functions}

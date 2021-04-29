@@ -23,10 +23,24 @@
 
 wave_topfreq <- function (data) {
 
-  waveform = wave_group = suffish = time = volts = frequency = NULL
-  rm(list = c("waveform", "wave_group", "suffish", "time", "volts", "frequency"))
+  waveform = wave_group = suffish = time = volts = frequency =
+    pd = NULL
+  rm(list = c("waveform", "wave_group", "suffish", "time", "volts", "frequency",
+              "pd"))
 
-  out = data %>%
+  udat <- data %>%
+    dplyr::mutate(pd = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"), "pd", waveform)) %>%
+    dplyr::mutate(wave_group = rep(1:length(rle(pd)[[1]]), rle(pd)[[1]])) %>%
+    dplyr::group_by(wave_group) %>%
+    dplyr::mutate(waveform = dplyr::case_when(
+      pd == "pd" & any(waveform %in% c("pd1", "pd2")) ~ "pdb",
+      pd == "pd" & all(waveform == "pd") ~ "pda",
+      TRUE ~ waveform
+    )) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(time, volts, waveform)
+
+  out = udat %>%
     # wave_group is each waveform/na period
     dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
                                    rle(waveform)[[1]])) %>%
@@ -39,16 +53,16 @@ wave_topfreq <- function (data) {
     dplyr::summarise(waveform = waveform[1],
                      frequency = round(topfreq(data.frame(time, volts))$mainfreq, 2),
                      .groups = "drop") %>%
-    dplyr::filter(waveform != "pd") %>%
-    dplyr::select(waveform, frequency)
+    dplyr::select(-wave_group)
 
-  pdonly <- pd_helper(data) %>%
+
+  pdsubforms <- pd_helper(data) %>%
+    dplyr::group_by(wave_group) %>%
     dplyr::summarise(waveform = waveform[1],
                      frequency = round(topfreq(data.frame(time, volts))$mainfreq, 2),
                      .groups = "drop") %>%
-    dplyr::filter(waveform == "pd") %>%
-    dplyr::select(waveform, frequency)
+    dplyr::select(-wave_group)
 
-  out <- rbind(out, pdonly)
+  out <- rbind(out, pdsubforms)
   return(out)
 }

@@ -11,12 +11,11 @@ pd_helper <- function (data) {
   rm(list = c("waveform", "wave_group"))
 
   out <- data %>%
-    dplyr::mutate(waveform = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"),
-                                            "pd", "non")) %>%
+    dplyr::filter(waveform %in% c("pd1", "pd2")) %>%
+    dplyr::mutate(waveform = dplyr::if_else(waveform == "pd1", "pdb1", "pdb2")) %>%
     dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
-                                   rle(waveform)[[1]])) %>%
-    dplyr::group_by(wave_group)
+                                   rle(waveform)[[1]]))
 
-  # returns grouped tibble with pd and non, grouped into wave_groups
+  # returns tibble with only pdb1/pdb2 - time, volts, waveform, wave_group but ungrouped
   return(out)
 }

@@ -33,7 +33,8 @@ shinyServer(function(input, output, session) {
       req(input$rawdata2)
 
       list <- lapply(input$rawdata2$datapath, read_epg)
-      out <- rbindlist(list)
+      out <- data.table::rbindlist(list)
+      rm(list)
     }
 
     return(out)
@@ -46,7 +47,7 @@ shinyServer(function(input, output, session) {
     )
 
     list <- lapply(input$compraw$datapath, read_epg)
-    out <- rbindlist(list)
+    out <- data.table::rbindlist(list)
     return(out)
   })
 
@@ -205,7 +206,7 @@ shinyServer(function(input, output, session) {
 
       gg <- plot_fbox(analyze_data(), waveforms = input$fbox_waves)
 
-      ggplotly(gg)
+      plotly::ggplotly(gg)
     }
 
     else if (input$plottype == "pie") {
@@ -222,8 +223,8 @@ shinyServer(function(input, output, session) {
     }
 
     else if (input$plottype == "wave") {
-      p <- plot_wave(analyze_data(), aggregate = "smart")
-      ggplotly(p)
+      p <- plot_wave(analyze_data(), aggregate = "all")
+      plotly::ggplotly(p)
     }
 
   })
@@ -257,8 +258,9 @@ shinyServer(function(input, output, session) {
     },
     content = function(file) {
 
-      htmlwidgets::saveWidget(as_widget(plot_react()), "temp.html", selfcontained = FALSE)
-      webshot(url = "temp.html", file, cliprect = "viewport", zoom = 0.5)
+      htmlwidgets::saveWidget(plotly::as_widget(plot_react()), "temp.html",
+                              selfcontained = FALSE)
+      webshot::webshot(url = "temp.html", file, cliprect = "viewport", zoom = 0.5)
     }
 
   )
@@ -269,8 +271,9 @@ shinyServer(function(input, output, session) {
     },
     content = function(file) {
 
-      htmlwidgets::saveWidget(as_widget(plot_react()), "temp.html", selfcontained = FALSE)
-      webshot(url = "temp.html", file, cliprect = "viewport", zoom = 0.5)
+      htmlwidgets::saveWidget(plotly::as_widget(plot_react()),
+                              "temp.html", selfcontained = FALSE)
+      webshot::webshot(url = "temp.html", file, cliprect = "viewport", zoom = 0.5)
     }
   )
 
@@ -445,7 +448,7 @@ shinyServer(function(input, output, session) {
 
   output$downloadcomp <- downloadHandler(
     filename = function() {
-      filename <- str_sub(input$compraw$name, end = -8)
+      filename <- stringr::str_sub(input$compraw$name, end = -8)
       paste(filename, ".csv", sep = "")
     },
     content = function(file) {
@@ -543,7 +546,7 @@ shinyServer(function(input, output, session) {
 
   output$downloadcomp_probe <- downloadHandler(
     filename = function() {
-      filename <- str_sub(input$compraw$name, end = -8)
+      filename <- stringr::str_sub(input$compraw$name, end = -8)
       paste(filename, ".csv", sep = "")
     },
     content = function(file) {
