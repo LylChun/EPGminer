@@ -9,9 +9,10 @@
 #'
 #' @details Labeled data is grouped by each waveform instance and the following three
 #' voltage metrics are returned: mean, SD, and amplitude.
-#' The amplitude is defined as the range of voltage values while the SD is the
-#' mathematical SD. Mean is first corrected for by subtracting the starting
-#' voltage, then the mean relative (adjusted) voltage is returned.
+#' The SD is the mathematical SD of volts. Mean is first corrected for by subtracting
+#' the starting voltage, then the mean relative (adjusted) voltage is returned.
+#' Amplitude is a relative percent calculated with the following formula:
+#' % amplitude = (mean of nonprobing - mean of waveform)/5V*100%
 #'
 #' @return A tibble object containing a row per waveform instance and four
 #' columns is returned: waveform, mean_volts, sd_volts, amplitude_volts.
@@ -40,7 +41,7 @@ wave_volts <- function(data) {
     dplyr::select(time, volts, waveform)
 
   if (any(unique(udat$waveform == "non-probing"))) {
-    begin = stats::median(wave_extract(udat, wave = "non-probing")[[1]]$volts)
+    begin = mean(wave_extract(udat, wave = "non-probing")[[1]]$volts)
   }
   else if (any(is.na(waveform))) {
     begin = stats::median(udat$volts[is.na(udat$waveform)][1:1000])
@@ -60,7 +61,8 @@ wave_volts <- function(data) {
                      # mean is relative to baseline begin
                      mean_volts = mean((volts - begin), na.rm = TRUE),
                      sd_volts = stats::sd(volts, na.rm = TRUE),
-                     amplitude_volts = max(volts) - min(volts),
+                     # relative amplitude percent based on Bin's definition
+                     amplitude_volts = (begin - mean(volts))/5 * 100,
                      .groups = "drop") %>%
     dplyr::select(-wave_group)
 
@@ -69,7 +71,7 @@ wave_volts <- function(data) {
     dplyr::summarise(waveform = waveform[1],
                      mean_volts = mean(volts, na.rm = TRUE),
                      sd_volts = stats::sd(volts, na.rm = TRUE),
-                     amplitude_volts = max(volts) - min(volts),
+                     amplitude_volts = (begin - mean(volts))/5 * 100,
                      .groups = "drop") %>%
     dplyr::select(-wave_group)
 

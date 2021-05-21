@@ -20,9 +20,10 @@ for each waveform instance
 \details{
 Labeled data is grouped by each waveform instance and the following three
 voltage metrics are returned: mean, SD, and amplitude.
-The amplitude is defined as the range of voltage values while the SD is the
-mathematical SD. Mean is first corrected for by subtracting the starting
-voltage, then the mean relative (adjusted) voltage is returned.
+The SD is the mathematical SD of volts. Mean is first corrected for by subtracting
+the starting voltage, then the mean relative (adjusted) voltage is returned.
+Amplitude is a relative percent calculated with the following formula:
+\% amplitude = (mean of nonprobing - mean of waveform)/5V*100\%
 }
 \seealso{
 Other waveform functions: 
