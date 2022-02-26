@@ -54,7 +54,7 @@ hann <- function (length) {
   out = 0.5*(1 - cos(2*pi*(0:n)/n))
 }
 
-#' Return the frequency and amplitude using the Fast Fourier Transform
+#' Extract the frequency and amplitude using the Fast Fourier Transform
 #'
 #' @description The function, single_fft, runs the R implementation of the
 #' Fast Fourier Transform, fft, and returns a dataframe containing the single-

@@ -1,7 +1,7 @@
-#' Use ANA file to lable raw data
+#' Use ANA file to label raw data
 #'
-#' @description The function label_ana combined raw data and an
-#' ANA annotation together to return a labelled dataframe.
+#' @description The function label_ana combines raw data and an
+#' ANA annotation together to return a labeled dataframe.
 #'
 #' @usage label_ana(data, ana)
 #'
@@ -20,7 +20,7 @@
 #' 9 = pd1
 #' 10 = pd2
 #' 99 = end
-#' If the ANA labels do not come in that exact code, then the labelling
+#' If the ANA labels do not come in that exact code matching, then the labeling
 #' will be incorrect.
 #'
 #' @return A tibble object with three rows is returned: time, volts, waveform.
