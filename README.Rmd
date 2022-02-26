@@ -33,7 +33,7 @@ To install, use the following code:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("LylChun/epgminer")
+devtools::install_github("LylChun/EPGminer")
 ```
 
 ## EPGminer Shiny App
