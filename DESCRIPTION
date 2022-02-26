@@ -1,6 +1,6 @@
 Package: epgminer
 Title: Analysis of EPG data
-Version: 0.0.1
+Version: 1.0.0
 Authors@R: 
     person(given = "Elizabeth",
            family = "Chun",
@@ -11,7 +11,7 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends: R (>= 4.0.0)
 Imports:
     dplyr,
