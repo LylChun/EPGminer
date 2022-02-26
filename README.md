@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/LylChun/epgminer/workflows/R-CMD-check/badge.svg)](https://github.com/LylChun/epgminer/actions)
+[![DOI](https://zenodo.org/badge/341639621.svg)](https://zenodo.org/badge/latestdoi/341639621)
 <!-- badges: end -->
 
 Electrical Penetration Graph (EPG) is a technique used to monitor insect

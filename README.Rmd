@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/LylChun/epgminer/workflows/R-CMD-check/badge.svg)](https://github.com/LylChun/epgminer/actions)
+[![DOI](https://zenodo.org/badge/341639621.svg)](https://zenodo.org/badge/latestdoi/341639621)
 <!-- badges: end -->
 
 Electrical Penetration Graph (EPG) is a technique used to monitor insect feeding behavior. Studying the voltage waveforms in EPG data allows one to analyze the insect-host relationship and gain insights into what makes a suitable host.
