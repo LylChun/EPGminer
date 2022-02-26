@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_pie.R
 \name{plot_pie}
 \alias{plot_pie}
-\title{Pie chart of labelled EPG data}
+\title{Pie chart of labeled EPG data}
 \usage{
 plot_pie(data, pietype = c("time", "number"),
 waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
@@ -13,7 +13,7 @@ waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
 \item{pietype}{Select the type of pie chart to display. Default is time - a pie
 chart showing the percent of time spent in each waveform is displayed. If "number"
 is selected, then the number of instances for each waveform type is displayed - e.g.
-if there are 20 distince waveforms, and 5 are of type C, then C will be 5/20 or
+if there are 20 distinct waveforms, and 5 are of type C, then C will be 5/20 or
 25\%.}
 
 \item{waveforms}{A list of waveforms to include in the plot. Default is all.}
