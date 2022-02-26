@@ -6,7 +6,6 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/LylChun/epgminer/workflows/R-CMD-check/badge.svg)](https://github.com/LylChun/epgminer/actions)
-[![DOI](https://zenodo.org/badge/341639621.svg)](https://zenodo.org/badge/latestdoi/341639621)
 <!-- badges: end -->
 
 Electrical Penetration Graph (EPG) is a technique used to monitor insect
@@ -29,6 +28,11 @@ generate visuals. The plotting functions are all in the format plot\_x
 where x denotes the type of plot. The types of plots currently supported
 are: voltage time series, labeled time-series, Fourier transformed data,
 frequency boxplot, and two types of pie charts.
+
+To cite the current version (with DOI):
+
+Elizabeth Chun. (2022). LylChun/EPGminer: EPGminer (v1.0.0). Zenodo.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6299917.svg)](https://doi.org/10.5281/zenodo.6299917)
 
 ## Installation
 
