@@ -2,7 +2,7 @@
 % Please edit documentation in R/wave_occurrence.R
 \name{wave_occurrence}
 \alias{wave_occurrence}
-\title{Calculate the Number of each waveform}
+\title{Calculate and Extract the number of occurrences for each waveform type}
 \usage{
 wave_occurrence(data)
 }
@@ -18,11 +18,8 @@ The function wave_occurrence calculates the number of each waveform
 type.
 }
 \details{
-Labelled data is grouped by each waveform instance and the
-unique instances of each waveform type are counted. The waveform type
-'pd' independent of any splitting into subforms is calculated at the end.
-As a result, the pd calculations  will appear all at the end of the table.
-The subforms, pd1 and pd2, will appear in sequence.
+Labeled data is grouped by each waveform instance and the
+unique instances of each waveform type are counted.
 }
 \seealso{
 Other waveform functions: 

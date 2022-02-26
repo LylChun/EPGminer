@@ -8,14 +8,14 @@
 #' @inheritParams plot_wave
 #'
 #' @details Labeled data is grouped by each waveform instance and the following three
-#' voltage metrics are returned: mean, SD, and amplitude.
+#' voltage metrics are returned: mean, SD, and relative amplitude.
 #' The SD is the mathematical SD of volts. Mean is first corrected for by subtracting
-#' the starting voltage, then the mean relative (adjusted) voltage is returned.
-#' Amplitude is a relative percent calculated with the following formula:
-#' % amplitude = (mean of nonprobing - mean of waveform)/5V*100%
+#' the starting voltage, then the mean (adjusted) voltage is returned.
+#' Relative amplitude is a percent calculated with the following formula:
+#' Relative amplitude = (mean of nonprobing - mean of waveform)/5V*100%
 #'
 #' @return A tibble object containing a row per waveform instance and four
-#' columns is returned: waveform, mean_volts, sd_volts, amplitude_volts.
+#' columns is returned: waveform, mean_volts, sd_volts, relative_amplitude_volts.
 #' @export
 #'
 #' @family waveform functions
@@ -27,27 +27,29 @@ wave_volts <- function(data) {
   rm(list = c("waveform", "wave_group", "time", "mean_volts", "sd_volts",
               "amplitude_volts", "pd", "volts"))
 
-  udat <- data %>%
-    dplyr::mutate(pd = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"), "pd", waveform)) %>%
-    dplyr::mutate(wave_group = rep(1:length(rle(pd)[[1]]),
-                                   rle(pd)[[1]])) %>%
-    dplyr::group_by(wave_group) %>%
-    dplyr::mutate(waveform = dplyr::case_when(
-      pd == "pd" & any(waveform %in% c("pd1", "pd2")) ~ "pdb",
-      pd == "pd" & all(waveform == "pd") ~ "pda",
-      TRUE ~ waveform
-    )) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(time, volts, waveform)
+  #### pda/b split notation - deprecated
+  # udat <- data %>%
+  #   dplyr::mutate(pd = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"), "pd", waveform)) %>%
+  #   dplyr::mutate(wave_group = rep(1:length(rle(pd)[[1]]),
+  #                                  rle(pd)[[1]])) %>%
+  #   dplyr::group_by(wave_group) %>%
+  #   dplyr::mutate(waveform = dplyr::case_when(
+  #     pd == "pd" & any(waveform %in% c("pd1", "pd2")) ~ "pdb",
+  #     pd == "pd" & all(waveform == "pd") ~ "pda",
+  #     TRUE ~ waveform
+  #   )) %>%
+  #   dplyr::ungroup() %>%
+  #   dplyr::select(time, volts, waveform)
 
-  if (any(unique(udat$waveform == "non-probing"))) {
-    begin = mean(wave_extract(udat, wave = "non-probing")[[1]]$volts)
+  if (any(unique(data$waveform == "non-probing"))) {
+    begin = mean(wave_extract(data, wave = "non-probing")[[1]]$volts)
   }
-  else if (any(is.na(waveform))) {
-    begin = stats::median(udat$volts[is.na(udat$waveform)][1:1000])
-  }
+  else if (any(is.na(data$waveform))) {
+    begin = stats::median(data$volts[is.na(data$waveform)][1:1000])
+    # if no non-probing and no na, assume beginning baseline is 0
+  } else {begin = 0}
 
-  out = udat %>%
+  out = data %>%
     # wave_group is each waveform/na period
     dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
                                    rle(waveform)[[1]])) %>%
@@ -62,19 +64,20 @@ wave_volts <- function(data) {
                      mean_volts = mean((volts - begin), na.rm = TRUE),
                      sd_volts = stats::sd(volts, na.rm = TRUE),
                      # relative amplitude percent based on Bin's definition
-                     amplitude_volts = (begin - mean(volts))/5 * 100,
+                     relative_amplitude = (begin - mean(volts))/5 * 100,
                      .groups = "drop") %>%
     dplyr::select(-wave_group)
 
-  pdsubforms <- pd_helper(data) %>%
-    dplyr::group_by(wave_group) %>%
-    dplyr::summarise(waveform = waveform[1],
-                     mean_volts = mean(volts, na.rm = TRUE),
-                     sd_volts = stats::sd(volts, na.rm = TRUE),
-                     amplitude_volts = (begin - mean(volts))/5 * 100,
-                     .groups = "drop") %>%
-    dplyr::select(-wave_group)
+  #### pda/b split notation - deprecated
+  # pdsubforms <- pd_helper(data) %>%
+  #   dplyr::group_by(wave_group) %>%
+  #   dplyr::summarise(waveform = waveform[1],
+  #                    mean_volts = mean(volts, na.rm = TRUE),
+  #                    sd_volts = stats::sd(volts, na.rm = TRUE),
+  #                    relative_amplitude = (begin - mean(volts))/5 * 100,
+  #                    .groups = "drop") %>%
+  #   dplyr::select(-wave_group)
 
-  out <- rbind(out, pdsubforms)
+  out <- rbind(out)
   return(out)
 }

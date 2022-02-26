@@ -1,4 +1,4 @@
-#' Calculate the Number of each waveform
+#' Calculate and Extract the number of occurrences for each waveform type
 #'
 #' @description The function wave_occurrence calculates the number of each waveform
 #' type.
@@ -7,11 +7,8 @@
 #'
 #' @inheritParams plot_wave
 #'
-#' @details Labelled data is grouped by each waveform instance and the
-#' unique instances of each waveform type are counted. The waveform type
-#' 'pd' independent of any splitting into subforms is calculated at the end.
-#' As a result, the pd calculations  will appear all at the end of the table.
-#' The subforms, pd1 and pd2, will appear in sequence.
+#' @details Labeled data is grouped by each waveform instance and the
+#' unique instances of each waveform type are counted.
 #'
 #' @return A tibble object containing a row per waveform instance and two
 #' columns, waveform and occurrence, is returned.
@@ -25,20 +22,21 @@ wave_occurrence <- function(data) {
   waveform = wave_group = time = pd = volts = NULL
   rm(list = c("waveform", "wave_group", "time", "pd", "volts"))
 
-  udat <- data %>%
-    dplyr::mutate(pd = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"), "pd", waveform)) %>%
-    dplyr::mutate(wave_group = rep(1:length(rle(pd)[[1]]),
-                                   rle(pd)[[1]])) %>%
-    dplyr::group_by(wave_group) %>%
-    dplyr::mutate(waveform = dplyr::case_when(
-      pd == "pd" & any(waveform %in% c("pd1", "pd2")) ~ "pdb",
-      pd == "pd" & all(waveform == "pd") ~ "pda",
-      TRUE ~ waveform
-    )) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(time, volts, waveform)
+  #### pda/b split notation - deprecated
+  # udat <- data %>%
+  #   dplyr::mutate(pd = dplyr::if_else(waveform %in% c("pd", "pd1", "pd2"), "pd", waveform)) %>%
+  #   dplyr::mutate(wave_group = rep(1:length(rle(pd)[[1]]),
+  #                                  rle(pd)[[1]])) %>%
+  #   dplyr::group_by(wave_group) %>%
+  #   dplyr::mutate(waveform = dplyr::case_when(
+  #     pd == "pd" & any(waveform %in% c("pd1", "pd2")) ~ "pdb",
+  #     pd == "pd" & all(waveform == "pd") ~ "pda",
+  #     TRUE ~ waveform
+  #   )) %>%
+  #   dplyr::ungroup() %>%
+  #   dplyr::select(time, volts, waveform)
 
-  out = udat %>%
+  out = data %>%
     # wave_group is each waveform/na period
     dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),
                                    rle(waveform)[[1]])) %>%
@@ -56,12 +54,13 @@ wave_occurrence <- function(data) {
       dplyr::add_row(waveform = "E2", occurrence = 0)
   }
 
-  pdsubforms <- pd_helper(data) %>%
-    dplyr::group_by(waveform) %>%
-    dplyr::summarise(waveform = waveform[1],
-                     occurrence = length(unique(wave_group)),
-                     .groups = "drop")
+  #### pda/b split notation - deprecated
+  # pdsubforms <- pd_helper(data) %>%
+  #   dplyr::group_by(waveform) %>%
+  #   dplyr::summarise(waveform = waveform[1],
+  #                    occurrence = length(unique(wave_group)),
+  #                    .groups = "drop")
 
-  out <- rbind(out, pdsubforms)
+  out <- rbind(out)
   return(out)
 }

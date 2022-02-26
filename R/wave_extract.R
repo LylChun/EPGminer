@@ -1,4 +1,4 @@
-#' Extract a specified waveform from a labelled dataset
+#' Extract a specified waveform from a labeled dataset
 #'
 #' @description The function wave_extract subsets data and returns the specified
 #' waveform.

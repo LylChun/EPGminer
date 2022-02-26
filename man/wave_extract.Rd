@@ -2,7 +2,7 @@
 % Please edit documentation in R/wave_extract.R
 \name{wave_extract}
 \alias{wave_extract}
-\title{Extract a specified waveform from a labelled dataset}
+\title{Extract a specified waveform from a labeled dataset}
 \usage{
 wave_extract(data, wave, number = 1)
 }

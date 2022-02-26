@@ -2,7 +2,7 @@
 % Please edit documentation in R/single_fft.R
 \name{single_fft}
 \alias{single_fft}
-\title{Return the frequency and amplitude using the Fast Fourier Transform}
+\title{Extract the frequency and amplitude using the Fast Fourier Transform}
 \usage{
 single_fft(data, window = TRUE, include_dc = TRUE, filter = 0.25,
 sample_rate = 100)

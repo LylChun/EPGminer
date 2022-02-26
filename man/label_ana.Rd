@@ -2,7 +2,7 @@
 % Please edit documentation in R/label_ana.R
 \name{label_ana}
 \alias{label_ana}
-\title{Use ANA file to lable raw data}
+\title{Use ANA file to label raw data}
 \usage{
 label_ana(data, ana)
 }
@@ -15,8 +15,8 @@ label_ana(data, ana)
 A tibble object with three rows is returned: time, volts, waveform.
 }
 \description{
-The function label_ana combined raw data and an
-ANA annotation together to return a labelled dataframe.
+The function label_ana combines raw data and an
+ANA annotation together to return a labeled dataframe.
 }
 \details{
 The raw data and ana must be for the same dataset, although the
@@ -31,7 +31,7 @@ number to character title conversion is followed:
 9 = pd1
 10 = pd2
 99 = end
-If the ANA labels do not come in that exact code, then the labelling
+If the ANA labels do not come in that exact code matching, then the labeling
 will be incorrect.
 }
 \seealso{

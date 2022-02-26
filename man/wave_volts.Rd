@@ -11,7 +11,7 @@ wave_volts(data)
 }
 \value{
 A tibble object containing a row per waveform instance and four
-columns is returned: waveform, mean_volts, sd_volts, amplitude_volts.
+columns is returned: waveform, mean_volts, sd_volts, relative_amplitude_volts.
 }
 \description{
 The function wave_volts calculates the voltage metrics
@@ -19,11 +19,11 @@ for each waveform instance
 }
 \details{
 Labeled data is grouped by each waveform instance and the following three
-voltage metrics are returned: mean, SD, and amplitude.
+voltage metrics are returned: mean, SD, and relative amplitude.
 The SD is the mathematical SD of volts. Mean is first corrected for by subtracting
-the starting voltage, then the mean relative (adjusted) voltage is returned.
-Amplitude is a relative percent calculated with the following formula:
-\% amplitude = (mean of nonprobing - mean of waveform)/5V*100\%
+the starting voltage, then the mean (adjusted) voltage is returned.
+Relative amplitude is a percent calculated with the following formula:
+Relative amplitude = (mean of nonprobing - mean of waveform)/5V*100\%
 }
 \seealso{
 Other waveform functions: 

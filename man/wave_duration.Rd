@@ -2,7 +2,7 @@
 % Please edit documentation in R/wave_duration.R
 \name{wave_duration}
 \alias{wave_duration}
-\title{Calculate and Extract the duration for each waveform instance}
+\title{Calculate the duration for each waveform instance}
 \usage{
 wave_duration(data)
 }
@@ -15,15 +15,12 @@ columns, waveform and duration, is returned.
 }
 \description{
 The function wave_duration calculates the duration for
-each waveform instance in labelled data.
+each waveform instance in labeled data.
 }
 \details{
-Labelled data is grouped by each waveform instance and the duration
+Labeled data is grouped by each waveform instance and the duration
 is then calculated. The overall feeding duration is displayed in the top row
-as "Feeding" for simplicity. The waveform type 'pd' independent of any splitting
-into subforms is calculated at the end. As a result, the pd calculations
-will appear all at the end of the table. The subforms, pd1 and pd2,
-will appear in sequence. Duration is reported in seconds.
+as "Feeding" for simplicity. Duration is reported in seconds.
 }
 \seealso{
 Other waveform functions: 
