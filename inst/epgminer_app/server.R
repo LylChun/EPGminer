@@ -263,7 +263,7 @@ shinyServer(function(input, output, session) {
 
       if (input$summaryav == "default") {
         out <- out
-        colnames(out) <- c("waveform", "Amplitude Volts")
+        colnames(out) <- c("waveform", "Relative Amplitude (Volts)")
       }
 
       else if (input$summaryav == "median") {
@@ -271,7 +271,7 @@ shinyServer(function(input, output, session) {
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
                     amplitude_volts = round(median(amplitude_volts), 2))
-        colnames(out) <- c("waveform", "Amplitude Volts")
+        colnames(out) <- c("waveform", "Relative Amplitude (Volts)")
       }
 
       else if (input$summaryav == "mean") {
@@ -279,7 +279,7 @@ shinyServer(function(input, output, session) {
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
                     amplitude_volts = round(mean(amplitude_volts), 2))
-        colnames(out) <- c("waveform", "Amplitude Volts")
+        colnames(out) <- c("waveform", "Relative Amplitude (Volts)")
       }
 
       else if (input$summaryav == "sd") {

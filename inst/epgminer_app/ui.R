@@ -41,11 +41,10 @@ shinyUI(fluidPage(
                           friendly and requires no coding experience."),
                         p("One of the main functionalities of EPGminer is to allow researchers to
                           calculate frequencies for labeled waveforms using the Fourier Transform.
-                          Additional waveform metrics are available as well, such as duration and
-                          occurrence. Another main functionality of EPGminer is the ability to generate
+                          Another main functionality of EPGminer is the ability to generate
                           visuals. There are currently four visuals that EPGminer can create - a
                           frequency boxplot, a pie chart of waveform times, a pie chart of
-                          waveform occurrence., and a time series colored by waveform labels. Each of
+                          waveform occurrence, and a time series colored by waveform labels. Each of
                           these plots, with the exception of the labeled time series, is customizable
                           - e.g. the user may select which waveforms to include in the plot itself.
                           All plots are interactive and the user may zoom in, or 'hover' over the plot
@@ -64,14 +63,14 @@ shinyUI(fluidPage(
                           and used to cross compare waveform types, differences both within and between
                           datasets, and even differences between insect/host combinations. All analysis
                           - both metrics and visuals, can be downloaded by the user."),
-                        p("Additionally, EPGminer includes a semi-automatic algorithm to label
+                        p("Additionally, EPGminer includes an experimental semi-automatic algorithm to label
                           waveforms in raw EPG data. Manual annotations of EPG data are time-consuming
                           and a computer mediated method of annotating is desireable. In this
                           semi-automatic algorithm, we have sought to balance the benefits of automatic
                           labeling with the need for accuracy. The automatic portion allows one to save
                           time and energy by computationally labeling waveforms. Then the user input
                           features - making it 'semi'-automatic - can be used to fine-tune the
-                          computer labeling to improve accuracy. The algorithm is still under active
+                          computer labeling to improve accuracy. The algorithm is still under
                           development, so if you already possess manual annotations (ANA files) for
                           your data, it is recommended that you use those instead for best accuracy.
                           However if you do not have manual annotations, or you simply would like to
@@ -96,12 +95,11 @@ shinyUI(fluidPage(
                           formats. If you choose 'Use Algorithm to Label' under 'Label My Data', only raw
                           data is required, no annotation file is necessary. For details on how to use this
                           option, see 'Additional Resources' and select 'Algorithmic Labeling'. Please
-                          note that the algorithm is still under active development and may not return
+                          note that the algorithm is still experimental and may not return
                           completely accurate results."),
                         p("2. When you have finished loading/labeling your data, proceed to the
                           'Analyze My Data' tab for analysis of the labeled waveforms. This tab
-                          allows one to calculate metrics - frequency, duration, and occurrence., as well as
-                          to summarise the metric by waveform (frequency and duration only). You may
+                          allows one to calculate metrics - frequency and relative amplitude (volts). You may
                           download the analysis by clicking on one of the buttons diplayed above the
                           table - e.g. if you would like to download the table as a csv click on the
                           button labeled csv."),
@@ -187,12 +185,12 @@ shinyUI(fluidPage(
                      properly labeled before proceeding. If the data is displayed as expected,
                      then return to the 'Analyze My Data' tab and wait an additional 30 seconds
                      to allow time to process."),
-                   p("For the waveform annotation 'pd', all calculated results will appear at
-                     the bottom of the table when viewing the frequency or duration of each
-                     individual waveform instance. The subforms labels, pd1 and pd2, will appear
-                     in order with the other waveforms, but due to the way 'pd' unseparated into
-                     subforms is handled by the app, they will appear all together on the bottom
-                     of the table.")
+                   # p("For the waveform annotation 'pd', all calculated results will appear at
+                   #   the bottom of the table when viewing the frequency or duration of each
+                   #   individual waveform instance. The subforms labels, pd1 and pd2, will appear
+                   #   in order with the other waveforms, but due to the way 'pd' unseparated into
+                   #   subforms is handled by the app, they will appear all together on the bottom
+                   #   of the table.")
                  ),
                  conditionalPanel(
                    condition = "input.help == 'visuals'",
@@ -213,13 +211,13 @@ shinyUI(fluidPage(
                  conditionalPanel(
                    condition = "input.help == 'comp'",
                    p(strong("The algorithm is currently experimental and prone to error. If you have
-                     the annotation for your data, it is recommended to use that instead.")),
+                     the annotation for your data, it is strongly recommended to use that instead.")),
                    p("Start by determining if your data has multiple feeding beginnings. If the insect
                      has retracted the probe and reinserted it, as seen in the plotted voltage data,
                      then select yes for 'Multiple Feeding Beginning'. To minimize error, only select
                      yes if there are truly multiple feeding beginnings."),
                    p("Then begin the labeling by checking the A start(s)/end(s). Once A has been
-                     labelled to your satisfaction, click Yes to the 'Are you finished labeling A?'
+                     labeled to your satisfaction, click Yes to the 'Are you finished labeling A?'
                      input. The rest of the waveforms will be now be algorithmically labelled. If
                      at the end of this process you encounter an error or E is present and has
                      not been labelled, try to adjust the E variance - this adjusts the amount of
@@ -379,11 +377,11 @@ shinyUI(fluidPage(
 
                  selectInput("metric", "Choose Desired Metric",
                              choices = c(`Frequency` = 'freq',
-                                         `Duration` = 'dur',
-                                         `Occurrence` = 'count',
-                                         `Mean Volts` = 'mean_volts',
-                                         `SD volts` = 'sd_volts',
-                                         `Amplitude volts` = 'amp_volts')),
+                                         # `Duration` = 'dur',
+                                         # `Occurrence` = 'count',
+                                         # `Mean Volts` = 'mean_volts',
+                                         # `SD volts` = 'sd_volts',
+                                         `Relative Amplitude (volts)` = 'amp_volts')),
                  conditionalPanel(
                    condition = "input.metric == 'freq'",
                    radioButtons("summary", "Choose Summary Type",
