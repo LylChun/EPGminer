@@ -32,7 +32,7 @@ frequency boxplot, and two types of pie charts.
 To cite the current version (with DOI):
 
 Elizabeth Chun. (2022). LylChun/EPGminer: EPGminer (v1.0.0). Zenodo.
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6299917.svg)](https://doi.org/10.5281/zenodo.6299917)
+[![DOI](https://zenodo.org/badge/341639621.svg)](https://zenodo.org/badge/latestdoi/341639621)
 
 ## Installation
 

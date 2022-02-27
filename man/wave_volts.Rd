@@ -23,7 +23,7 @@ voltage metrics are returned: mean, SD, and relative amplitude.
 The SD is the mathematical SD of volts. Mean is first corrected for by subtracting
 the starting voltage, then the mean (adjusted) voltage is returned.
 Relative amplitude is a percent calculated with the following formula:
-Relative amplitude = (mean of nonprobing - mean of waveform)/5V*100\%
+Relative amplitude = |(mean of waveform - mean of nonprobing)|x100/5
 }
 \seealso{
 Other waveform functions: 

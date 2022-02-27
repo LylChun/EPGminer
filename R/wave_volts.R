@@ -12,7 +12,7 @@
 #' The SD is the mathematical SD of volts. Mean is first corrected for by subtracting
 #' the starting voltage, then the mean (adjusted) voltage is returned.
 #' Relative amplitude is a percent calculated with the following formula:
-#' Relative amplitude = (mean of nonprobing - mean of waveform)/5V*100%
+#' Relative amplitude = |(mean of waveform - mean of nonprobing)|x100/5
 #'
 #' @return A tibble object containing a row per waveform instance and four
 #' columns is returned: waveform, mean_volts, sd_volts, relative_amplitude_volts.
@@ -63,8 +63,8 @@ wave_volts <- function(data) {
                      # mean is relative to baseline begin
                      mean_volts = mean((volts - begin), na.rm = TRUE),
                      sd_volts = stats::sd(volts, na.rm = TRUE),
-                     # relative amplitude percent based on Bin's definition
-                     relative_amplitude = (begin - mean(volts))/5 * 100,
+                     # relative amplitude percent (absolute to ensure positive)
+                     relative_amplitude = abs(mean(volts) - begin)/5 * 100,
                      .groups = "drop") %>%
     dplyr::select(-wave_group)
 
