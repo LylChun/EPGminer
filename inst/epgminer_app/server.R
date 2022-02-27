@@ -259,7 +259,7 @@ shinyServer(function(input, output, session) {
     if (input$metric == "amp_volts") {
 
       out <- out %>%
-        select(waveform, amplitude_volts)
+        select(waveform, relative_amplitude)
 
       if (input$summaryav == "default") {
         out <- out
@@ -270,7 +270,7 @@ shinyServer(function(input, output, session) {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    amplitude_volts = round(median(amplitude_volts), 2))
+                    relative_amplitude = round(median(relative_amplitude), 2))
         colnames(out) <- c("waveform", "Relative Amplitude (Volts)")
       }
 
@@ -278,7 +278,7 @@ shinyServer(function(input, output, session) {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    amplitude_volts = round(mean(amplitude_volts), 2))
+                    relative_amplitude = round(mean(relative_amplitude), 2))
         colnames(out) <- c("waveform", "Relative Amplitude (Volts)")
       }
 
@@ -286,7 +286,7 @@ shinyServer(function(input, output, session) {
         out <- out %>%
           group_by(waveform) %>%
           summarise(waveform = waveform[1],
-                    sd = round(sd(amplitude_volts), 2))
+                    sd = round(sd(relative_amplitude), 2))
       }
 
     }

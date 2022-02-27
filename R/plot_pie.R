@@ -30,6 +30,8 @@ plot_pie <- function (data, pietype = c("time", "number"),
 
   pietype = match.arg(pietype)
 
+  # subset to only user-selected waveforms that are present
+  waveforms = intersect(unique(data$waveform), waveforms)
   if (pietype == "time") {
 
     plot_data <- wave_duration(data) %>%
