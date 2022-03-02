@@ -53,6 +53,11 @@ label_ana <- function (data, ana) {
   out <- dplyr::left_join(data, ana, by = "time") %>%
     # replace NA for rle
     dplyr::mutate(waveform = ifelse(is.na(waveform), "fill", waveform))
+
+  # in case data does not start with non-probing annotation,
+  # index down to first ana code
+  out <- out[(which(out$waveform != "fill")[1]):nrow(out), ]
+
   # define which rows to keep in rle - half length out bc half is fill
   evens <- seq(2, by = 2, length.out = length(rle(out$waveform)[[1]])/2)
   # create idx with 1/2 # categories as waveform bc 1/2 waveform is "fill"
