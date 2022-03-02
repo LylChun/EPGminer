@@ -343,12 +343,12 @@ shinyUI(fluidPage(
 
                    conditionalPanel(
                      condition = "input.probe == 'blank'",
-                     plotlyOutput("vts_plot")
+                     plotly::plotlyOutput("vts_plot")
                    ),
 
                    conditionalPanel(
                      condition = "input.probe == 'n'",
-                     plotlyOutput("comp_plot"),
+                     plotly::plotlyOutput("comp_plot"),
 
                      conditionalPanel(
                        condition = "input.adone == 'y'",
@@ -362,7 +362,7 @@ shinyUI(fluidPage(
                    conditionalPanel(
                      condition = "input.probe == 'y'",
 
-                     plotlyOutput("plot_probe")
+                     plotly::plotlyOutput("plot_probe")
                    )
                  )
                )
@@ -459,7 +459,7 @@ shinyUI(fluidPage(
                  # downloadButton(outputId = "eps", label = "eps")
                ),
 
-               mainPanel(plotlyOutput("plot"))
+               mainPanel(plotly::plotlyOutput("plot"))
              )
     )
   )

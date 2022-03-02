@@ -5,9 +5,9 @@ account: epgdata
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3971862
-bundleId: 5621492
+bundleId: 5631024
 url: https://epgdata.shinyapps.io/epgminer_app/
-when: 1645915990.65025
-lastSyncTime: 1645915990.65025
+when: 1646180908.28897
+lastSyncTime: 1646180908.28897
 asMultiple: FALSE
 asStatic: FALSE

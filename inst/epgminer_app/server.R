@@ -337,7 +337,7 @@ shinyServer(function(input, output, session) {
 
   })
 
-  output$plot <- renderPlotly({
+  output$plot <- plotly::renderPlotly({
     plot_react()
   })
 
@@ -395,11 +395,11 @@ shinyServer(function(input, output, session) {
     return(out)
   })
 
-  output$vts_plot <- renderPlotly({
+  output$vts_plot <- plotly::renderPlotly({
     vts_id <- showNotification("Rendering...", duration  = NULL, closeButton = FALSE)
     on.exit(removeNotification(vts_id), add = TRUE)
 
-    ggplotly(plot_vts(comp_raw()))
+    plotly::ggplotly(plot_vts(comp_raw()))
   })
 
   ############# Single probe instance ############
@@ -484,12 +484,12 @@ shinyServer(function(input, output, session) {
     return(out)
   })
 
-  output$comp_plot <- renderPlotly({
+  output$comp_plot <- plotly::renderPlotly({
 
     comp_id <- showNotification("Rendering...", duration  = NULL, closeButton = FALSE)
     on.exit(removeNotification(comp_id), add = TRUE)
 
-    ggplotly(plot_comp())
+    plotly::ggplotly(plot_comp())
 
   })
 
@@ -634,12 +634,12 @@ shinyServer(function(input, output, session) {
 
   })
 
-  output$plot_probe <- renderPlotly ({
+  output$plot_probe <- plotly::renderPlotly ({
 
     probe_id <- showNotification("Rendering...", duration  = NULL, closeButton = FALSE)
     on.exit(removeNotification(probe_id), add = TRUE)
 
-    ggplotly(plot_probe())
+    plotly::ggplotly(plot_probe())
   })
 
   output$e_var_p <- renderUI ({
