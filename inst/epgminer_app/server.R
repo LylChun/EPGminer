@@ -402,7 +402,7 @@ shinyServer(function(input, output, session) {
     ggplotly(plot_vts(comp_raw()))
   })
 
-          ############# Single probe instance ############
+  ############# Single probe instance ############
 
   a_data <- reactive ({
 
@@ -564,7 +564,7 @@ shinyServer(function(input, output, session) {
     }
   )
 
-        ################## Multiple Probes ####################
+  ################## Multiple Probes ####################
 
   output$probe_a <- renderUI ({
 
@@ -649,7 +649,7 @@ shinyServer(function(input, output, session) {
 
   output$g_drop_p <- renderUI ({
     textInput("in_gdrop_p", "Specify acceptable G drop from non-feeding baseline",
-                value = 0.75)
+              value = 0.75)
   })
 
   output$downloadcomp_probe <- downloadHandler(

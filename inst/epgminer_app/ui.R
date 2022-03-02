@@ -2,7 +2,7 @@
 library(dplyr)
 library(epgminer)
 # library(htmlwidgets)
-library(plotly)
+# library(plotly)
 ### library(readr)
 # library(shiny)
 # library(shinythemes)

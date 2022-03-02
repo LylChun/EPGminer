@@ -35,7 +35,7 @@ label_ana <- function (data, ana) {
 
   data$time <- round(data$time, 2)
   ana <- ana %>%
-    dplyr::filter(waveform != 99) %>%
+    # dplyr::filter(waveform != 99) %>%
     dplyr::mutate(time = round(time, 2),
                   waveform = dplyr::case_when(
                     waveform == 1 ~ "non-probing",
