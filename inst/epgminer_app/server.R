@@ -1,4 +1,5 @@
 source("algorithm.R")
+webshot::install_phantomjs()
 
 shinyServer(function(input, output, session) {
 
@@ -314,6 +315,11 @@ shinyServer(function(input, output, session) {
 
       gg <- plot_fbox(analyze_data(), waveforms = input$fbox_waves)
 
+      validate(
+        need(!is.null(gg),
+             message = "None of the specified waveforms have been found in the data")
+      )
+
       plotly::ggplotly(gg)
     }
 
@@ -321,12 +327,22 @@ shinyServer(function(input, output, session) {
 
       if (input$pietype == "pie_t") {
 
-        plot_pie(analyze_data(), pietype = "time", waveforms = input$pie_waves)
+        p <- plot_pie(analyze_data(), pietype = "time", waveforms = input$pie_waves)
+        validate(
+          need(!is.null(p),
+               message = "None of the specified waveforms have been found in the data")
+        )
+        p
       }
 
       else if (input$pietype == "pie_c") {
 
-        plot_pie(analyze_data(), pietype = "number", waveforms = input$pie_waves)
+        p <- plot_pie(analyze_data(), pietype = "number", waveforms = input$pie_waves)
+        validate(
+          need(!is.null(p),
+               message = "None of the specified waveforms have been found in the data")
+        )
+        p
       }
     }
 
