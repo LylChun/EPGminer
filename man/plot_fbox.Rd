@@ -13,7 +13,8 @@ plot_fbox(data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
 \item{waveforms}{A list of waveforms to include in the plot. Default is all.}
 }
 \value{
-A boxplot of frequencies by waveform
+A boxplot of frequencies by waveform. If none of the specified
+waveforms are present in the data, then the function will return NULL.
 }
 \description{
 The function plot_fbox shows the frequencies present in a dataset

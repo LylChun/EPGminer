@@ -12,7 +12,8 @@
 #' @details The function plot_fbox is designed to allow one to see the frequencies
 #' and the variability of frequencies for waveforms in a dataset.
 #'
-#' @return A boxplot of frequencies by waveform
+#' @return A boxplot of frequencies by waveform. If none of the specified
+#' waveforms are present in the data, then the function will return NULL.
 #' @export
 #'
 #' @family frequency related functions
@@ -24,6 +25,14 @@ plot_fbox <- function (data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
 
   waveform = frequency = NULL
   rm(list = c("waveform", "frequency"))
+
+  # subset to only user-selected waveforms that are present
+  waveforms = intersect(unique(data$waveform), waveforms)
+  # if none, then message no plot
+  if (length(waveforms) == 0){
+    message("None of the selected waveforms are present")
+    return(NULL)
+  }
 
   out <- wave_topfreq(data)
   out <- out %>%

@@ -16,7 +16,8 @@
 #'
 #' @details The function plot_pie is designed to help visualize EPG waveform data.
 #'
-#' @return A plotly pie chart of EPG waveforms in a dataset.
+#' @return A plotly pie chart of EPG waveforms in a dataset. If none of the specified
+#' waveforms are present in the data, then the function will return NULL.
 #' @export
 #'
 #' @family waveform functions
@@ -32,6 +33,12 @@ plot_pie <- function (data, pietype = c("time", "number"),
 
   # subset to only user-selected waveforms that are present
   waveforms = intersect(unique(data$waveform), waveforms)
+  # if none, then message no plot
+  if (length(waveforms) == 0){
+    message("None of the selected waveforms are present")
+    return(NULL)
+  }
+
   if (pietype == "time") {
 
     plot_data <- wave_duration(data) %>%
