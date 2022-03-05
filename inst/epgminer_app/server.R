@@ -1,5 +1,5 @@
 source("algorithm.R")
-webshot::install_phantomjs()
+# webshot::install_phantomjs()
 
 shinyServer(function(input, output, session) {
 
