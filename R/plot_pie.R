@@ -24,7 +24,8 @@
 #'
 
 plot_pie <- function (data, pietype = c("time", "number"),
-                      waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd")) {
+                      waveforms = c("non-probing", "C", "E1", "E2", "G", "pd1",
+                                    "pd2", "pd")) {
 
   waveform = duration = NULL
   rm(list = c("waveform", "duration"))

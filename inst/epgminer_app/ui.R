@@ -442,7 +442,7 @@ shinyUI(fluidPage(
                  conditionalPanel(
                    condition = "input.plottype == 'fbox'",
                    checkboxGroupInput("fbox_waves", "Choose Waveforms to Include",
-                                      choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
+                                      choices = c("non-probing", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
                                       selected = c("E1", "E2", "G", "pd1", "pd2"))
                  ),
                  conditionalPanel(
@@ -451,7 +451,7 @@ shinyUI(fluidPage(
                                 choices = c(`By Time` = "pie_t",
                                             `By Number` = "pie_c")),
                    checkboxGroupInput("pie_waves", "Choose Waveforms to Include",
-                                      choices = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
+                                      choices = c("non-probing", "C", "E1", "E2", "G", "pd1", "pd2", "pd"),
                                       selected = c("E1", "E2", "G", "pd1", "pd2"))
                  ),
                  downloadButton(outputId = "pdf", label = "pdf"),

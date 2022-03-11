@@ -20,8 +20,8 @@
 #'
 #'
 
-plot_fbox <- function (data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
-                                           "pd2", "pd")) {
+plot_fbox <- function (data, waveforms = c("non-probing", "C", "E1", "E2", "G",
+                                           "pd1", "pd2", "pd")) {
 
   waveform = frequency = NULL
   rm(list = c("waveform", "frequency"))
