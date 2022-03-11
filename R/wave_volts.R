@@ -53,6 +53,9 @@ wave_volts <- function(data) {
     # if no non-probing and no na, assume beginning baseline is 0
   } else {begin = 0}
 
+  # find overall sd of feeding data
+  # overall_sd <- sd(data$volts[data$waveform != "non-probing"])
+
   out = data %>%
     # wave_group is each waveform/na period
     dplyr::mutate(wave_group = rep(1:length(rle(waveform)[[1]]),

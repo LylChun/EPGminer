@@ -5,7 +5,7 @@
 \title{Pie chart of labeled EPG data}
 \usage{
 plot_pie(data, pietype = c("time", "number"),
-waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
+waveforms = c("non-probing", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
 }
 \arguments{
 \item{data}{A dataframe containing three columns: time, volts, waveform.}
@@ -14,7 +14,10 @@ waveforms = c("A", "C", "E1", "E2", "G", "pd1", "pd2", "pd"))
 chart showing the percent of time spent in each waveform is displayed. If "number"
 is selected, then the number of instances for each waveform type is displayed - e.g.
 if there are 20 distinct waveforms, and 5 are of type C, then C will be 5/20 or
-25\%.}
+25\%.
+
+To avoid double counting pds, the category pd itself (i.e. not pd1 or pd2) only
+consists of times where pd, not classified into subforms, appears.}
 
 \item{waveforms}{A list of waveforms to include in the plot. Default is all.}
 }

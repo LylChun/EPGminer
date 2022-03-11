@@ -4,7 +4,7 @@
 \alias{plot_fbox}
 \title{Box plot of Frequencies}
 \usage{
-plot_fbox(data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
+plot_fbox(data, waveforms = c("non-probing", "C", "E1", "E2", "G", "pd1",
 "pd2", "pd"))
 }
 \arguments{

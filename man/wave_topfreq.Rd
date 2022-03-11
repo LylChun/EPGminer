@@ -21,6 +21,10 @@ each waveform instance in labeled data.
 Labeled data is grouped by each waveform instance and the
 Fourier transform is then used to extract the top frequency via the
 epgminer function topfreq. Frequency is reported in Hz.
+
+The waveform type 'pd' without any splitting into subforms is calculated separately.
+As a result, the pd calculations will appear all at the end of the table.
+The subforms, pd1 and pd2, will appear in sequence.
 }
 \seealso{
 Other frequency related functions: 

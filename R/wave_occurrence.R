@@ -47,9 +47,9 @@ wave_occurrence <- function(data) {
     dplyr::filter(waveform != "pd")
 
   pdonly <- pd_helper(data) %>%
-    dplyr::filter(waveform == "pd")
-  dplyr::ungroup() %>%
-    dplyr::summarise(waveform = waveform[1], count = length(unique(wave_group)),
+    dplyr::filter(waveform == "pd") %>%
+    dplyr::ungroup() %>%
+    dplyr::summarise(waveform = waveform[1], occurrence = length(unique(wave_group)),
                      .groups = "drop")
 
   # check for phloem feeding, if not present assign number 0

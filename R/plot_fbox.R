@@ -3,7 +3,7 @@
 #' @description The function plot_fbox shows the frequencies present in a dataset
 #' plotted in a box plot by waveform.
 #'
-#' @usage plot_fbox(data, waveforms = c("A", "C", "E1", "E2", "G", "pd1",
+#' @usage plot_fbox(data, waveforms = c("non-probing", "C", "E1", "E2", "G", "pd1",
 #' "pd2", "pd"))
 #'
 #' @inheritParams plot_wave
