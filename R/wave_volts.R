@@ -11,11 +11,15 @@
 #' voltage metrics are returned: mean, SD, and relative amplitude.
 #' The SD is the mathematical SD of volts. Mean is first corrected for by subtracting
 #' the starting voltage, then the mean (adjusted) voltage is returned.
+#' The waveform type 'pd' without any splitting into subforms is calculated separately.
+#' As a result, the pd calculations will appear all at the end of the table.
+#' The subforms, pd1 and pd2, will appear in sequence.
+#'
 #' Relative amplitude is a percent calculated with the following formula:
 #' Relative amplitude = |(mean of waveform - mean of nonprobing)|x100/5
 #'
 #' @return A tibble object containing a row per waveform instance and four
-#' columns is returned: waveform, mean_volts, sd_volts, relative_amplitude_volts.
+#' columns is returned: waveform, mean_volts, sd_volts, relative_amplitude.
 #' @export
 #'
 #' @family waveform functions
@@ -66,7 +70,22 @@ wave_volts <- function(data) {
                      # relative amplitude percent (absolute to ensure positive)
                      relative_amplitude = abs(mean(volts) - begin)/5 * 100,
                      .groups = "drop") %>%
+    dplyr::filter(waveform != "pd") %>%
     dplyr::select(-wave_group)
+
+  # aggregate pds (pd_helper returns grouped tibble with pd or non as waveforms)
+  pdonly <- pd_helper(data) %>%
+    dplyr::filter(waveform == "pd") %>%
+    dplyr::summarise(waveform = waveform[1],
+                     # mean is relative to baseline begin
+                     mean_volts = mean((volts - begin), na.rm = TRUE),
+                     sd_volts = stats::sd(volts, na.rm = TRUE),
+                     # relative amplitude percent (absolute to ensure positive)
+                     relative_amplitude = abs(mean(volts) - begin)/5 * 100,
+                     .groups = "drop") %>%
+    dplyr::select(-wave_group)
+
+  out <- rbind(out, pdonly)
 
   #### pda/b split notation - deprecated
   # pdsubforms <- pd_helper(data) %>%
@@ -78,6 +97,5 @@ wave_volts <- function(data) {
   #                    .groups = "drop") %>%
   #   dplyr::select(-wave_group)
 
-  out <- rbind(out)
   return(out)
 }
