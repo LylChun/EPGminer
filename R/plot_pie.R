@@ -57,9 +57,9 @@ plot_pie <- function (data, pietype = c("time", "number"),
     labels[[1]] <- round(plot_data$time/(sum(plot_data$time))*100, 1)
     if (sum(labels[[1]]) != 100){
       # find difference (generally positive)
-      diff <- 100 - sum(labels)
+      diff <- 100 - sum(labels[[1]])
       # add split diff to all
-      labels[[1]] <- labels + diff/length(labels)
+      labels[[1]] <- labels[[1]] + diff/length(labels[[1]])
       # round, recheck sum, add to first if still not equal
       labels[[1]] <- round(labels[[1]], 1)
       if (sum(labels[[1]]) != 100){
