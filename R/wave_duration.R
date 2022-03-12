@@ -46,16 +46,18 @@ wave_duration <- function(data) {
     dplyr::filter(waveform != "pd") %>%
     dplyr::select(-wave_group)
 
-  # aggregate pds (pd_helper returns grouped tibble with pd or non as waveforms)
-  pdonly <- pd_helper(data) %>%
-    dplyr::filter(waveform == "pd") %>%
-    dplyr::summarise(waveform = waveform[1],
-                     duration = round(max(time) - min(time), 2),
-                     .groups = "drop") %>%
-    dplyr::select(-wave_group)
+  # only calculate pds if they exist in the data
+  if (any(data$waveform %in% c("pd", "pd1", "pd2"))) {
+    # aggregate pds (pd_helper returns grouped tibble with pd or non as waveforms)
+    pdonly <- pd_helper(data) %>%
+      dplyr::filter(waveform == "pd") %>%
+      dplyr::summarise(waveform = waveform[1],
+                       duration = round(max(time) - min(time), 2),
+                       .groups = "drop") %>%
+      dplyr::select(-wave_group)
 
-  out <- rbind(out, pdonly)
-
+    out <- rbind(out, pdonly)
+  }
   # check for phloem feeding, if false - duration = 0
   if (!any(unique(out$waveform) == "E1")) {
     out <- out %>%

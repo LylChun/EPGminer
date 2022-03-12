@@ -76,20 +76,22 @@ wave_volts <- function(data) {
     dplyr::filter(waveform != "pd") %>%
     dplyr::select(-wave_group)
 
-  # aggregate pds (pd_helper returns grouped tibble with pd or non as waveforms)
-  pdonly <- pd_helper(data) %>%
-    dplyr::filter(waveform == "pd") %>%
-    dplyr::summarise(waveform = waveform[1],
-                     # mean is relative to baseline begin
-                     mean_volts = mean((volts - begin), na.rm = TRUE),
-                     sd_volts = stats::sd(volts, na.rm = TRUE),
-                     # relative amplitude percent (absolute to ensure positive)
-                     relative_amplitude = abs(mean(volts) - begin)/5 * 100,
-                     .groups = "drop") %>%
-    dplyr::select(-wave_group)
+  # only calculate pds if they exist in the data
+  if (any(data$waveform %in% c("pd", "pd1", "pd2"))) {
+    # aggregate pds (pd_helper returns grouped tibble with pd or non as waveforms)
+    pdonly <- pd_helper(data) %>%
+      dplyr::filter(waveform == "pd") %>%
+      dplyr::summarise(waveform = waveform[1],
+                       # mean is relative to baseline begin
+                       mean_volts = mean((volts - begin), na.rm = TRUE),
+                       sd_volts = stats::sd(volts, na.rm = TRUE),
+                       # relative amplitude percent (absolute to ensure positive)
+                       relative_amplitude = abs(mean(volts) - begin)/5 * 100,
+                       .groups = "drop") %>%
+      dplyr::select(-wave_group)
 
-  out <- rbind(out, pdonly)
-
+    out <- rbind(out, pdonly)
+  }
   #### pda/b split notation - deprecated
   # pdsubforms <- pd_helper(data) %>%
   #   dplyr::group_by(wave_group) %>%
