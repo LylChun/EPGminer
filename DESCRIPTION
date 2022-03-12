@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "lizzie_chun1@tamu.edu")
 Description: Analysis of insect electrical penetration graph (EPG) data through metrics, such as frequency and duration, and visuals, including boxplots and colored time-series.
-License: GPL-2
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -29,3 +29,7 @@ Imports:
     tibble,
     utils,
     webshot
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
