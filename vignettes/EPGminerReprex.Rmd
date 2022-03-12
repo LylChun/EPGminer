@@ -1,0 +1,86 @@
+---
+title: "EPGminerReprex"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{EPGminerReprex}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+The following R code is illustrative of how to use this software on our data to reproduce the results.
+
+```{r eval = F}
+library(epgminer)
+
+# The time needed to run this script is dependent on the number of datasets
+
+# load necessary packages
+library(tidyverse)
+library(epgminer)
+
+# Set working directory to folder containing dataset folders and ANA files
+folder <- "insert_here"
+setwd(folder)
+# list out ANA files 
+label <- list.files(pattern = ".ANA")
+
+# Read all datasets into a list
+raw_dat <- list()
+lab_dat <- list()
+for (i in 1:length(label)) {
+  # find specified raw hourly files
+  set <- str_sub(label[i], end = -5)
+  
+  # read in the specified dataset
+  raw_dat[[i]] <- paste(set, "/", list.files(paste(set, "/", sep = "")), sep = "") %>%
+    map_df(~read_epg(.))
+}
+
+# for each dataset, combine raw and ANA
+for (i in 1:length(label)) {
+  ana <- read_epg(label[i], extension = "ANA")
+  # lab dat contains fully labeled tibble - time, volts, wavform
+  # to be used for metrics
+  lab_dat[[i]] <- label_ana(raw_dat[[i]], ana)
+  # track when data has been labelled (can be removed)
+  print(i)
+}
+
+# Now calculate top frequencies for each waveform
+for (i in 1:length(lab_dat)) {
+  set <- str_sub(label[i], end = -5)
+
+  # returns tibble with waveform, frequency columns
+  # pds (subform independent) are on bottom
+  out <- wave_topfreq(lab_dat[[i]])
+
+  # save frequency results in a csv
+  write.table(out, file = paste(set, "_frequencies_wpd.csv", sep = ""),
+              row.names = FALSE, col.names = TRUE, sep = ",")
+  # track table writing (can be removed)
+  print(paste(set, "_frequencies.csv", sep = ""))
+}
+
+# voltage metrics ----
+for (i in 1:length(lab_dat)) {
+  set <- str_sub(label[i], end = -5)
+  
+  # returns tibble with waveform, duration columns
+  # pds (subform independent) are on bottom
+  out <- wave_volts(lab_dat[[i]])
+  
+  # save results in a csv
+  write.table(out, file = paste(set, "_volts_osd.csv", sep = ""),
+              row.names = FALSE, col.names = TRUE, sep = ",")
+  # track table writing (can be removed)
+  print(paste(set, "_volts.csv", sep = ""))
+}
+```
