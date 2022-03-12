@@ -70,7 +70,7 @@ shinyUI(fluidPage(
                       fluidRow(
                         column(6,
                                "Example Pie Chart of Waveforms by Time",
-                               img(src = "Waveform_piechart_time.png", height = "100%", width = "100%%"),
+                               img(src = "waveform_piechart_time.png", height = "100%", width = "100%%"),
                         ),
                         column(6,
                                "Example Pie Chart of Waveforms by Number",
@@ -165,7 +165,7 @@ shinyUI(fluidPage(
                      the 'Choose Raw Data File Type' input does not match with what you have uploaded,
                      please change the input and try again."),
                    p("(ii) For the 'Add Manual Labels from ANA' option, check that the raw data
-                     files and the ANA file match.")
+                     files and ANA are from the same dataset.")
                  ),
                  conditionalPanel(
                    condition = "input.help == 'analysis'",

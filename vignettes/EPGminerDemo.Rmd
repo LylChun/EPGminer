@@ -1,5 +1,5 @@
 ---
-title: "EPGminerDemo"
+title: "EPGminer Demo"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{EPGminerDemo}

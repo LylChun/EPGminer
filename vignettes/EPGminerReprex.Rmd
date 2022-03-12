@@ -1,5 +1,5 @@
 ---
-title: "EPGminerReprex"
+title: "EPGminer Example Workflow"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{EPGminerReprex}
