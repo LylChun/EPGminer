@@ -16,7 +16,12 @@ shinyUI(fluidPage(
 
   theme = shinythemes::shinytheme("paper"),
 
-  titlePanel("EPGminer"),
+  tags$head(tags$title("EPGminer")),
+
+  # titlePanel("EPGminer"),
+  titlePanel(title = div(img(src = "logo.png", width = "5%", height = "5%",
+                             align = "center"),
+                         "EPGminer")),
 
   tabsetPanel(
 
@@ -25,123 +30,110 @@ shinyUI(fluidPage(
                column(12, wellPanel(h3("Welcome to EPGminer!")))
              ),
              fluidRow(
-               column(12,
+               column(6,
                       wellPanel(
                         h4("Overview"),
-                        p("EPGminer is an application designed to assist researchers in the
-                          analysis of Electrical Penetration Graph (EPG) data. EPG data can help
-                          scientists to better understand insect feeding behavior and host-insect
-                          relationships. Since EPG datasets can often be large and hard to analyze,
-                          there is a need for user friendly software that can assist in that
-                          analysis."),
-                        p("There are three parts to EPGminer: (i) Labeling raw data, (ii) Analysis
-                          of labeled data through metric calculations, and (iii) Visualizations
-                          of labeled data. A researcher may upload their data, label it, and then
-                          analyze the data, all within a point and click interface that is user
-                          friendly and requires no coding experience."),
-                        p("One of the main functionalities of EPGminer is to allow researchers to
-                          calculate frequencies for labeled waveforms using the Fourier Transform.
-                          Another main functionality of EPGminer is the ability to generate
-                          visuals. There are currently four visuals that EPGminer can create - a
-                          frequency boxplot, a pie chart of waveform times, a pie chart of
-                          waveform occurrence, and a time series colored by waveform labels. Each of
-                          these plots, with the exception of the labeled time series, is customizable
-                          - e.g. the user may select which waveforms to include in the plot itself.
-                          All plots are interactive and the user may zoom in, or 'hover' over the plot
-                          for additional information.")
-                      )
-               )),
-
-             fluidRow(
-               column(12,
+                        p("EPGminer is an application designed to help analyze Electrical
+                          Penetration Graph (EPG) data. EPG data can help scientists better
+                          understand insect feeding behavior and host-insect relationships.
+                          Since EPG datasets can often be large and difficult to analyze, there
+                          is a need for user friendly software that can assist in that analysis.
+                          The EPGminer app is based on the epgminer R package which can be found on
+                          Github at LylChun/EPGminer"),
+                        p("There are three parts to EPGminer:"),
+                        p("(i) Data upload and labeling"),
+                        p("(ii) Data Analysis using Frequency and Relative Amplitude"),
+                        p("(iii) Data Visualizations via interactive plots")
+                      ),
                       wellPanel(
                         h4("Why use EPGminer?"),
                         p("EPGminer allows one to dig deeper into EPG data and calculate metrics that
                           require computational power, such as frequency. By providing the data analysis
                           capabilities of R code in a user-friendly manner, we hope to advance EPG
-                          data analysis further. For example, the metrics calculated can be downloaded
-                          and used to cross compare waveform types, differences both within and between
-                          datasets, and even differences between insect/host combinations. All analysis
-                          - both metrics and visuals, can be downloaded by the user."),
-                        p("Additionally, EPGminer includes an experimental semi-automatic algorithm to label
-                          waveforms in raw EPG data. Manual annotations of EPG data are time-consuming
-                          and a computer mediated method of annotating is desireable. In this
-                          semi-automatic algorithm, we have sought to balance the benefits of automatic
-                          labeling with the need for accuracy. The automatic portion allows one to save
-                          time and energy by computationally labeling waveforms. Then the user input
-                          features - making it 'semi'-automatic - can be used to fine-tune the
-                          computer labeling to improve accuracy. The algorithm is still under
-                          development, so if you already possess manual annotations (ANA files) for
-                          your data, it is recommended that you use those instead for best accuracy.
-                          However if you do not have manual annotations, or you simply would like to
-                          see the algorithm in action, then the option is available."))
+                          data analysis further. Additionally, all analyses - both metrics and visuals,
+                          can be downloaded by the user for further study.")
+                        # p("Additionally, EPGminer includes an experimental semi-automatic algorithm to label
+                        #   waveforms in raw EPG data. Manual annotations of EPG data are time-consuming
+                        #   and a computer mediated method of annotating is desireable. In this
+                        #   semi-automatic algorithm, we have sought to balance the benefits of automatic
+                        #   labeling with the need for accuracy. The automatic portion allows one to save
+                        #   time and energy by computationally labeling waveforms. Then the user input
+                        #   features - making it 'semi'-automatic - can be used to fine-tune the
+                        #   computer labeling to improve accuracy. The algorithm is still under
+                        #   development, so if you already possess manual annotations (ANA files) for
+                        #   your data, it is recommended that you use those instead for best accuracy.
+                        #   However if you do not have manual annotations, or you simply would like to
+                        #   see the algorithm in action, then the option is available.")
+                      )
+               ),
+               column(6,
+                      fluidRow(
+                        column(6,
+                               "Example Pie Chart of Waveforms by Time",
+                               img(src = "Waveform_piechart_time.png", height = "100%", width = "100%%"),
+                        ),
+                        column(6,
+                               "Example Pie Chart of Waveforms by Number",
+                               img(src = "Waveform_piechart.png", height = "100%", width = "100%%")
+                        )
+                      ),
+                      "Example Boxplot of Frequencies",
+                      img(src = "freq_boxplot.png", width = "100%")
                )
-             )),
+
+             ),
+    ),
 
     tabPanel("Tutorial", fluid = TRUE,
              fluidRow(
-               column(12, wellPanel(h3("How to Use EPGminer")))
+               column(12, wellPanel(h3("Getting Started with EPGminer")))
              ),
              fluidRow(
-               column(12,
+               column(6,
                       wellPanel(
                         h4("Quick Start Guide:"),
-                        p("1. To begin, please click the 'Label My Data' tab, and
-                          upload your data file(s). If the raw data is in separate hourly txt files,
-                          highlight all of them when you click 'Browse'. In order to analyze your data,
-                          you must upload both the raw voltage data and the annotation file for that data.
-                          Alternatively, you may upload a single csv containing both the raw data and
-                          the waveform labels. See 'Additional Resources' for more details on supported data
-                          formats. If you choose 'Use Algorithm to Label' under 'Label My Data', only raw
-                          data is required, no annotation file is necessary. For details on how to use this
-                          option, see 'Additional Resources' and select 'Algorithmic Labeling'. Please
-                          note that the algorithm is still experimental and may not return
-                          completely accurate results."),
-                        p("2. When you have finished loading/labeling your data, proceed to the
-                          'Analyze My Data' tab for analysis of the labeled waveforms. This tab
-                          allows one to calculate metrics - frequency and relative amplitude (volts). You may
-                          download the analysis by clicking on one of the buttons diplayed above the
-                          table - e.g. if you would like to download the table as a csv click on the
-                          button labeled csv."),
-                        p("3. If you wish to visualize your data, you may select the 'Visuals' tab.
-                          You may select which waveform(s) to include as well as zoom in or pan through
-                          the plot. Certain waveforms are included by default but can be deselected if
-                          desired. Note that the pie chart percentages will change depending on which
-                          waveforms are selected as they are percents out of a 100%, where 100% means all
-                          selected waveforms not all present waveforms. However the absolute values will
-                          not change - e.g. if waveform G is present for 100 minutes, adding waveform C
-                          to the selected waveforms will change it's percent composition but the absolute
-                          value of 100 minutes will not change. This can be seen by hovering over the plot.
-                          The labeled time series plot can help you double check if the labeling
-                          was processed correctly and that the analysis outputs are reasonable."),
-                        p("4. If you encounter errors, or are unsure how to proceed, check out
+                        p("1. Click the 'Label My Data' tab and upload your data file(s). For
+                        specifics on supported data types, please see 'Additional Resources' below."),
+                        p("2. Once the data has loaded, proceed to the 'Analyze My Data' tab for
+                        frequency and relative amplitude calculations, or the 'Visuals' tab for
+                        visualizations of your data."),
+                        p("3. If you encounter errors, or are unsure how to proceed, check out
                           'Tips and Troubleshooting' and/or 'Additional Resources'."))
-               )
-             ),
-             fluidRow(
-               column(12,
+               ),
+               column(6,
                       wellPanel(
                         h4("Tips and Troubleshooting:"),
-                        p("Please note that all steps take some time. Because EPG data is collected
-                          for many hours at a time and can thus be millions of rows when combined,
-                          uploading data is not instantaneous. Allow a minimum of one minute
-                          before checking that all inputs are correct. You may also see a
-                          notification in the bottom right corner that says 'Rendering'. This
-                          means the program is running and the output will be displayed when
-                          finished. Additionally, if you see an error displaying, but the 'Rendering'
-                          banner is also displayed, wait until the Rendering banner disappears as
-                          the error message may be old/transient and disappear once the program
-                          finishs rendering."),
-                        p("If you are adding Manual labels/annotation from an ANA file, ensure that
-                          the raw data and the ANA file match and are for the same dataset. For example,
-                          if there are 24 hours of data, you must upload the raw data for all 24 hours.
-                          The file names do not need to match, only the contents."),
-                        p("The algorithm for labeling data is still under active development and prone
-                          to erroring out or mislabeling. For detailed instructions on how to use it
-                          and best avoid errors, please see the 'Additional Resources' section on
-                          'Algorithmic Labeling'."))
+                        p("Please note that all steps, particularly data upload/labeling and visuals,
+                        can take a nontrivial amount of time. "),
+                        p("When uploading data,", strong("please allow a minimum of one minute"), "
+                        before checking that all inputs are correct. You may also see a notification
+                        in the bottom right corner that says 'Rendering' while the program is running."))
                )
              ),
+             # fluidRow(
+             #   column(12,
+             #          wellPanel(
+             #            h4("Tips and Troubleshooting:"),
+             #            p("Please note that all steps take some time. Because EPG data is collected
+             #              for many hours at a time and can thus be millions of rows when combined,
+             #              uploading data is not instantaneous. Allow a minimum of one minute
+             #              before checking that all inputs are correct. You may also see a
+             #              notification in the bottom right corner that says 'Rendering'. This
+             #              means the program is running and the output will be displayed when
+             #              finished. Additionally, if you see an error displaying, but the 'Rendering'
+             #              banner is also displayed, wait until the Rendering banner disappears as
+             #              the error message may be old/transient and disappear once the program
+             #              finishs rendering."),
+             #            p("If you are adding Manual labels/annotation from an ANA file, ensure that
+             #              the raw data and the ANA file match and are for the same dataset. For example,
+             #              if there are 24 hours of data, you must upload the raw data for all 24 hours.
+             #              The file names do not need to match, only the contents."),
+             #            p("The algorithm for labeling data is still under active development and prone
+             #              to erroring out or mislabeling. For detailed instructions on how to use it
+             #              and best avoid errors, please see the 'Additional Resources' section on
+             #              'Algorithmic Labeling'."))
+             #   )
+             # ),
              fluidRow(
                column(12, wellPanel(
                  h4("Additional Resources"),
@@ -173,9 +165,7 @@ shinyUI(fluidPage(
                      the 'Choose Raw Data File Type' input does not match with what you have uploaded,
                      please change the input and try again."),
                    p("(ii) For the 'Add Manual Labels from ANA' option, check that the raw data
-                     files and the ANA file match exactly. Also make sure that ALL raw data file(s)
-                     have been uploaded - e.g if there are 24 hourly txt files corresponding to
-                     this dataset, you must upload all 24.")
+                     files and the ANA file match.")
                  ),
                  conditionalPanel(
                    condition = "input.help == 'analysis'",
@@ -185,12 +175,12 @@ shinyUI(fluidPage(
                      properly labeled before proceeding. If the data is displayed as expected,
                      then return to the 'Analyze My Data' tab and wait an additional 30 seconds
                      to allow time to process."),
-                   # p("For the waveform annotation 'pd', all calculated results will appear at
-                   #   the bottom of the table when viewing the frequency or duration of each
-                   #   individual waveform instance. The subforms labels, pd1 and pd2, will appear
-                   #   in order with the other waveforms, but due to the way 'pd' unseparated into
-                   #   subforms is handled by the app, they will appear all together on the bottom
-                   #   of the table.")
+                   p("For the waveform annotation 'pd', all calculated results will appear at
+                     the bottom of the table when viewing the frequency or relative amplitude of each
+                     individual waveform instance. The subforms labels, pd1 and pd2, will appear
+                     in order with the other waveforms, but due to the way 'pd' unseparated into
+                     subforms is handled, they will appear all together on the bottom
+                     of the table.")
                  ),
                  conditionalPanel(
                    condition = "input.help == 'visuals'",
@@ -257,9 +247,9 @@ shinyUI(fluidPage(
 
                sidebarPanel(
                  radioButtons("label", "Choose Labeling Method",
-                              choices = c(`Add Manual Labels from ANA file` = "ana",
+                              choices = c(`Manual Labels from ANA file` = "ana",
                                           `Pre-labeled Data` = "prelab",
-                                          `Use Algorithm to Label` = "comp")),
+                                          `Algorithmic Labeling (BETA)` = "comp")),
 
                  conditionalPanel(
                    condition = "input.label == 'ana'",
