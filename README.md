@@ -34,7 +34,7 @@ An accompanying Shiny app, available as both a web version
 includes a streamlined version of the package functionality focusing on
 the main calculations and visuals.
 
-To cite the current version (with DOI):
+To cite (with DOI) please use:
 
 Elizabeth Chun. (2022). LylChun/EPGminer: EPGminer (v1.0.0). Zenodo.
 [![DOI](https://zenodo.org/badge/341639621.svg)](https://zenodo.org/badge/latestdoi/341639621)
@@ -52,7 +52,7 @@ with 8 GB of RAM which is amply sufficient.
 #### OS
 
 The package was developed and primarily tested on Windows 10 Version
-20H2. It has also been tested on macOS **Insert Here**
+20H2. It has also been tested on macOS Monterey Version 12.1.
 
 #### Dependencies
 
@@ -65,9 +65,13 @@ DESCRIPTION file.
 A streamlined version of `EPGminer` is available as a Shiny application.
 The `EPGminer` App web version may be launched via the user’s web
 browser with no installation or other software dependencies required.
-The app has been tested in Chrome, Edge, and **insert**. Note that due
-to server limitations, the web version is limited in memory and should
-not be used for datasets that exceed 100mb at most.
+The app has been tested in the following browsers:
+
+Chrome Version 99.0.4844.51 Edge Version 99.0.1150.39 Safari Version
+15.2
+
+Note that due to server limitations, the web version is limited in
+memory and should not be used for datasets that exceed 100mb at most.
 
 The `EPGminer` app local version must be installed with the R package
 itself and System Requirements are as noted above.
@@ -87,6 +91,9 @@ installed from GitHub as follows.
 
 The `EPGminer` package can be installed from GitHub using `devtools` via
 the following code in R. Installation should take around 20-30 seconds.
+To install the package without vignettes, set build\_vignettes = FALSE
+(install time will be faster, however this means the vignettes
+referenced in “Demo” and “Instructions for use” will not be installed).
 
 ``` r
 if (!require(devtools)){
@@ -98,8 +105,7 @@ devtools::install_github("LylChun/EPGminer", build_vignettes = TRUE)
 ## Demo
 
 For a demo of `EPGminer` with instructions, expected output, and
-expected runtime, please see the “EPGminerDemo” vignette (to be filled
-in):
+expected run time, please see the “EPGminerDemo” vignette:
 
 ``` r
 vignette("EPGminerDemo")
