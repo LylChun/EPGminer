@@ -2,7 +2,7 @@
 title: "EPGminer Demo"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{EPGminerDemo}
+  %\VignetteIndexEntry{EPGminer Demo}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,11 +10,76 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  eval = FALSE,
   comment = "#>"
 )
 ```
 
 ```{r setup}
 library(epgminer)
+library(dplyr)
 ```
 
+# Introduction
+In this demo, we will show the use of the `EPGminer` R package for analysis of insect EPG data. The primary goal of `EPGminer` is to advance analysis of insect feeding behavior using EPG by introducing a computational tool. The main utility of `EPGminer` is calculation of frequency via the Fourier Transform, and calculation of Relative Amplitude (voltage). This demo will take you step by step through analysis of EPG data using an example dataset.
+
+## 1. Load Example Dataset
+First, the dataset must be read in properly. The `EPGminer` function read_epg can be used to read in both raw EPG data as "txt" files and manual annotation files with extension ".ANA".
+
+```{r}
+# insert dataset
+```
+
+## 2. Add waveform labels
+To calculate Frequency and Relative Amplitude for each waveform, the annotation file must be combined with the raw data
+
+```{r}
+# example_epg_unlabeled and example_epg_ana from part 1
+example_epg_labeled <- label_ana(example_epg_unlabeled, example_epg_ana)
+```
+
+## 3. Calculate Frequency and Relative Amplitude
+Once the data has been properly labeled using the annotation file, the `EPGminer` functions wave_topfreq and wave_volts can be used to calculate Frequency and Relative Amplitude respectively.
+```{r}
+frequency <- wave_topfreq(example_epg_labeled)
+RA <- wave_volts(example_epg_labeled)
+head(frequency); head(RA)
+```
+
+## 4. Summarize results by waveform
+To summarize the results, we take the mean value for each waveform type.
+
+```{r}
+# group by waveform and take the mean
+summary_freq <- frequency %>%
+  group_by(waveform) %>%
+  summarise(waveform = waveform[1], frequency = mean(frequency), .groups = "drop")
+summary_ra <- RA %>%
+  group_by(waveform) %>%
+  summarise(waveform = waveform[1], relative_amplitude = mean(relative_amplitude),
+            .groups = "drop")
+knitr::kable(summary_freq, caption = "Table of Mean Frequency by Waveform",
+             align = "c")
+knitr::kable(summary_ra, caption = "Table of Mean Relative Amplitude by Waveform",
+             align = "c")
+```
+
+
+## 5. Visualize data
+For further exploration, the data can also be visualized. The following three plots will show: (i) a boxpot of frequencies for each waveform type, (ii) a pie chart of time spent in each waveform type (iii) a pie chart showing the number of each waveform type.
+
+```{r}
+plot_fbox(example_epg_labeled)
+plot_pie(example_epg_labeled, pietype = "time")
+plot_pie(example_epg_labeled, pietype = "number")
+```
+## Expected Output and Run time
+Expected output from running the above is as follows: 
+
+3. Frequency and Relative Amplitude are calculated for each waveform instance and returned in a table. The frequency object is a table with columns for waveform and frequency, while the RA object is a table with columns for waveform, mean volts, SD of volts and Relative Amplitude. 
+
+4. Expected output is two summary tables for frequency and Relative Amplitude grouped by waveform respectively. There should be one (mean) frequency and (mean) Relative Amplitude for each waveform type.
+
+5. Three plots where the first is a boxplot of frequencies and the last two are pie charts by time and number respectively.
+
+Overall expected run time for this demo is less than 30 seconds, including data reading/processing in steps 1 and 2. 

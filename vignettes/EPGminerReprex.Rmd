@@ -2,7 +2,7 @@
 title: "EPGminer Example Workflow"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{EPGminerReprex}
+  %\VignetteIndexEntry{EPGminer Example Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,9 +15,9 @@ knitr::opts_chunk$set(
 ```
 
 
-The following R code is illustrative of how to use this software on our data to reproduce the results.
+The following R code is illustrative of how to use this software on our data to reproduce calculations. In essence, data and annotations are read in using the read_epg data function. The label_ana function is used to combine the raw data and annotation files. Then wave_topfreq and wave_volts are used to calculate frequency and relative amplitude of volts respectively.
 
-```{r eval = F}
+```{r, eval = F}
 library(epgminer)
 
 # The time needed to run this script is dependent on the number of datasets
@@ -41,16 +41,16 @@ for (i in 1:length(label)) {
   
   # read in the specified dataset
   raw_dat[[i]] <- paste(set, "/", list.files(paste(set, "/", sep = "")), sep = "") %>%
-    map_df(~read_epg(.))
+    map_df(~epgminer::read_epg(.))
 }
 
 # for each dataset, combine raw and ANA
 for (i in 1:length(label)) {
-  ana <- read_epg(label[i], extension = "ANA")
+  ana <- epgminer::read_epg(label[i], extension = "ANA")
   # lab dat contains fully labeled tibble - time, volts, wavform
   # to be used for metrics
-  lab_dat[[i]] <- label_ana(raw_dat[[i]], ana)
-  # track when data has been labelled (can be removed)
+  lab_dat[[i]] <- epgminer::label_ana(raw_dat[[i]], ana)
+  # track when data has been labeled 
   print(i)
 }
 
@@ -60,12 +60,12 @@ for (i in 1:length(lab_dat)) {
 
   # returns tibble with waveform, frequency columns
   # pds (subform independent) are on bottom
-  out <- wave_topfreq(lab_dat[[i]])
+  out <- epgminer::wave_topfreq(lab_dat[[i]])
 
   # save frequency results in a csv
-  write.table(out, file = paste(set, "_frequencies_wpd.csv", sep = ""),
+  write.table(out, file = paste(set, "_frequencies.csv", sep = ""),
               row.names = FALSE, col.names = TRUE, sep = ",")
-  # track table writing (can be removed)
+  # track table writing
   print(paste(set, "_frequencies.csv", sep = ""))
 }
 
@@ -75,12 +75,12 @@ for (i in 1:length(lab_dat)) {
   
   # returns tibble with waveform, duration columns
   # pds (subform independent) are on bottom
-  out <- wave_volts(lab_dat[[i]])
+  out <- epgminer::wave_volts(lab_dat[[i]])
   
   # save results in a csv
-  write.table(out, file = paste(set, "_volts_osd.csv", sep = ""),
+  write.table(out, file = paste(set, "_volts.csv", sep = ""),
               row.names = FALSE, col.names = TRUE, sep = ",")
-  # track table writing (can be removed)
+  # track table writing 
   print(paste(set, "_volts.csv", sep = ""))
 }
 ```
