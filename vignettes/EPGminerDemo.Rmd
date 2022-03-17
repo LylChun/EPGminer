@@ -74,7 +74,7 @@ plot_pie(example_epg_labeled, pietype = "time")
 plot_pie(example_epg_labeled, pietype = "number")
 ```
 ## Expected Output and Run time
-Expected output from running the above is as follows: 
+Expected output for each step is as follows: 
 
 3. Frequency and Relative Amplitude are calculated for each waveform instance and returned in a table. The frequency object is a table with columns for waveform and frequency, while the RA object is a table with columns for waveform, mean volts, SD of volts and Relative Amplitude. 
 

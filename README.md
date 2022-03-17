@@ -67,8 +67,9 @@ The `EPGminer` App web version may be launched via the user’s web
 browser with no installation or other software dependencies required.
 The app has been tested in the following browsers:
 
-Chrome Version 99.0.4844.51 Edge Version 99.0.1150.39 Safari Version
-15.2
+Chrome Version 99.0.4844.51  
+Edge Version 99.0.1150.39  
+Safari Version 15.2
 
 Note that due to server limitations, the web version is limited in
 memory and should not be used for datasets that exceed 100mb at most.
@@ -90,8 +91,8 @@ installed from GitHub as follows.
 ### Install from GitHub
 
 The `EPGminer` package can be installed from GitHub using `devtools` via
-the following code in R. Installation should take around 20-30 seconds.
-To install the package without vignettes, set build\_vignettes = FALSE
+the following code in R. Installation should take around 30 seconds. To
+install the package without vignettes, set build\_vignettes = FALSE
 (install time will be faster, however this means the vignettes
 referenced in “Demo” and “Instructions for use” will not be installed).
 
