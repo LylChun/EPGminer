@@ -107,7 +107,10 @@ shinyUI(fluidPage(
                         can take a nontrivial amount of time. "),
                         p("When uploading data,", strong("please allow a minimum of one minute"), "
                         before checking that all inputs are correct. You may also see a notification
-                        in the bottom right corner that says 'Rendering' while the program is running."))
+                        in the bottom right corner that says 'Rendering' while the program is running."),
+                        p("Algorithmic labeling is currently experimental and prone to errors.
+                          It is", strong("strongly recommended"), "to use manual labels (ANA)
+                          or prelabeled data instead."))
                )
              ),
              # fluidRow(
@@ -151,9 +154,9 @@ shinyUI(fluidPage(
                           be multiple txt files (please highlight/select all). The txt file must
                           have the format time;volts. Raw data in .csv format must be a
                           single csv file with columns labeled time, volts."),
-                   p("c. ANA files must have the first two columns be waveform then time. Any
+                   p("b. ANA files must have the first two columns be waveform then time. Any
                      additional columns will not be used."),
-                   p("b. Pre-labeled data must be in csv format with columns labeled
+                   p("c. Pre-labeled data must be in csv format with columns labeled
                      time, volts, and waveform."),
                    p("If you encounter an issue or error when uploading/labeling your data, first
                      check that all data file(s) are properly formatted. If all files are properly
@@ -272,7 +275,7 @@ shinyUI(fluidPage(
 
                  conditionalPanel(
                    condition = "input.label == 'prelab'",
-                   fileInput("data", "Choose Labelled Data File",
+                   fileInput("data", "Choose Labeled Data File",
                              multiple = FALSE, accept = ".csv")
                  ),
 

@@ -407,7 +407,7 @@ shinyServer(function(input, output, session) {
     req(input$compraw)
 
     list <- lapply(input$compraw$datapath, read_epg)
-    out <- rbindlist(list)
+    out <- data.table::rbindlist(list)
     return(out)
   })
 
@@ -431,7 +431,7 @@ shinyServer(function(input, output, session) {
       return(out)
     }
 
-    ao <- as.double(str_split(input$in_ao, pattern = ",")[[1]])
+    ao <- as.double(stringr::str_split(input$in_ao, pattern = ",")[[1]])
     out <- wave_label_a(comp_raw(), ao)
 
     return(out)
@@ -539,7 +539,7 @@ shinyServer(function(input, output, session) {
       need(input$pd_manual == "n", message = F)
     )
 
-    event <- event_data("plotly_click")
+    event <- plotly::event_data("plotly_click")
     values$pd1 <- event
   })
 
@@ -617,8 +617,8 @@ shinyServer(function(input, output, session) {
       return(out)
     }
 
-    a <- as.double(str_split(input$in_a, pattern = ",")[[1]])
-    o <- as.double(str_split(input$in_o, pattern = ",")[[1]])
+    a <- as.double(stringr::str_split(input$in_a, pattern = ",")[[1]])
+    o <- as.double(stringr::str_split(input$in_o, pattern = ",")[[1]])
 
     out <- wave_label_a_probe(comp_raw(), a, o)
 
