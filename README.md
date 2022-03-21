@@ -106,7 +106,8 @@ devtools::install_github("LylChun/EPGminer", build_vignettes = TRUE)
 ## Demo
 
 For a demo of `EPGminer` with instructions, expected output, and
-expected run time, please see the “EPGminerDemo” vignette found
+expected run time, please see the “EPGminerDemo” vignette which can be
+found on the package website
 [here](https://lylchun.github.io/EPGminer/articles/EPGminerDemo.html)
 
 The vignette may also be accessed in R via:
