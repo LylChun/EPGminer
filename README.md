@@ -106,7 +106,10 @@ devtools::install_github("LylChun/EPGminer", build_vignettes = TRUE)
 ## Demo
 
 For a demo of `EPGminer` with instructions, expected output, and
-expected run time, please see the “EPGminerDemo” vignette:
+expected run time, please see the “EPGminerDemo” vignette found
+[here](https://lylchun.github.io/EPGminer/articles/EPGminerDemo.html)
+
+The vignette may also be accessed in R via:
 
 ``` r
 vignette("EPGminerDemo")
@@ -117,7 +120,9 @@ vignette("EPGminerDemo")
 Use of the software for EPG data analysis involves data
 reading/processing, labeling, and calculation of metrics. For an example
 script showing how we used `EPGminer` on our data, please see the
-“EPGminerReprex” vignette:
+“EPGminerReprex” vignette
+[here](https://lylchun.github.io/EPGminer/articles/EPGminerReprex.html)
+or via R:
 
 ``` r
 vignette("EPGminerReprex")
