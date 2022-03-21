@@ -33,7 +33,11 @@ label_ana <- function (data, ana) {
   waveform = time = idx = NULL
   rm(list = c("waveform","time", "idx"))
 
-  data$time <- round(data$time, 2)
+  # ensure data is in ascending time and rounded to 2 decimals
+  data <- data %>%
+    dplyr::arrange(time) %>%
+    dplyr::mutate(time = round(time, 2))
+
   ana <- ana %>%
     # dplyr::filter(waveform != 99) %>%
     dplyr::mutate(time = round(time, 2),
