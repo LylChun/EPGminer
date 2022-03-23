@@ -62,9 +62,7 @@
 
 
 
-<script src="EPGminerDemo_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="EPGminerDemo_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="EPGminerDemo_files/plotly-binding-4.10.0/plotly.js"></script><script src="EPGminerDemo_files/typedarray-0.1/typedarray.min.js"></script><link href="EPGminerDemo_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
-<script src="EPGminerDemo_files/crosstalk-1.2.0/js/crosstalk.min.js"></script><link href="EPGminerDemo_files/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet">
-<script src="EPGminerDemo_files/plotly-main-2.5.1/plotly-latest.min.js"></script><div class="row">
+<script src="EPGminerDemo_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>EPGminer Demo</h1>
             
@@ -78,20 +76,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lylchun.github.io/EPGminer/">epgminer</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'dplyr'</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     filter, lag</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'data.table'</span>
-<span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     between, first, last</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></code></pre></div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -104,28 +89,9 @@
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
 <span class="op">}</span>
-<span class="co">#&gt; Loading required package: devtools</span>
-<span class="co">#&gt; Warning in library(package, lib.loc = lib.loc, character.only = TRUE,</span>
-<span class="co">#&gt; logical.return = TRUE, : there is no package called 'devtools'</span>
-<span class="co">#&gt; Installing package into '/home/runner/work/_temp/Library'</span>
-<span class="co">#&gt; (as 'lib' is unspecified)</span>
-<span class="co">#&gt; also installing the dependencies 'credentials', 'zip', 'gitcreds', 'ini', 'diffobj', 'rematch2', 'gert', 'gh', 'brew', 'praise', 'waldo', 'usethis', 'pkgload', 'remotes', 'roxygen2', 'rstudioapi', 'rversions', 'testthat'</span>
 <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st">"epgdata"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-  <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"LylChun/epgdata"</span><span class="op">)</span>
+  <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"LylChun/epgdata"</span><span class="op">)</span>
 <span class="op">}</span>
-<span class="co">#&gt; Loading required package: epgdata</span>
-<span class="co">#&gt; Warning in library(package, lib.loc = lib.loc, character.only = TRUE,</span>
-<span class="co">#&gt; logical.return = TRUE, : there is no package called 'epgdata'</span>
-<span class="co">#&gt; Using github PAT from envvar GITHUB_PAT</span>
-<span class="co">#&gt; Downloading GitHub repo LylChun/epgdata@HEAD</span>
-<span class="co">#&gt; * checking for file ‘/tmp/RtmpFfXO4u/remotes34dd34b9d148/LylChun-epgdata-33be0ab/DESCRIPTION’ ... OK</span>
-<span class="co">#&gt; * preparing ‘epgdata’:</span>
-<span class="co">#&gt; * checking DESCRIPTION meta-information ... OK</span>
-<span class="co">#&gt; * checking for LF line-endings in source and make files and shell scripts</span>
-<span class="co">#&gt; * checking for empty or unneeded directories</span>
-<span class="co">#&gt; * building ‘epgdata_0.0.1.tar.gz’</span>
-<span class="co">#&gt; Installing package into '/home/runner/work/_temp/Library'</span>
-<span class="co">#&gt; (as 'lib' is unspecified)</span>
 
 <span class="co"># list raw txt files and ana file from epgdata package</span>
 <span class="va">datafiles</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"epgdata"</span><span class="op">)</span>,
@@ -166,99 +132,18 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>waveform <span class="op">=</span> <span class="va">waveform</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, relative_amplitude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">relative_amplitude</span><span class="op">)</span>,
             .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
 <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">summary_freq</span>, caption <span class="op">=</span> <span class="st">"Table of Mean Frequency by Waveform"</span>,
+             align <span class="op">=</span> <span class="st">"c"</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">summary_ra</span>, caption <span class="op">=</span> <span class="st">"Table of Mean Relative Amplitude by Waveform"</span>,
              align <span class="op">=</span> <span class="st">"c"</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
-<table class="table">
-<caption>Table of Mean Frequency by Waveform</caption>
-<thead><tr class="header">
-<th align="center">waveform</th>
-<th align="center">frequency</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="center">C</td>
-<td align="center">0.80</td>
-</tr>
-<tr class="even">
-<td align="center">E1</td>
-<td align="center">4.59</td>
-</tr>
-<tr class="odd">
-<td align="center">G</td>
-<td align="center">2.05</td>
-</tr>
-<tr class="even">
-<td align="center">non-probing</td>
-<td align="center">44.34</td>
-</tr>
-<tr class="odd">
-<td align="center">pd</td>
-<td align="center">1.42</td>
-</tr>
-<tr class="even">
-<td align="center">pd1</td>
-<td align="center">1.88</td>
-</tr>
-<tr class="odd">
-<td align="center">pd2</td>
-<td align="center">2.73</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">summary_ra</span>, caption <span class="op">=</span> <span class="st">"Table of Mean Relative Amplitude by Waveform"</span>,
-             align <span class="op">=</span> <span class="st">"c"</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
-<table class="table">
-<caption>Table of Mean Relative Amplitude by Waveform</caption>
-<thead><tr class="header">
-<th align="center">waveform</th>
-<th align="center">relative_amplitude</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="center">C</td>
-<td align="center">16.78</td>
-</tr>
-<tr class="even">
-<td align="center">E1</td>
-<td align="center">33.82</td>
-</tr>
-<tr class="odd">
-<td align="center">G</td>
-<td align="center">3.00</td>
-</tr>
-<tr class="even">
-<td align="center">non-probing</td>
-<td align="center">0.00</td>
-</tr>
-<tr class="odd">
-<td align="center">pd</td>
-<td align="center">27.38</td>
-</tr>
-<tr class="even">
-<td align="center">pd1</td>
-<td align="center">26.29</td>
-</tr>
-<tr class="odd">
-<td align="center">pd2</td>
-<td align="center">29.04</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="section level3">
 <h3 id="visualize-data">5. Visualize data<a class="anchor" aria-label="anchor" href="#visualize-data"></a>
 </h3>
 <p>For further exploration, the data can also be visualized. The following three plots will show: (i) a boxpot of frequencies for each waveform type, (ii) a pie chart of time spent in each waveform type (iii) a pie chart showing the number of each waveform type.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_fbox.html">plot_fbox</a></span><span class="op">(</span><span class="va">example_epg_labeled</span><span class="op">)</span></code></pre></div>
-<p><img src="EPGminerDemo_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_pie.html">plot_pie</a></span><span class="op">(</span><span class="va">example_epg_labeled</span>, pietype <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-c8893ade0d20d5874d53" style="width:700px;height:432.632880098888px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c8893ade0d20d5874d53">{"x":{"visdat":{"34dd1bc6d1aa":["function () ","plotlyVisDat"]},"cur_data":"34dd1bc6d1aa","attrs":{"34dd1bc6d1aa":{"labels":{},"values":{},"textinfo":"text","hoverinfo":"label+text","hovertext":["257.08 mins","21.63 mins","242.48 mins","189.82 mins","8.98 mins","2.77 mins","1.04 mins"],"text":["35.6%","3%","33.5%","26.2%","1.2%","0.4%","0.1%"],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["C","E1","G","non-probing","pd","pd1","pd2"],"values":[257.08,21.63,242.48,189.82,8.98,2.77,1.04],"textinfo":"text","hoverinfo":["label+text","label+text","label+text","label+text","label+text","label+text","label+text"],"hovertext":["257.08 mins","21.63 mins","242.48 mins","189.82 mins","8.98 mins","2.77 mins","1.04 mins"],"text":["35.6%","3%","33.5%","26.2%","1.2%","0.4%","0.1%"],"type":"pie","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(255,255,255,1)"}},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-plot_pie(example_epg_labeled, pietype = "number")
-<div id="htmlwidget-9c9851d2422dc3308777" style="width:700px;height:432.632880098888px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9c9851d2422dc3308777">{"x":{"visdat":{"34dd3530f709":["function () ","plotlyVisDat"]},"cur_data":"34dd3530f709","attrs":{"34dd3530f709":{"labels":{},"values":{},"textinfo":"text","hoverinfo":"label+value","text":["36.8%","3.3%","3.3%","3.3%","13.3%","10%","30%"],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["C","E1","G","non-probing","pd1","pd2","pd"],"values":[11,1,1,1,4,3,9],"textinfo":"text","hoverinfo":["label+value","label+value","label+value","label+value","label+value","label+value","label+value"],"text":["36.8%","3.3%","3.3%","3.3%","13.3%","10%","30%"],"type":"pie","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(255,255,255,1)"}},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_fbox.html">plot_fbox</a></span><span class="op">(</span><span class="va">example_epg_labeled</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot_pie.html">plot_pie</a></span><span class="op">(</span><span class="va">example_epg_labeled</span>, pietype <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot_pie.html">plot_pie</a></span><span class="op">(</span><span class="va">example_epg_labeled</span>, pietype <span class="op">=</span> <span class="st">"number"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="expected-output-and-run-time">Expected Output and Run time<a class="anchor" aria-label="anchor" href="#expected-output-and-run-time"></a>
