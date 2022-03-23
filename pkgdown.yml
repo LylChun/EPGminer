@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   EPGminerDemo: EPGminerDemo.html
   EPGminerReprex: EPGminerReprex.html
-last_built: 2022-03-21T23:26Z
+last_built: 2022-03-23T06:30Z
 urls:
   reference: https://lylchun.github.io/EPGminer/reference
   article: https://lylchun.github.io/EPGminer/articles
