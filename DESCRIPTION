@@ -31,7 +31,6 @@ Imports:
     webshot
 Suggests: 
     rmarkdown,
-    knitr,
-    epgdata
+    knitr
 VignetteBuilder: knitr
 URL: https://lylchun.github.io/EPGminer/
