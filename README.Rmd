@@ -80,6 +80,8 @@ The vignette may also be accessed in R via:
 vignette("EPGminerDemo")
 ```
 
+Note that due to the size of EPG datasets, the data is included in a separate R package called `epgdata` which can be found [here](https://github.com/LylChun/epgdata)
+
 ### Instructions for use
 Use of the software for EPG data analysis involves data reading/processing, labeling, and calculation of metrics. For an example script showing how we used `EPGminer` on our data, please see the "EPGminerReprex" vignette [here](https://lylchun.github.io/EPGminer/articles/EPGminerReprex.html) or via R:
 

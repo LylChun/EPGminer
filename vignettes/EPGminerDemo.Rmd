@@ -18,20 +18,35 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(epgminer)
 library(dplyr)
+library(data.table)
 ```
 
 # Introduction
 In this demo, we will show the use of the `EPGminer` R package for analysis of insect EPG data. The primary goal of `EPGminer` is to advance analysis of insect feeding behavior using EPG by introducing a computational tool. The main utility of `EPGminer` is calculation of frequency via the Fourier Transform, and calculation of Relative Amplitude (voltage). This demo will take you step by step through analysis of EPG data using an example dataset.
 
 ## 1. Load Example Dataset
-First, the dataset must be read in properly. The `EPGminer` function read_epg can be used to read in both raw EPG data as "txt" files and manual annotation files with extension ".ANA".
+First, the dataset must be loaded. Due to the size involved with any EPG dataset, the raw data has been included in a separate package: `epgdata`. First install/load the `epgdata` package from github using devtools. Then, the `EPGminer` function read_epg can be used to read in both raw EPG data in "txt" files and manual annotation files with extension "ANA".
 
 ```{r}
-# insert dataset
+if (!require(devtools)){
+  install.packages("devtools")
+}
+if (!require("epgdata")){
+  devtools::install_github("LylChun/epgdata")
+}
+
+# list raw txt files and ana file from epgdata package
+datafiles = list.files(system.file("extdata", package = "epgdata"),
+                       pattern = "txt", full.names = TRUE)
+anafile <- list.files(system.file("extdata", package = "epgdata"),
+                       pattern = "ANA", full.names = TRUE)
+# read into dataframe
+example_epg_unlabeled <- rbindlist(lapply(datafiles, read_epg, extension = "txt"))
+example_epg_ana <- read_epg(anafile, extension = "ANA")
 ```
 
 ## 2. Add waveform labels
-To calculate Frequency and Relative Amplitude for each waveform, the annotation file must be combined with the raw data
+To calculate Frequency and Relative Amplitude for each waveform, the annotation file must be combined with the raw data. This can be accomplished using the `EPGminer` function label_ana
 
 ```{r}
 # example_epg_unlabeled and example_epg_ana from part 1
@@ -43,11 +58,10 @@ Once the data has been properly labeled using the annotation file, the `EPGminer
 ```{r}
 frequency <- wave_topfreq(example_epg_labeled)
 RA <- wave_volts(example_epg_labeled)
-head(frequency); head(RA)
 ```
 
 ## 4. Summarize results by waveform
-To summarize the results, we take the mean value for each waveform type.
+To summarize and view the results, we take the mean value for each waveform type.
 
 ```{r}
 # group by waveform and take the mean
@@ -59,9 +73,9 @@ summary_ra <- RA %>%
   summarise(waveform = waveform[1], relative_amplitude = mean(relative_amplitude),
             .groups = "drop")
 knitr::kable(summary_freq, caption = "Table of Mean Frequency by Waveform",
-             align = "c")
+             align = "c", digits = 2)
 knitr::kable(summary_ra, caption = "Table of Mean Relative Amplitude by Waveform",
-             align = "c")
+             align = "c", digits = 2)
 ```
 
 
@@ -82,4 +96,4 @@ Expected output for each step is as follows:
 
 5. Three plots where the first is a boxplot of frequencies and the last two are pie charts by time and number respectively.
 
-Overall expected run time for this demo is less than 30 seconds, including data reading/processing in steps 1 and 2. 
+Overall expected run time for this demo, including data reading/processing and display of visuals, is less than 1 minute.
