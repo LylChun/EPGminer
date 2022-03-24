@@ -73,10 +73,6 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lylchun.github.io/EPGminer/">epgminer</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></code></pre></div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -84,14 +80,15 @@
 <div class="section level3">
 <h3 id="load-example-dataset">1. Load Example Dataset<a class="anchor" aria-label="anchor" href="#load-example-dataset"></a>
 </h3>
-<p>First, the dataset must be loaded. Due to the size involved with any EPG dataset, the raw data has been included in a separate package: <code>epgdata</code>. First install/load the <code>epgdata</code> package from github using devtools. Then, the <code>EPGminer</code> function read_epg can be used to read in both raw EPG data in “txt” files and manual annotation files with extension “ANA”.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>First, the dataset must be loaded. Due to the size involved with EPG datasets, the raw data has been included in a separate package: <code>epgdata</code>. First install the <code>epgdata</code> package from github using devtools. Then, the <code>EPGminer</code> function read_epg can be used to read in both raw EPG data in “txt” files and manual annotation files with extension “ANA”.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st">"epgdata"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-  <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"LylChun/epgdata"</span><span class="op">)</span>
+  <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"LylChun/epgdata"</span><span class="op">)</span>
 <span class="op">}</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 
 <span class="co"># list raw txt files and ana file from epgdata package</span>
 <span class="va">datafiles</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"epgdata"</span><span class="op">)</span>,
@@ -99,30 +96,31 @@
 <span class="va">anafile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"epgdata"</span><span class="op">)</span>,
                        pattern <span class="op">=</span> <span class="st">"ANA"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co"># read into dataframe</span>
-<span class="va">example_epg_unlabeled</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">datafiles</span>, <span class="va">read_epg</span>, extension <span class="op">=</span> <span class="st">"txt"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">example_epg_ana</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_epg.html">read_epg</a></span><span class="op">(</span><span class="va">anafile</span>, extension <span class="op">=</span> <span class="st">"ANA"</span><span class="op">)</span></code></pre></div>
+<span class="va">example_epg_unlabeled</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">datafiles</span>, <span class="fu">epgminer</span><span class="fu">::</span><span class="va"><a href="../reference/read_epg.html">read_epg</a></span>, 
+                                                      extension <span class="op">=</span> <span class="st">"txt"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">example_epg_ana</span> <span class="op">&lt;-</span> <span class="fu">epgminer</span><span class="fu">::</span><span class="fu"><a href="../reference/read_epg.html">read_epg</a></span><span class="op">(</span><span class="va">anafile</span>, extension <span class="op">=</span> <span class="st">"ANA"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="add-waveform-labels">2. Add waveform labels<a class="anchor" aria-label="anchor" href="#add-waveform-labels"></a>
 </h3>
 <p>To calculate Frequency and Relative Amplitude for each waveform, the annotation file must be combined with the raw data. This can be accomplished using the <code>EPGminer</code> function label_ana</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># example_epg_unlabeled and example_epg_ana from part 1</span>
-<span class="va">example_epg_labeled</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/label_ana.html">label_ana</a></span><span class="op">(</span><span class="va">example_epg_unlabeled</span>, <span class="va">example_epg_ana</span><span class="op">)</span></code></pre></div>
+<span class="va">example_epg_labeled</span> <span class="op">&lt;-</span> <span class="fu">epgminer</span><span class="fu">::</span><span class="fu"><a href="../reference/label_ana.html">label_ana</a></span><span class="op">(</span><span class="va">example_epg_unlabeled</span>, <span class="va">example_epg_ana</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="calculate-frequency-and-relative-amplitude">3. Calculate Frequency and Relative Amplitude<a class="anchor" aria-label="anchor" href="#calculate-frequency-and-relative-amplitude"></a>
 </h3>
 <p>Once the data has been properly labeled using the annotation file, the <code>EPGminer</code> functions wave_topfreq and wave_volts can be used to calculate Frequency and Relative Amplitude respectively.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">frequency</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wave_topfreq.html">wave_topfreq</a></span><span class="op">(</span><span class="va">example_epg_labeled</span><span class="op">)</span>
-<span class="va">RA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wave_volts.html">wave_volts</a></span><span class="op">(</span><span class="va">example_epg_labeled</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">frequency</span> <span class="op">&lt;-</span> <span class="fu">epgminer</span><span class="fu">::</span><span class="fu"><a href="../reference/wave_topfreq.html">wave_topfreq</a></span><span class="op">(</span><span class="va">example_epg_labeled</span><span class="op">)</span>
+<span class="va">RA</span> <span class="op">&lt;-</span> <span class="fu">epgminer</span><span class="fu">::</span><span class="fu"><a href="../reference/wave_volts.html">wave_volts</a></span><span class="op">(</span><span class="va">example_epg_labeled</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="summarize-results-by-waveform">4. Summarize results by waveform<a class="anchor" aria-label="anchor" href="#summarize-results-by-waveform"></a>
 </h3>
 <p>To summarize and view the results, we take the mean value for each waveform type.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># group by waveform and take the mean</span>
 <span class="va">summary_freq</span> <span class="op">&lt;-</span> <span class="va">frequency</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">waveform</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
@@ -130,20 +128,91 @@
 <span class="va">summary_ra</span> <span class="op">&lt;-</span> <span class="va">RA</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">waveform</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>waveform <span class="op">=</span> <span class="va">waveform</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, relative_amplitude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">relative_amplitude</span><span class="op">)</span>,
-            .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span>
-<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">summary_freq</span>, caption <span class="op">=</span> <span class="st">"Table of Mean Frequency by Waveform"</span>,
-             align <span class="op">=</span> <span class="st">"c"</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">summary_ra</span>, caption <span class="op">=</span> <span class="st">"Table of Mean Relative Amplitude by Waveform"</span>,
-             align <span class="op">=</span> <span class="st">"c"</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+            .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<caption>Table of Mean Frequency by Waveform</caption>
+<thead><tr class="header">
+<th align="center">waveform</th>
+<th align="center">frequency</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="center">C</td>
+<td align="center">0.80</td>
+</tr>
+<tr class="even">
+<td align="center">E1</td>
+<td align="center">4.59</td>
+</tr>
+<tr class="odd">
+<td align="center">G</td>
+<td align="center">2.05</td>
+</tr>
+<tr class="even">
+<td align="center">non-probing</td>
+<td align="center">44.34</td>
+</tr>
+<tr class="odd">
+<td align="center">pd</td>
+<td align="center">1.42</td>
+</tr>
+<tr class="even">
+<td align="center">pd1</td>
+<td align="center">1.88</td>
+</tr>
+<tr class="odd">
+<td align="center">pd2</td>
+<td align="center">2.73</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<caption>Table of Mean Relative Amplitude by Waveform</caption>
+<thead><tr class="header">
+<th align="center">waveform</th>
+<th align="center">relative_amplitude</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="center">C</td>
+<td align="center">16.78</td>
+</tr>
+<tr class="even">
+<td align="center">E1</td>
+<td align="center">33.82</td>
+</tr>
+<tr class="odd">
+<td align="center">G</td>
+<td align="center">3.00</td>
+</tr>
+<tr class="even">
+<td align="center">non-probing</td>
+<td align="center">0.00</td>
+</tr>
+<tr class="odd">
+<td align="center">pd</td>
+<td align="center">27.38</td>
+</tr>
+<tr class="even">
+<td align="center">pd1</td>
+<td align="center">26.29</td>
+</tr>
+<tr class="odd">
+<td align="center">pd2</td>
+<td align="center">29.04</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="visualize-data">5. Visualize data<a class="anchor" aria-label="anchor" href="#visualize-data"></a>
 </h3>
-<p>For further exploration, the data can also be visualized. The following three plots will show: (i) a boxpot of frequencies for each waveform type, (ii) a pie chart of time spent in each waveform type (iii) a pie chart showing the number of each waveform type.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_fbox.html">plot_fbox</a></span><span class="op">(</span><span class="va">example_epg_labeled</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot_pie.html">plot_pie</a></span><span class="op">(</span><span class="va">example_epg_labeled</span>, pietype <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot_pie.html">plot_pie</a></span><span class="op">(</span><span class="va">example_epg_labeled</span>, pietype <span class="op">=</span> <span class="st">"number"</span><span class="op">)</span></code></pre></div>
+<p>For further exploration, the data can also be visualized. The following three plots will show: (i) a boxplot of frequencies for each waveform type, (ii) a pie chart of time spent in each waveform type (iii) a pie chart showing the number of each waveform type.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>epgminer<span class="op">::</span><span class="kw">plot_fbox</span>(example_epg_labeled)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>epgminer<span class="op">::</span><span class="kw">plot_pie</span>(example_epg_labeled, <span class="dt">pietype =</span> <span class="st">"time"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>epgminer<span class="op">::</span>(example_epg_labeled, <span class="dt">pietype =</span> <span class="st">"number"</span>)</span></code></pre></div>
+<p><img src="demo_figures/freq_boxplot.png" width="600px" height="300px"></p>
+<p><img src="demo_figures/pie_time.png" width="600px" height="400px"><img src="demo_figures/pie_number.png" width="600px" height="400px"></p>
 </div>
 <div class="section level3">
 <h3 id="expected-output-and-run-time">Expected Output and Run time<a class="anchor" aria-label="anchor" href="#expected-output-and-run-time"></a>
@@ -154,7 +223,7 @@
 <li><p>Expected output is two summary tables for frequency and Relative Amplitude grouped by waveform respectively. There should be one (mean) frequency and (mean) Relative Amplitude for each waveform type.</p></li>
 <li><p>Three plots where the first is a boxplot of frequencies and the last two are pie charts by time and number respectively.</p></li>
 </ol>
-<p>Overall expected run time for this demo, including data reading/processing and display of visuals, is less than 1 minute.</p>
+<p>Overall expected run time for this demo, not including package installation, is less than 1 minute.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
