@@ -70,11 +70,11 @@ shinyUI(fluidPage(
                       fluidRow(
                         column(6,
                                "Example Pie Chart of Waveforms by Time",
-                               img(src = "waveform_piechart_time.png", height = "100%", width = "100%%"),
+                               img(src = "pie_time.png", height = "100%", width = "100%%"),
                         ),
                         column(6,
                                "Example Pie Chart of Waveforms by Number",
-                               img(src = "Waveform_piechart.png", height = "100%", width = "100%%")
+                               img(src = "pie_number.png", height = "100%", width = "100%%")
                         )
                       ),
                       "Example Boxplot of Frequencies",
