@@ -30,7 +30,11 @@ Imports:
     utils,
     webshot
 Suggests: 
-    rmarkdown,
-    knitr
+    devtools,
+    epgdata,
+    knitr,
+    rmarkdown
+Remotes:
+    LylChun/epgdata
 VignetteBuilder: knitr
 URL: https://lylchun.github.io/EPGminer/
