@@ -1,10 +1,10 @@
-pandoc: 2.7.3
-pkgdown: 2.0.2
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   EPGminerDemo: EPGminerDemo.html
   EPGminerReprex: EPGminerReprex.html
-last_built: 2022-03-24T00:16Z
+last_built: 2023-08-19T22:37Z
 urls:
   reference: https://lylchun.github.io/EPGminer/reference
   article: https://lylchun.github.io/EPGminer/articles
